@@ -307,6 +307,11 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+        
           <li class="md-nav__item">
   <a href="#calculate-the-oriented-centerline" class="md-nav__link">
     Calculate the oriented centerline
@@ -318,11 +323,6 @@
   <a href="#disaggregate-the-valley-bottom-along-the-centerline" class="md-nav__link">
     Disaggregate the valley bottom along the centerline
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -2177,6 +2177,11 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+        
           <li class="md-nav__item">
   <a href="#calculate-the-oriented-centerline" class="md-nav__link">
     Calculate the oriented centerline
@@ -2188,11 +2193,6 @@
   <a href="#disaggregate-the-valley-bottom-along-the-centerline" class="md-nav__link">
     Disaggregate the valley bottom along the centerline
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -2242,11 +2242,11 @@ The calculation of the valley bottom requires the prior calculation of the detre
 <li>No small polygons outside of the main polygon. If there are ones, try to increase the <code>Aggregation distance</code> of the previous step or remove them manually.</li>
 <li>A numeric field with an identifier to associate each network polyline with his valley bottom polygon. If there is no such field, create one. </li>
 </ul>
-<h4 id="calculate-the-oriented-centerline">Calculate the oriented centerline<a class="headerlink" href="#calculate-the-oriented-centerline" title="Permanent link">&para;</a></h4>
+<h3 id="calculate-the-oriented-centerline">Calculate the oriented centerline<a class="headerlink" href="#calculate-the-oriented-centerline" title="Permanent link">&para;</a></h3>
 <p>You can directly calculate the DGOs using the network polyline but the result is better using the centerline (ie. medial axis) of the valley bottom. 
 To calculate it, you will need a polyline that intersects the valley bottom polygon at least upstream and downstream. You can use the QGIS <code>Extend Lines</code> algorithm with the network polyline or just draw a dummy polyline that does the job. This polyline will never be used after. </p>
 <p>Run the <a href="../workflows/spatialcomponents/OrientedCenterline/">Oriented Centerline Workflow</a> with your DEM, your refined valley bottom, and your polyline that instersect it. The result is a centerline which is oriented upstream to downstream. If you want to smooth it more, you can use the QGIS <code>Simplify</code> Douglas-Peucker algorithm, then the QGIS <code>Smooth Geometry</code> algorithm.</p>
-<h4 id="disaggregate-the-valley-bottom-along-the-centerline">Disaggregate the valley bottom along the centerline<a class="headerlink" href="#disaggregate-the-valley-bottom-along-the-centerline" title="Permanent link">&para;</a></h4>
+<h3 id="disaggregate-the-valley-bottom-along-the-centerline">Disaggregate the valley bottom along the centerline<a class="headerlink" href="#disaggregate-the-valley-bottom-along-the-centerline" title="Permanent link">&para;</a></h3>
 <p>Before carrying out the disaggregation, we advise to simplify the valley bottom polygon with the QGIS <code>Simplify</code> Douglas-Peucker algorithm. Disaggregating the raw valley bottom is possible, but will take a lot of time and resources. </p>
 <p>From now, you are ready to disaggregate the valley bottom in DGOs. Use the <a href="../workflows/disaggregation/Segmentation/">Segmentation Workflow</a> to do it, using the valley bottom polygon as feature to segment and the oriented centerline. Choose the segmentation step (in map unit) you want for your DGOs size. </p>
 
