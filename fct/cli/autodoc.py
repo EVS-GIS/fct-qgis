@@ -215,7 +215,7 @@ def generate_alg(alg, destination):
         parameters=parameters,
         tags=[tag for tag in metadata.get('tags', [])])
 
-    with open(filename, 'w') as output:
+    with open(filename, 'w', encoding="utf-8") as output:
         output.write(ALGORITHM_TEMPLATE.render(metadata))
 
 def generate_doc(provider, destination='docs/algorithms'):

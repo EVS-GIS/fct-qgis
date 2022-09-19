@@ -172,8 +172,7 @@ class ValleyCenterLine(AlgorithmMetadata, QgsProcessingAlgorithm):
                     if len(pts) < 2:
                         feedback.reportError(
                             self.tr(
-                                f"Axis {axis_number}: not enough intersection points between polygon and network features (2 needed)",
-                                True,
+                                f"Axis {axis_number}: not enough intersection points between polygon and network features (2 needed)"
                             )
                         )
                         break

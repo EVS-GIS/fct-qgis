@@ -1,6 +1,6 @@
 [general]
 name = Fluvial Corridor Toolbox
-qgisminimumversion = 3.4.0
+qgisminimumversion = 3.16.0
 qgismaximumversion = 3.99.99
 description = Fluvial Corridor Toolbox
 about = The Fluvial Corridor Toolbox is a set of geoalgorithms intended to describe and measure fluvial features and processes.
@@ -11,6 +11,7 @@ category = Vector
 changelog = 
 	1.0.8
 	- Actual dev version
+	- Update for QGIS 3.16
 	
 	1.0.7
 	- Minor update
@@ -44,9 +45,9 @@ changelog =
 	1.0.0
 	- First version released in fct repository
 tags = fluvial, vector, analysis, processing
-homepage = https://github.com/tramebleue/fct-qgis
+homepage = https://github.com/EVS-GIS/fct-qgis
 tracker = 
-repository = https://github.com/tramebleue/fct-qgis
+repository = https://github.com/EVS-GIS/fct-qgis
 icon = images/icon.png
 experimental = False
 deprecated = False
