@@ -19,7 +19,7 @@ To quickly install the latest released version, add the following repository to 
 
     https://evs-gis.github.io/fct-qgis/repo/plugins.xml
 
-Then check the ```Show experimental plugins``` box, and install the Fluvial Corridor Toolbox plugin with the QGIS plugin manager.
+Then install the Fluvial Corridor Toolbox plugin with the QGIS plugin manager.
 
 ## Acknowledgements
 
