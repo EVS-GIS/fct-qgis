@@ -1,6 +1,6 @@
 # Fluvial Corridor Toolbox
 
-![Corridor Width Profile Example (River le Var, France)](https://github.com/EVS-GIS/fct-cli/blob/master/docs/img/width_profile.png)
+![Corridor Width Profile Example (River le Var, France)](https://github.com/tramebleue/fct-cli/blob/master/docs/img/width_profile.png)
 
 The Fluvial Corridor Toolbox is a set of geoalgorithms intended to describe and measure fluvial features and processes.
 
