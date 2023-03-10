@@ -11,8 +11,8 @@
         <author_name>Christophe Rousson, Samuel Dunesme</author_name>
         <download_url>https://github.com/EVS-GIS/fct-qgis/releases/download/v1.0.9/FluvialCorridorToolbox.1.0.9.zip</download_url>
         <uploaded_by>sdunesme</uploaded_by>
-        <create_date>2022-09-19</create_date>
-        <update_date>2022-09-19</update_date>
+        <create_date>2022-09-19T13:30:59.287786</create_date>
+        <update_date>2022-09-19T13:30:59.287786</update_date>
         <experimental>False</experimental>
         <deprecated>False</deprecated>
         <tracker>https://github.com/EVS-GIS/fct-qgis/issues</tracker>
