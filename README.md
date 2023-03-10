@@ -43,4 +43,4 @@ Funding and support have been kindly provided by :
 
 The Fluvial Corridor Toolbox is released under the [GNU Public License][].
 
-[GNU Public License]: https://github.com/EVS-GIS/fct/blob/master/LICENSE
+[GNU Public License]: https://github.com/EVS-GIS/fct-qgis/blob/master/LICENSE

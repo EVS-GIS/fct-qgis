@@ -1,16 +1,19 @@
 [general]
 name = Fluvial Corridor Toolbox
-qgisminimumversion = 3.16.0
+qgisminimumversion = 3.22.0
 qgismaximumversion = 3.99.99
 description = Fluvial Corridor Toolbox
 about = The Fluvial Corridor Toolbox is a set of geoalgorithms intended to describe and measure fluvial features and processes.
-version = 1.0.9
+version = 1.0.10
 author = Geopeka
 email = contact@geopeka.fr
 category = Vector
 changelog = 
+	1.0.10
+	- Update help URLs
+	
 	1.0.9
-	- Actual dev version
+	- Cython terrain analysis extensions
 	
 	1.0.8
 	- Update for QGIS 3.16

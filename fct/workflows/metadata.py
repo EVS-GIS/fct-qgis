@@ -21,7 +21,7 @@ from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
     QCoreApplication
 )
 
-DOC_URL = 'https://evs-gis.github.io/fct/workflows/%s/%s'
+DOC_URL = 'https://evs-gis.github.io/fct-qgis/workflows/%s/%s'
 
 class AlgorithmMetadata(object):
     """

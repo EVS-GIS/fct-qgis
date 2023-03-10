@@ -21,7 +21,7 @@ from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
     QCoreApplication
 )
 
-DOC_URL = 'https://evs-gis.github.io/fct/algorithms/%s/%s'
+DOC_URL = 'https://evs-gis.github.io/fct-qgis/algorithms/%s/%s'
 
 class AlgorithmMetadata(object):
     """
