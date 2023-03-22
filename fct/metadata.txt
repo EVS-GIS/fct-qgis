@@ -1,59 +1,22 @@
 [general]
 name = Fluvial Corridor Toolbox
-qgisminimumversion = 3.22.0
-qgismaximumversion = 3.99.99
+qgisMinimumVersion = 3.22.0
 description = Fluvial Corridor Toolbox
 about = The Fluvial Corridor Toolbox is a set of geoalgorithms intended to describe and measure fluvial features and processes.
 version = 1.0.10
-author = Geopeka
-email = contact@geopeka.fr
+author = UMR5600 EVS
+email = samuel.dunesme@ens-lyon.fr
 category = Vector
 changelog = 
-	1.0.10
-	- Update help URLs
-	
-	1.0.9
-	- Cython terrain analysis extensions
-	
-	1.0.8
-	- Update for QGIS 3.16
-	
-	1.0.7
-	- Minor update
-	
-	1.0.6
-	- QGIS 3.10 compatibility
-	- Workflows improvements
-	- New algorithms
-	- Bug fixes
-	- New repo URL
-	
-	1.0.5
-	- Cython terrain analysis extensions for windows
-	- New Shortest algorithms
-	
-	1.0.4
-	- New workflows
-	- New graph algorithms
-	- Bug fixes
-	
-	1.0.3
-	- Terrain Analysis algorithms
-	
-	1.0.2
-	- Add workflows
-	- Bug fixes
-	
-	1.0.1
-	- Bug fixes
-	
-	1.0.0
-	- First version released in fct repository
 tags = fluvial, vector, analysis, processing
-homepage = https://github.com/EVS-GIS/fct-qgis
-tracker = 
+homepage = https://evs-gis.github.io/fct-qgis/
+tracker = https://github.com/EVS-GIS/fct-qgis/issues
 repository = https://github.com/EVS-GIS/fct-qgis
 icon = images/icon.png
 experimental = False
 deprecated = False
 
+[tool:qgis-plugin-ci]
+commitNumber=
+commitSha1=
+dateTime=

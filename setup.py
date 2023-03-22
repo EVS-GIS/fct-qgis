@@ -17,13 +17,14 @@ extensions = [
 
 setup(
     name='fct-qgis',
-    version='1.0.9',
+    version='1.0.10',
     packages=find_packages(),
     ext_modules=cythonize(extensions),
     include_package_data=True,
     install_requires=[
         'Click>=7.0',
-        'scipy==1.8.1',
+        'numpy==1.20.0',
+        'scipy==1.3.3',
         'plotly>=3.3'
     ],
     entry_points='''
