@@ -1,3 +1,5 @@
+[![.github/workflows/release.yml](https://github.com/EVS-GIS/fct-qgis/actions/workflows/release.yml/badge.svg?branch=master)](https://github.com/EVS-GIS/fct-qgis/actions/workflows/release.yml)
+
 # Fluvial Corridor Toolbox
 
 ![Corridor Width Profile Example (River le Var, France)](https://github.com/tramebleue/fct-cli/blob/master/docs/img/width_profile.png)
