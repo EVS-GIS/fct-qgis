@@ -29,7 +29,7 @@
         <version>1.0.8</version>
         <trusted>True</trusted>
         <qgis_minimum_version>3.16.0</qgis_minimum_version>
-        <qgis_maximum_version>3.99.0</qgis_maximum_version>
+        <qgis_maximum_version>3.20.0</qgis_maximum_version>
         <homepage>https://evs-gis.github.io/fct-qgis/</homepage>
         <file_name>FluvialCorridorToolbox.1.0.8.zip</file_name>
         <icon>https://evs-gis.github.io/fct-qgis/repo/icon.png</icon>
