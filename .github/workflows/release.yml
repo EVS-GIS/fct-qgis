@@ -66,12 +66,12 @@ jobs:
           mkdir alien
           cp -r fct alien/FluvialCorridorToolbox
       - name: Download linux build artifact
-        uses: actions/download-artifacts@v3
+        uses: actions/download-artifact@v3
         with:
           name: extension-linux
           path: alien/FluvialCorridorToolbox/lib/
       - name: Download windows build artifact
-        uses: actions/download-artifacts@v3
+        uses: actions/download-artifact@v3
         with:
           name: extension-windows
           path: alien/FluvialCorridorToolbox/lib/
@@ -85,3 +85,12 @@ jobs:
           name: release-zip
           path: alien/FluvialCorridorToolbox.zip
           retention-days: 1
+      - name: GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          files: alien/FluvialCorridorToolbox.zip
+          name: v${{ vars.FCT_CURRENT_VERSION }}
+          body_path: CHANGELOG.txt
+
+          
