@@ -25,7 +25,7 @@ __copyright__ = '(C) 2016, Christophe Rousson'
 __revision__ = '$Format:%H$'
 
 try:
-    from scipy.ndimage.morphology import binary_closing
+    from scipy.ndimage import binary_closing
     hasSciPy = True
 except ImportError:
     hasSciPy = False

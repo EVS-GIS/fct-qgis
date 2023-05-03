@@ -146,7 +146,7 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
             detrended_dem = processing.run('fct:relativedem',
                 {
                     'INPUT': self.parameterAsRasterLayer(parameters, self.IN_DEM, context),
-                    'OUTPUT': 'memory:',
+                    'OUTPUT': 'C:/Users/sdunesme/vb.tif',
                     'STREAM': self.parameterAsVectorLayer(parameters, self.IN_STREAM, context)
                 }, context=context)
             

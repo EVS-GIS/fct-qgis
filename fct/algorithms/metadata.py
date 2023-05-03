@@ -21,7 +21,7 @@ from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
     QCoreApplication
 )
 
-DOC_URL = 'https://tramebleue.github.io/fct/algorithms/%s/%s'
+DOC_URL = 'https://evs-gis.github.io/fct-qgis/algorithms/%s/%s'
 
 class AlgorithmMetadata(object):
     """
@@ -38,7 +38,7 @@ class AlgorithmMetadata(object):
             os.path.join(os.path.dirname(sourcefile), basename + '.yml'),
             encoding='utf-8') as stream:
 
-            return yaml.load(stream)
+            return yaml.safe_load(stream)
 
     def createInstance(self):
         return type(self)()

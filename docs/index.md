@@ -13,7 +13,7 @@ This branch is under development and is an open effort to support QGis 3 (curren
 
 To quickly install the latest released version, add the following repository to your QGIS plugin repositories :
 
-    https://tramebleue.github.io/fct-qgis/repo/plugins.xml
+    https://evs-gis.github.io/fct-qgis/repo/plugins.xml
 
 Then check the ```Show experimental plugins``` box, and install the Fluvial Corridor Toolbox plugin with the QGIS plugin manager.
 
@@ -39,4 +39,4 @@ Funding and support have been kindly provided by :
 
 The Fluvial Corridor Toolbox is released under the [GNU Public License][].
 
-[GNU Public License]: https://github.com/tramebleue/fct/blob/master/LICENSE
+[GNU Public License]: https://github.com/EVS-GIS/fct/blob/master/LICENSE

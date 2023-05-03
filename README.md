@@ -1,3 +1,5 @@
+[![.github/workflows/release.yml](https://github.com/EVS-GIS/fct-qgis/actions/workflows/release.yml/badge.svg?branch=master)](https://github.com/EVS-GIS/fct-qgis/actions/workflows/release.yml)
+
 # Fluvial Corridor Toolbox
 
 > **Warning**
@@ -7,7 +9,7 @@
 
 The Fluvial Corridor Toolbox is a set of geoalgorithms intended to describe and measure fluvial features and processes.
 
-Documentation (in progress) is available at : https://tramebleue.github.io/fct-qgis
+Documentation (in progress) is available at : https://evs-gis.github.io/fct-qgis
 
 If your are looking for the ArcGIS version of the toolbox,
 please go to [Fluvial Corridor Toolbox for ArcGIS](https://github.com/EVS-GIS/Fluvial-Corridor-Toolbox-ArcGIS).
@@ -22,7 +24,7 @@ To quickly install the latest released version, add the following repository to 
 
     https://evs-gis.github.io/fct-qgis/repo/plugins.xml
 
-Then check the ```Show experimental plugins``` box, and install the Fluvial Corridor Toolbox plugin with the QGIS plugin manager.
+Then install the Fluvial Corridor Toolbox plugin with the QGIS plugin manager.
 
 ## Acknowledgements
 
@@ -46,4 +48,4 @@ Funding and support have been kindly provided by :
 
 The Fluvial Corridor Toolbox is released under the [GNU Public License][].
 
-[GNU Public License]: https://github.com/tramebleue/fct/blob/master/LICENSE
+[GNU Public License]: https://github.com/EVS-GIS/fct-qgis/blob/master/LICENSE

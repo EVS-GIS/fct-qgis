@@ -192,7 +192,7 @@ def task_doc():
 
     return {
         'actions': [
-            'python3 -m fct.cli.autodoc build'
+            'python -m fct.cli.autodoc build'
         ],
         'task_dep': ['doc_clean']
     }
@@ -204,7 +204,7 @@ def task_doc_toc():
 
     return {
         'actions': [
-            LongRunning('python3 -m fct.cli.autodoc toc')
+            LongRunning('python -m fct.cli.autodoc toc')
         ],
         'verbosity': 2
     }
@@ -216,7 +216,7 @@ def task_doc_serve():
 
     return {
         'actions': [
-            LongRunning('python3 -m mkdocs serve')
+            LongRunning('python -m mkdocs serve')
         ],
         'task_dep': ['doc']
     }
@@ -228,7 +228,7 @@ def task_doc_deploy():
 
     return {
         'actions': [
-            LongRunning('python3 -m mkdocs gh-deploy')
+            LongRunning('python -m mkdocs gh-deploy')
         ],
         'task_dep': ['doc']
     }
@@ -285,7 +285,7 @@ def task_releases_stats():
 
             from github import Github
             g = Github()
-            fct_repo = g.get_repo("tramebleue/fct-qgis")
+            fct_repo = g.get_repo("EVS-GIS/fct-qgis")
 
             print(" Publish date  | Release tag |           Release title           |            Asset name             | Download count")
             print("---------------|-------------|-----------------------------------|-----------------------------------|---------------")
@@ -345,7 +345,7 @@ def task_release():
             access_token = input("GitHub personal access token: ")
 
             g = Github(access_token)
-            fct_repo = g.get_repo("tramebleue/fct-qgis")
+            fct_repo = g.get_repo("EVS-GIS/fct-qgis")
 
             tag_name = f"v{version}"
             zip_path = os.path.join("release", 
