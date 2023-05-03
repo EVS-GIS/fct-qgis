@@ -18,7 +18,6 @@ import os
 import tempfile
 
 from qgis.core import (
-    QgsFeature,
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterFeatureSource,
@@ -26,9 +25,7 @@ from qgis.core import (
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterNumber,
     QgsProcessingParameterEnum,
-    QgsWkbTypes,
-    QgsGeometry,
-    QgsFeatureSink
+    QgsProcessingParameterExtent,
 )
 
 from ..metadata import AlgorithmMetadata
@@ -48,6 +45,9 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
     BUFFER = 'BUFFER'
     THRESH_MIN = 'THRESH_MIN'
     THRESH_MAX = 'THRESH_MAX'
+    BBOX = 'BBOX'
+    SIMPLIFY = 'SIMPLIFY'
+    SMOOTH = 'SMOOTH'
     OUT_VB = 'OUT_VB'
 
     def initAlgorithm(self, configuration):
@@ -71,31 +71,48 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
 
         self.addParameter(QgsProcessingParameterNumber(
             self.STEP,
-            self.tr('Disaggregation step'),
+            self.tr('Disaggregation step (topological detrending only)'),
             defaultValue=50.0,
             minValue=1))
 
         self.addParameter(QgsProcessingParameterNumber(
             self.AGGREG,
-            self.tr('Aggregation distance'),
+            self.tr('Isolated objects aggregation distance'),
             defaultValue=5.0,
             minValue=1))
 
         self.addParameter(QgsProcessingParameterNumber(
             self.BUFFER,
-            self.tr('Large buffer size'),
+            self.tr('Max width (large buffer size)'),
             defaultValue=1500.0,
             minValue=1))
 
         self.addParameter(QgsProcessingParameterNumber(
             self.THRESH_MIN,
-            self.tr('Minimum threshold value'),
-            defaultValue=-10.0))
+            self.tr('Minimum relative height value'),
+            defaultValue=-10.0,
+            type=QgsProcessingParameterNumber.Double))
 
         self.addParameter(QgsProcessingParameterNumber(
             self.THRESH_MAX,
-            self.tr('Maximum threshold value'),
-            defaultValue=10.0))
+            self.tr('Maximum relative height value'),
+            defaultValue=10.0,
+            type=QgsProcessingParameterNumber.Double))
+        
+        self.addParameter(QgsProcessingParameterNumber(
+            self.SIMPLIFY,
+            self.tr('Simplify VB tolerance'),
+            defaultValue=10))
+        
+        self.addParameter(QgsProcessingParameterNumber(
+            self.SMOOTH,
+            self.tr('Smooth VB iterations'),
+            defaultValue=5))
+        
+        self.addParameter(QgsProcessingParameterExtent(
+            self.BBOX, 
+            self.tr('Output extent'), 
+            defaultValue=None))
 
         self.addParameter(QgsProcessingParameterFeatureSink(
             self.OUT_VB,
@@ -114,11 +131,11 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
                 {
                     'dem': self.parameterAsRasterLayer(parameters, self.IN_DEM, context),
                     'disaggregationdistance': self.parameterAsDouble(parameters, self.STEP, context), 
-                    'fct:rasterdifference:Detrended': 'memory:', 
+                    'Detrended': QgsProcessing.TEMPORARY_OUTPUT, 
                     'stream': self.parameterAsVectorLayer(parameters, self.IN_STREAM, context)
                 }, context=context)
             
-            relative_dem = detrended_dem['fct:rasterdifference:Detrended']
+            relative_dem = detrended_dem['Detrended']
 
         if method == '1':
             feedback.pushInfo(self.tr('Flow detrending...'))
@@ -126,15 +143,15 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
             flow_dir = processing.run('fct:flowdirection',
                 { 
                     'ELEVATIONS': self.parameterAsRasterLayer(parameters, self.IN_DEM, context), 
-                    'OUTPUT': 'memory:' 
+                    'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT 
                 }, context=context)
 
             feedback.pushInfo(self.tr('  Detrend DEM...'))
-            detrended_dem = processing.run('fct:detrenddem',
+            detrended_dem = processing.run('fct:relativedembyflow',
                 { 
                     'FLOW': flow_dir['OUTPUT'], 
                     'INPUT': self.parameterAsRasterLayer(parameters, self.IN_DEM, context), 
-                    'OUTPUT': 'memory:', 
+                    'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT, 
                     'STREAM': self.parameterAsVectorLayer(parameters, self.IN_STREAM, context)
                 }, context=context)
             
@@ -146,7 +163,7 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
             detrended_dem = processing.run('fct:relativedem',
                 {
                     'INPUT': self.parameterAsRasterLayer(parameters, self.IN_DEM, context),
-                    'OUTPUT': 'C:/Users/sdunesme/vb.tif',
+                    'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT,
                     'STREAM': self.parameterAsVectorLayer(parameters, self.IN_STREAM, context)
                 }, context=context)
             
@@ -163,15 +180,16 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
         valleybottom = processing.run('fct:valleybottom',
             {
                 'detrendeddem': relative_dem, 
-                'gdal:sieve_1:VALLEYBOTTOM_RASTER': os.path.join(tmpdir, 'VB_RASTER.tif'),
+                'Valleybottom_raster': os.path.join(tmpdir, 'VB_RASTER.tif'),
                 'inputstreamnetwork': self.parameterAsVectorLayer(parameters, self.IN_STREAM, context),
                 'largebufferdistanceparameter': self.parameterAsDouble(parameters, self.BUFFER, context),
                 'mergedistance': self.parameterAsDouble(parameters, self.AGGREG, context),
-                'native:smoothgeometry_1:VALLEYBOTTOM_POLYGON': parameters['OUT_VB'],
-                'thresholds': [
-                    self.parameterAsDouble(parameters, self.THRESH_MIN, context),
-                    self.parameterAsDouble(parameters, self.THRESH_MAX, context),
-                    1]
+                'Valleybottom_polygon': parameters['OUT_VB'],
+                'min_height': self.parameterAsDouble(parameters, self.THRESH_MIN, context),
+                'max_height': self.parameterAsDouble(parameters, self.THRESH_MAX, context),
+                'simplify': self.parameterAsDouble(parameters, self.SIMPLIFY, context),
+                'smoothing': self.parameterAsDouble(parameters, self.SMOOTH, context),
+                'bbox': self.parameterAsExtent(parameters, self.BBOX, context)
             }, context=context)
 
-        return {self.OUT_VB: valleybottom['native:smoothgeometry_1:VALLEYBOTTOM_POLYGON']}
+        return {self.OUT_VB: valleybottom['Valleybottom_polygon']}

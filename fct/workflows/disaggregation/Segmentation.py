@@ -111,7 +111,7 @@ class Segmentation(AlgorithmMetadata, QgsProcessingAlgorithm):
                         'FIELD_PRECISION': 0,
                         'NEW_FIELD': True,
                         'FORMULA': '@row_number',
-                        'OUTPUT': 'memory:'
+                        'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
                     }, context=context, feedback=feedback)
 
             if feedback.isCanceled():
