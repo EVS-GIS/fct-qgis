@@ -179,6 +179,9 @@ class RelativeDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
         elevations_ds = gdal.Open(elevations_lyr.dataProvider().dataSourceUri())
         elevations = elevations_ds.GetRasterBand(1).ReadAsArray()
         nodata = elevations_ds.GetRasterBand(1).GetNoDataValue()
+        if not nodata:
+            nodata = -9999.0
+            
         transform = elevations_ds.GetGeoTransform()
         height, width = elevations.shape
 
