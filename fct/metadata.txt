@@ -7,7 +7,9 @@ version = 1.0.11
 author = UMR5600 EVS
 email = samuel.dunesme@ens-lyon.fr
 category = Vector
-changelog = Actual dev version
+changelog = 
+    - Fix access from qgs_process cli
+    - Fixed nodata value if not in input
 tags = fluvial, vector, analysis, processing
 homepage = https://evs-gis.github.io/fct-qgis/
 tracker = https://github.com/EVS-GIS/fct-qgis/issues
@@ -15,6 +17,7 @@ repository = https://github.com/EVS-GIS/fct-qgis
 icon = images/icon.png
 experimental = False
 deprecated = False
+hasProcessingProvider = True
 
 [tool:qgis-plugin-ci]
 commitNumber=

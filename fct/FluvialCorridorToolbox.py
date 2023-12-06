@@ -36,10 +36,14 @@ class FluvialCorridorToolboxPlugin:
         # self.iface = iface
         self.providers = [cls() for cls in PROVIDERS]
 
-    def initGui(self):
+    def initProcessing(self):
 
         for provider in self.providers:
             QgsApplication.processingRegistry().addProvider(provider)
+
+    def initGui(self):
+
+        self.initProcessing()
 
     def unload(self):
 
