@@ -1,0 +1,5 @@
+env/
+.doit.db
+**.pyc
+alien/
+release/
