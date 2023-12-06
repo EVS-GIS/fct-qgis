@@ -1,4 +1,29 @@
 <?xml-stylesheet type="text/xsl" href="plugins.xsl" ?><plugins>
+    <pyqgis_plugin name="Fluvial Corridor Toolbox" version="1.0.11" plugin_id="8">
+        <description>Fluvial Corridor Toolbox</description>
+        <version>1.0.11</version>
+        <trusted>True</trusted>
+        <qgis_minimum_version>3.28.0</qgis_minimum_version>
+        <qgis_maximum_version>3.99.0</qgis_maximum_version>
+        <homepage>https://evs-gis.github.io/fct-qgis/</homepage>
+        <file_name>FluvialCorridorToolbox.1.0.11.zip</file_name>
+        <icon>https://evs-gis.github.io/fct-qgis/repo/icon.png</icon>
+        <author_name>Christophe Rousson, Samuel Dunesme</author_name>
+        <download_url>https://github.com/EVS-GIS/fct-qgis/releases/download/v1.0.11/FluvialCorridorToolbox.1.0.11.zip</download_url>
+        <uploaded_by>sdunesme</uploaded_by>
+        <create_date>2023-06-08</create_date>
+        <update_date>2023-06-08</update_date>
+        <experimental>False</experimental>
+        <deprecated>False</deprecated>
+        <tracker>https://github.com/EVS-GIS/fct-qgis/issues</tracker>
+        <repository>https://github.com/EVS-GIS/fct-qgis.git</repository>
+        <tags>fluvial, vector, analysis, processing, hydromorphology, dgo, river, evs</tags>
+        <downloads>1</downloads>
+        <average_vote>5</average_vote>
+        <rating_votes>1</rating_votes>
+        <external_dependencies/>
+        <server>False</server>
+    </pyqgis_plugin>
     <pyqgis_plugin name="Fluvial Corridor Toolbox" version="1.0.10" plugin_id="7">
         <description>Fluvial Corridor Toolbox</description>
         <version>1.0.10</version>
