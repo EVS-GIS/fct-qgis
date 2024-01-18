@@ -98,6 +98,10 @@ class WatershedMax(AlgorithmMetadata, QgsProcessingAlgorithm):
         # width = target_ds.RasterXSize
         # height = target_ds.RasterYSize
 
+        if not nodata:
+            feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+            return {}
+
         ref_ds = gdal.OpenEx(ref_lyr.dataProvider().dataSourceUri(), gdal.GA_ReadOnly)
         reference = ref_ds.GetRasterBand(1).ReadAsArray()
 

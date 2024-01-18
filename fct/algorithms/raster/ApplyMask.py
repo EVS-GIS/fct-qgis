@@ -77,6 +77,10 @@ class ApplyMask(AlgorithmMetadata, QgsProcessingAlgorithm):
         ds = gdal.Open(raster.dataProvider().dataSourceUri(), gdal.GA_ReadOnly)
         nodata = ds.GetRasterBand(band).GetNoDataValue()
 
+        if not nodata:
+            feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+            return {}
+        
         bbox = raster.extent()
         # cellsize = (bbox.xMaximum() - bbox.xMinimum()) / raster1.width()
         # width = round((bbox.xMaximum() - bbox.xMinimum()) / cellsize)

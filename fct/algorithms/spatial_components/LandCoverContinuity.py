@@ -91,6 +91,10 @@ class LandCoverContinuity(AlgorithmMetadata, QgsProcessingAlgorithm):
         nodata = landcover_ds.GetRasterBand(1).GetNoDataValue()
         # height, width = landcover.shape
 
+        if not nodata:
+            feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+            return {}
+        
         stream_ds = gdal.Open(stream_lyr.dataProvider().dataSourceUri())
         stream = stream_ds.GetRasterBand(1).ReadAsArray()
         assert(stream.shape == landcover.shape)

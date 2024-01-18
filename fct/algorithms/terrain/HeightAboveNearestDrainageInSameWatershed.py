@@ -176,6 +176,10 @@ class HeightAboveNearestDrainageInSameWatershed(AlgorithmMetadata, QgsProcessing
         transform = elevations_ds.GetGeoTransform()
         height, width = elevations.shape
 
+        if not nodata:
+            feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+            return {}
+        
         feedback.setProgressText('Read watersheds')
 
         watersheds_ds = gdal.Open(watersheds_lyr.dataProvider().dataSourceUri())

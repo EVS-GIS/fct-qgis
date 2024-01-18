@@ -80,6 +80,11 @@ class Watershed(AlgorithmMetadata, QgsProcessingAlgorithm):
 
         target_ds = gdal.Open(target_lyr.dataProvider().dataSourceUri())
         nodata = target_ds.GetRasterBand(1).GetNoDataValue()
+
+        if not nodata:
+            feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+            return {}
+        
         # TODO check target dtype
         target = np.float32(target_ds.GetRasterBand(1).ReadAsArray())
 

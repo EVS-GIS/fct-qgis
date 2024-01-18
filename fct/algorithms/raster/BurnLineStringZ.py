@@ -118,6 +118,10 @@ class BurnLineStringZ(AlgorithmMetadata, QgsProcessingAlgorithm):
         src_nodata = datasource.GetRasterBand(band).GetNoDataValue()
         transform = datasource.GetGeoTransform()
 
+        if not nodata:
+            feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+            return {}
+        
         def worldtopixel(x, y):
             """
             Transform real world coordinates (x, y)

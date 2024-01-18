@@ -68,6 +68,10 @@ class FlowDirection(AlgorithmMetadata, QgsProcessingAlgorithm):
         elevations = elevations_ds.GetRasterBand(1).ReadAsArray()
         nodata = elevations_ds.GetRasterBand(1).GetNoDataValue()
 
+        if not nodata:
+            feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+            return {}
+        
         flow = flowdir(elevations, nodata)
 
         if feedback.isCanceled():

@@ -94,6 +94,10 @@ class FillDepressions(AlgorithmMetadata, QgsProcessingAlgorithm):
         nodata = elevations_ds.GetRasterBand(1).GetNoDataValue()
         transform = elevations_ds.GetGeoTransform()
 
+        if not nodata:
+            feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+            return {}
+        
         if flow_output:
             flow = np.zeros_like(elevations, dtype=np.int16)
         else:

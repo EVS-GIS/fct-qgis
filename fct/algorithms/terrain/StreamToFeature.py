@@ -112,6 +112,10 @@ class StreamToFeature(AlgorithmMetadata, QgsProcessingAlgorithm):
             height, width = elevations.shape
             wkbType = QgsWkbTypes.LineStringZ
 
+            if not nodata:
+                feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+                return {}
+        
             def get_elevation(px, py):
                 """
                 Return elevation at pixel (px, py)

@@ -106,6 +106,10 @@ class SignedShortestDistance(AlgorithmMetadata, QgsProcessingAlgorithm):
         transform = distance_ds.GetGeoTransform()
         height, width = distance.shape
 
+        if not nodata:
+            feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+            return {}
+        
         feedback.setProgressText('Build point/segment index')
 
         segments = list()

@@ -168,6 +168,10 @@ class RelativeDEMByFlow(AlgorithmMetadata, QgsProcessingAlgorithm):
         transform = elevations_ds.GetGeoTransform()
         height, width = elevations.shape
 
+        if not nodata:
+            feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+            return {}
+        
         feedback.setProgressText('Read flow direction')
 
         flow_ds = gdal.OpenEx(flow_lyr.dataProvider().dataSourceUri())

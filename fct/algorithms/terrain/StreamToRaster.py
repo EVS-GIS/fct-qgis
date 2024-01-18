@@ -177,6 +177,10 @@ class StreamToRaster(AlgorithmMetadata, QgsProcessingAlgorithm):
         width = template_ds.RasterXSize
         height = template_ds.RasterYSize
 
+        if not nodata:
+            feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+            return {}
+        
         feedback.setProgressText('Rasterize stream vectors')
         total = 100.0 / layer.featureCount() if layer.featureCount() else 0.0
 

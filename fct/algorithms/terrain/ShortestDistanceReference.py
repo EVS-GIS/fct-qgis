@@ -168,6 +168,10 @@ class ShortestDistanceReference(AlgorithmMetadata, QgsProcessingAlgorithm):
         resolution_y = -transform[5]
         height, width = data.shape
 
+        if not nodata:
+            feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+            return {}
+        
         feedback.setProgressText('Calculate shortest distance')
 
         origins = np.float32(data != fill_value)

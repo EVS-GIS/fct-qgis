@@ -161,6 +161,10 @@ class ShortestDistance(AlgorithmMetadata, QgsProcessingAlgorithm):
         resolution_y = -transform[5]
         height, width = elevations.shape
 
+        if not nodata:
+            feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+            return {}
+        
         feedback.setProgressText('Build stream point index')
 
         total = 100.0 / stream_layer.featureCount() if stream_layer.featureCount() else 0.0
