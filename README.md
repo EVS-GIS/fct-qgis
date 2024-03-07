@@ -17,11 +17,7 @@ This branch is under development and is an open effort to support QGis 3 (curren
 
 ## Quick install
 
-To quickly install the latest released version, add the following repository to your QGIS plugin repositories :
-
-    https://evs-gis.github.io/fct-qgis/repo/plugins.xml
-
-Then install the Fluvial Corridor Toolbox plugin with the QGIS plugin manager.
+The latest stable release of the Fluvial Corridor Toolbox is now available from the official QGIS plugins repository. 
 
 ## Acknowledgements
 
