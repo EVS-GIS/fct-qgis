@@ -181,7 +181,7 @@ class RelativeDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
         nodata = elevations_ds.GetRasterBand(1).GetNoDataValue()
         
         if not nodata:
-            feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+            feedback.reportError(self.tr('Nodata value should be set in the raster properties and different from 0.'), True)
             return {}
             
         transform = elevations_ds.GetGeoTransform()
