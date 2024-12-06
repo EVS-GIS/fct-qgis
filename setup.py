@@ -23,8 +23,9 @@ setup(
     include_package_data=True,
     install_requires=[
         'Click>=7.0',
-        'numpy==1.20.0',
-        'scipy==1.3.3',
+        #TODO: check versions in OSGeo4W installer
+        'numpy>=1.26.3',
+        'scipy>=1.11.4',
         'plotly>=3.3'
     ],
     entry_points='''
