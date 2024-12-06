@@ -15,7 +15,7 @@ LineStringZ Slope
 
 import numpy as np
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsGeometry,
     QgsLineString,
     QgsMultiLineString,
@@ -34,19 +34,19 @@ class LineStringZSlope(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
 
     METADATA = AlgorithmMetadata.read(__file__, 'LineStringZSlope')
 
-    def inputLayerTypes(self): #pylint: disable=no-self-use,missing-docstring
+    def inputLayerTypes(self): 
         return [QgsProcessing.TypeVectorLine]
 
-    def outputName(self): #pylint: disable=missing-docstring
+    def outputName(self): 
         return self.tr('LineStrings with Slope Coordinate')
 
-    def outputWkbType(self, inputWkbType): #pylint: disable=no-self-use,missing-docstring
+    def outputWkbType(self, inputWkbType): 
         return inputWkbType
 
-    def supportInPlaceEdit(self, layer): #pylint: disable=unused-argument,no-self-use,missing-docstring
+    def supportInPlaceEdit(self, layer): 
         return False
 
-    def prepareAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def prepareAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, 'INPUT', context)
 
@@ -60,7 +60,7 @@ class LineStringZSlope(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
 
         return True
 
-    def processFeature(self, feature, context, feedback): #pylint: disable=no-self-use,unused-argument,missing-docstring
+    def processFeature(self, feature, context, feedback): 
 
         def transform(geometry):
             """

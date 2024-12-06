@@ -16,7 +16,7 @@ TopologicalStreamBurn
 from osgeo import gdal
 import numpy as np
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterNumber,
@@ -57,7 +57,7 @@ class BurnFill(AlgorithmMetadata, QgsProcessingAlgorithm):
     OUTPUT = 'OUTPUT'
     FILLED = 'FILLED'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.ELEVATIONS,
@@ -91,18 +91,18 @@ class BurnFill(AlgorithmMetadata, QgsProcessingAlgorithm):
             optional=True,
             createByDefault=False))
 
-    def canExecute(self): #pylint: disable=unused-argument,missing-docstring
+    def canExecute(self): 
 
         try:
-            # pylint: disable=import-error,unused-variable
+            
             from ...lib.terrain_analysis import burnfill
             return True, ''
         except ImportError:
             return False, self.tr('Missing dependency: FCT terrain_analysis')
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
-        # pylint:disable=import-error,no-name-in-module
+        
         from ...lib.terrain_analysis import burnfill
 
         elevations_lyr = self.parameterAsRasterLayer(parameters, self.ELEVATIONS, context)

@@ -13,11 +13,11 @@ ProjectPointsAlongLine
 ***************************************************************************
 """
 
-from qgis.PyQt.QtCore import ( #pylint: disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( #pylint: disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeatureRequest,
     QgsFeature,
     QgsField,
@@ -80,7 +80,7 @@ class ProjectPointOnNearestLine(AlgorithmMetadata, QgsProcessingAlgorithm):
     INCLUDE_NOT_MATCHING = 'INCLUDE_NOT_MATCHING'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -108,7 +108,7 @@ class ProjectPointOnNearestLine(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Projected Points'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         lines = self.parameterAsSource(parameters, self.LINES, context)

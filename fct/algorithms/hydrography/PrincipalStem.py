@@ -15,7 +15,7 @@ Export Main Drain
 
 from collections import defaultdict
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsFeatureRequest,
     QgsProcessing,
     QgsProcessingAlgorithm,
@@ -43,7 +43,7 @@ class PrincipalStem(AlgorithmMetadata, QgsProcessingAlgorithm):
     COST = 'COST'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -77,7 +77,7 @@ class PrincipalStem(AlgorithmMetadata, QgsProcessingAlgorithm):
             QgsProcessing.TypeVectorLine))
 
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)

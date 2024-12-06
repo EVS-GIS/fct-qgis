@@ -17,13 +17,12 @@ extensions = [
 
 setup(
     name='fct-qgis',
-    version='1.0.10',
+    version='1.1.0',
     packages=find_packages(),
     ext_modules=cythonize(extensions),
     include_package_data=True,
     install_requires=[
         'Click>=7.0',
-        #TODO: check versions in OSGeo4W installer
         'numpy>=1.26.3',
         'scipy>=1.11.4',
         'plotly>=3.3'

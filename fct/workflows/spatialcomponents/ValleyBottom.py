@@ -118,7 +118,7 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.OUT_VB,
             self.tr('Output valley bottom')))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
         
         # Step 1: Detrend DEM
 

@@ -13,7 +13,7 @@ Set M Coordinate From Measure Field
 ***************************************************************************
 """
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsGeometry,
     QgsLineString,
     QgsMultiLineString,
@@ -40,7 +40,7 @@ class SetMCoordFromMeasureField(AlgorithmMetadata, QgsProcessingFeatureBasedAlgo
     DIRECTION_FORWARD = 0
     DIRECTION_REVERSE = 1
 
-    def initParameters(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initParameters(self, configuration): 
 
         self.addParameter(QgsProcessingParameterField(
             self.MEASURE_FIELD,
@@ -55,13 +55,13 @@ class SetMCoordFromMeasureField(AlgorithmMetadata, QgsProcessingFeatureBasedAlgo
             options=[self.tr(option) for option in ['Forward', 'Reverse']],
             defaultValue=1))
 
-    def inputLayerTypes(self): #pylint: disable=no-self-use,missing-docstring
+    def inputLayerTypes(self): 
         return [QgsProcessing.TypeVectorLine]
 
-    def outputName(self): #pylint: disable=missing-docstring
+    def outputName(self): 
         return self.tr('Measured Lines')
 
-    def outputWkbType(self, inputWkbType): #pylint: disable=no-self-use,missing-docstring
+    def outputWkbType(self, inputWkbType): 
 
         if QgsWkbTypes.hasM(inputWkbType):
             return inputWkbType
@@ -73,18 +73,18 @@ class SetMCoordFromMeasureField(AlgorithmMetadata, QgsProcessingFeatureBasedAlgo
 
         return out
 
-    def supportInPlaceEdit(self, layer): #pylint: disable=no-self-use,missing-docstring
+    def supportInPlaceEdit(self, layer): 
 
         return super().supportInPlaceEdit(layer) \
             and QgsWkbTypes.hasM(layer.wkbType())
 
-    def prepareAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def prepareAlgorithm(self, parameters, context, feedback): 
 
         self.measure_field = self.parameterAsString(parameters, self.MEASURE_FIELD, context)
         self.direction = self.parameterAsInt(parameters, self.MEASURE_DIRECTION, context)
         return True
 
-    def processFeature(self, feature, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processFeature(self, feature, context, feedback): 
 
         measure = feature.attribute(self.measure_field)
         geometry = feature.geometry()

@@ -175,7 +175,7 @@ def test():
 
     class Feedback(object):
 
-        #pylint:disable=missing-docstring,no-self-use
+        
 
         def setProgressText(self, msg):
             print(msg)

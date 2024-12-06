@@ -42,7 +42,7 @@ class Segmentation(AlgorithmMetadata, QgsProcessingAlgorithm):
     STEP = 'STEP'
     CENTERLINE = 'CENTERLINE'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -66,7 +66,7 @@ class Segmentation(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Segmented features')))
 
 
-    def prepareAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def prepareAlgorithm(self, parameters, context, feedback): 
 
         self.segStep = self.parameterAsDouble(parameters, self.STEP, context)
         self.layer = self.parameterAsVectorLayer(parameters, self.INPUT, context)
@@ -97,7 +97,7 @@ class Segmentation(AlgorithmMetadata, QgsProcessingAlgorithm):
         feedback.reportError(self.tr('Unsupported geometry type'), True)
         return False
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
         
         if self.input_type == 'Polygon':
 

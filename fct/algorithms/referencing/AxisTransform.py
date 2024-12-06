@@ -120,7 +120,7 @@ class AxisTransform(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
     LINEAR_REFERENCE = 'LINEAR_REFERENCE'
     AXIS_PK_FIELD = 'AXIS_ID_FIELD'
 
-    def initParameters(self, configuration=None): #pylint: disable=unused-argument,missing-docstring
+    def initParameters(self, configuration=None): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.LINEAR_REFERENCE,
@@ -134,27 +134,27 @@ class AxisTransform(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
             type=QgsProcessingParameterField.Numeric,
             defaultValue='GID'))
 
-    def inputLayerTypes(self): #pylint: disable=no-self-use,missing-docstring
+    def inputLayerTypes(self): 
         return [QgsProcessing.TypeVectorLine]
 
-    def outputName(self): #pylint: disable=missing-docstring
+    def outputName(self): 
         return self.tr('Transformed')
 
-    def outputWkbType(self, inputWkbType): #pylint: disable=no-self-use,missing-docstring
+    def outputWkbType(self, inputWkbType): 
         return QgsWkbTypes.addM(inputWkbType)
 
-    # def outputFields(self, inputFields): #pylint: disable=no-self-use,missing-docstring
+    # def outputFields(self, inputFields): 
     #     appendUniqueField(QgsField('AXIS', QVariant.Int), inputFields)
     #     appendUniqueField(QgsField('MLOC', QVariant.Double), inputFields)
     #     return inputFields
 
-    # def outputCrs(self, inputCrs): #pylint: disable=no-self-use,missing-docstring,unused-argument
+    # def outputCrs(self, inputCrs): 
     #     return QgsCoordinateReferenceSystem.fromEpsgId(6505)
 
-    def supportInPlaceEdit(self, layer): #pylint: disable=no-self-use,missing-docstring,unused-argument
+    def supportInPlaceEdit(self, layer): 
         return False
 
-    def prepareAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def prepareAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, 'INPUT', context)
         ref_layer = self.parameterAsSource(parameters, self.LINEAR_REFERENCE, context)
@@ -204,7 +204,7 @@ class AxisTransform(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
 
         return True
 
-    def processFeature(self, feature, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processFeature(self, feature, context, feedback): 
 
         vertices = list()
 

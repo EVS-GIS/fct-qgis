@@ -15,7 +15,7 @@ SelectConnectedComponents - Select Connected Components
 
 from collections import defaultdict, Counter
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterEnum,
@@ -41,7 +41,7 @@ class SelectHeadwaterBasins(AlgorithmMetadata, QgsProcessingAlgorithm):
     ID_FIELD = 'ID_FIELD'
     DOWNSTREAM_FIELD = 'DOWNSTREAM_FIELD'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -67,7 +67,7 @@ class SelectHeadwaterBasins(AlgorithmMetadata, QgsProcessingAlgorithm):
         #     self.tr('Strahler Order'),
         #     QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsVectorLayer(parameters, self.INPUT, context)
         id_field = self.parameterAsString(parameters, self.ID_FIELD, context)

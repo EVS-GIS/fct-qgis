@@ -22,7 +22,7 @@ from collections import defaultdict
 from itertools import chain
 import click
 
-# pylint: disable=import-error,no-name-in-module,wrong-import-position
+
 
 import jinja2
 import bleach

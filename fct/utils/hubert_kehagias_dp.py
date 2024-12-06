@@ -218,7 +218,7 @@ class HubertKehagiasSegmentation(object):
 
 if __name__ == "__main__":
 
-    #pylint: disable=wrong-import-position,wrong-import-order
+    
 
     import doctest
     doctest.testmod()

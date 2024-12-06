@@ -13,7 +13,7 @@ Helper functions for processing algorithms
 ***************************************************************************
 """
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFields
 )
 

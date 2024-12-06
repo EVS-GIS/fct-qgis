@@ -17,7 +17,7 @@ import numpy as np
 from osgeo import gdal
 # import osr
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessingAlgorithm,
     QgsProcessingParameterDistance,
     QgsProcessingParameterRasterDestination,
@@ -45,7 +45,7 @@ class FillDepressions(AlgorithmMetadata, QgsProcessingAlgorithm):
     OUTPUT = 'OUTPUT'
     FLOW = 'FLOW'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.DEM,
@@ -67,18 +67,18 @@ class FillDepressions(AlgorithmMetadata, QgsProcessingAlgorithm):
             optional=True,
             createByDefault=False))
 
-    def canExecute(self): #pylint: disable=unused-argument,missing-docstring
+    def canExecute(self): 
 
         try:
-            # pylint: disable=import-error,unused-variable
+            
             from ...lib.terrain_analysis import fillsinks
             return True, ''
         except ImportError:
             return False, self.tr('Missing dependency: FCT terrain_analysis')
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
-        # pylint:disable=import-error,no-name-in-module
+        
         from ...lib.terrain_analysis import fillsinks
 
         elevations_lyr = self.parameterAsRasterLayer(parameters, self.DEM, context)

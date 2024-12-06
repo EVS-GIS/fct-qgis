@@ -15,7 +15,7 @@ Anisotropic Diffusion (Perona-Malik) Filter
 
 from osgeo import gdal
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessingAlgorithm,
     QgsProcessingParameterBand,
     QgsProcessingParameterEnum,
@@ -24,7 +24,7 @@ from qgis.core import ( # pylint:disable=import-error,no-name-in-module
     QgsProcessingParameterRasterLayer
 )
 
-from processing.algs.gdal.GdalUtils import GdalUtils # pylint:disable=import-error
+from processing.algs.gdal.GdalUtils import GdalUtils 
 
 from ...lib.anisotropic import anisotropic_diffusion
 from ..metadata import AlgorithmMetadata
@@ -61,7 +61,7 @@ class AnisotropicDiffusionFilter(AlgorithmMetadata, QgsProcessingAlgorithm):
     METHOD = 'METHOD'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, config=None): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, config=None): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.INPUT,
@@ -109,7 +109,7 @@ class AnisotropicDiffusionFilter(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.OUTPUT,
             self.tr('Filtered (Anisotropic Diffusion)')))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         raster = self.parameterAsRasterLayer(parameters, self.INPUT, context)
         bands = self.parameterAsInts(parameters, self.BANDS, context)

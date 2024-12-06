@@ -17,7 +17,7 @@ FixLinkDirection - Check links are oriented downslope and reverse
 from collections import Counter, defaultdict, namedtuple
 from heapq import heappop, heappush
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsGeometry,
     QgsProcessing,
     # QgsProcessingException,
@@ -66,7 +66,7 @@ class FixLinkOrientation(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
     OUTLETS_DEF_SELECTION = 1
     OUTLETS_DEF_DANGLING = 2
 
-    def initParameters(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initParameters(self, configuration): 
 
         self.addParameter(QgsProcessingParameterBoolean(
             self.DRYRUN,
@@ -108,19 +108,19 @@ class FixLinkOrientation(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
             type=QgsProcessingParameterField.Numeric,
             defaultValue='GID'))
 
-    def inputLayerTypes(self): #pylint: disable=no-self-use,missing-docstring
+    def inputLayerTypes(self): 
         return [QgsProcessing.TypeVectorLine]
 
-    def outputName(self): #pylint: disable=missing-docstring
+    def outputName(self): 
         return self.tr('Oriented Network')
 
-    def outputWkbType(self, inputWkbType): #pylint: disable=no-self-use,missing-docstring
+    def outputWkbType(self, inputWkbType): 
         return inputWkbType
 
-    # def supportInPlaceEdit(self, layer): #pylint: disable=no-self-use,missing-docstring
+    # def supportInPlaceEdit(self, layer): 
     #     return super().supportInPlaceEdit(layer)
 
-    def prepareAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def prepareAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         nodes = self.parameterAsSource(parameters, self.NODES, context)
@@ -189,7 +189,7 @@ class FixLinkOrientation(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
 
         return outlets
 
-    def processNetwork(self, parameters, context, feedback): #pylint: disable=unused-argument
+    def processNetwork(self, parameters, context, feedback): 
         """
         1. index links for undirected graph traversal
         2. sort nodes by z ascending
@@ -403,7 +403,7 @@ class FixLinkOrientation(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
         feedback.pushInfo('%d features need to be reversed' % len(marked))
         self.marked = marked
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         self.processNetwork(parameters, context, feedback)
 
@@ -415,7 +415,7 @@ class FixLinkOrientation(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
         # processFeature() for each feature in layer
         return super().processAlgorithm(parameters, context, feedback)
 
-    def processFeature(self, feature, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processFeature(self, feature, context, feedback): 
 
         from_node_field = self.parameters.from_node_field
         to_node_field = self.parameters.to_node_field

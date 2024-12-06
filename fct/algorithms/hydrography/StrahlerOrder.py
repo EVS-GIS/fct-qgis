@@ -15,11 +15,11 @@ StrahlerOrder - Horton-Strahler stream order of each link in a stream network
 
 from collections import defaultdict, Counter
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -46,7 +46,7 @@ class StrahlerOrder(AlgorithmMetadata, QgsProcessingAlgorithm):
     AXIS_FIELD = 'AXIS_FIELD'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -80,7 +80,7 @@ class StrahlerOrder(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Strahler Order'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, fb): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, fb): 
 
         feedback = QgsProcessingMultiStepFeedback(3, fb)
 

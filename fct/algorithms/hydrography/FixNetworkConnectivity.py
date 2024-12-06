@@ -22,11 +22,11 @@ from functools import (
 
 from collections import defaultdict, Counter
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module,import-error
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=no-name-in-module,import-error
+from qgis.core import ( 
     QgsFeature,
     QgsFeatureRequest,
     QgsField,
@@ -55,7 +55,7 @@ class FixNetworkConnectivity(AlgorithmMetadata, QgsProcessingAlgorithm):
     TO_NODE_FIELD = 'TO_NODE_FIELD'
     COPYFIELDS = 'COPYFIELDS'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -92,7 +92,7 @@ class FixNetworkConnectivity(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Fixed Network'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         subset = self.parameterAsSource(parameters, self.SUBSET, context)

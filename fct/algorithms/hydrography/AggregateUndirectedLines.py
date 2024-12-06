@@ -19,11 +19,11 @@ from collections import (
     namedtuple
 )
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsExpression,
     QgsLineString,
     QgsFeature,
@@ -57,7 +57,7 @@ class AggregateUndirectedLines(AlgorithmMetadata, QgsProcessingAlgorithm):
     TO_NODE_FIELD = 'TO_NODE_FIELD'
     MEASURE_FIELD = 'MEASURE_FIELD'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -90,7 +90,7 @@ class AggregateUndirectedLines(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Aggregated Lines'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         category_field = self.parameterAsString(parameters, self.CATEGORY_FIELD, context)

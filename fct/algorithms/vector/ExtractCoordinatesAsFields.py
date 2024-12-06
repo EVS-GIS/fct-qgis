@@ -56,20 +56,20 @@ class ExtractCoordinatesAsFields(AlgorithmMetadata, QgsProcessingFeatureBasedAlg
 
     METADATA = AlgorithmMetadata.read(__file__, 'ExtractCoordinatesAsFields')
 
-    def inputLayerTypes(self): #pylint: disable=no-self-use,missing-docstring
+    def inputLayerTypes(self): 
         return [QgsProcessing.TypeVectorPoint]
 
-    def outputName(self): #pylint: disable=missing-docstring
+    def outputName(self): 
         return self.tr('Extracted Coordinates')
 
-    def outputFields(self, inputFields): #pylint: disable=no-self-use,missing-docstring
+    def outputFields(self, inputFields): 
         appendUniqueField(QgsField('X', QVariant.Double), inputFields)
         appendUniqueField(QgsField('Y', QVariant.Double), inputFields)
         appendUniqueField(QgsField('Z', QVariant.Double), inputFields)
         appendUniqueField(QgsField('M', QVariant.Double), inputFields)
         return inputFields
 
-    def processFeature(self, feature, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processFeature(self, feature, context, feedback): 
 
         geometry = feature.geometry()
         point = geometry.vertexAt(0)

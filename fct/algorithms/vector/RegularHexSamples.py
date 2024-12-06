@@ -15,11 +15,11 @@ RegularHexPoints - Generate a regular hexagon grid of points
 
 from math import sqrt, floor
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsGeometry,
     QgsFeature,
     QgsField,
@@ -60,7 +60,7 @@ class RegularHexSamples(AlgorithmMetadata, QgsProcessingAlgorithm):
     DISTANCE = 'DISTANCE'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -83,7 +83,7 @@ class RegularHexSamples(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Regular Hex Points'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         pk_field = self.parameterAsString(parameters, self.PK_FIELD, context)

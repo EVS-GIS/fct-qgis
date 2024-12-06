@@ -15,7 +15,7 @@ Transect By Point
 
 import math
 
-from qgis.core import ( #pylint: disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsFeatureRequest,
     QgsGeometry,
@@ -65,7 +65,7 @@ class TransectByPoint(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
     LENGTH = 'LENGTH'
     SEARCH_DISTANCE = 'SEARCH_DISTANCE'
 
-    def initParameters(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initParameters(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.LINES,
@@ -92,19 +92,19 @@ class TransectByPoint(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
             parentParameterName='INPUT',
             defaultValue=50.0))
 
-    def inputLayerTypes(self): #pylint: disable=no-self-use,missing-docstring
+    def inputLayerTypes(self): 
         return [QgsProcessing.TypeVectorPoint]
 
-    def outputName(self): #pylint: disable=missing-docstring
+    def outputName(self): 
         return self.tr('Transects')
 
-    def outputWkbType(self, inputWkbType): #pylint: disable=no-self-use,unused-argument,missing-docstring
+    def outputWkbType(self, inputWkbType): 
         return QgsWkbTypes.LineString
 
-    def supportInPlaceEdit(self, layer): #pylint: disable=unused-argument,no-self-use,missing-docstring
+    def supportInPlaceEdit(self, layer): 
         return False
 
-    def prepareAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def prepareAlgorithm(self, parameters, context, feedback): 
 
         self.dynamic_parameters = dict()
         self.registerDynamicParameterAsDouble(parameters, self.LENGTH, context)
@@ -144,7 +144,7 @@ class TransectByPoint(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
 
             raise QgsProcessingException('Unknown parameter %s' % name)
 
-    def processFeature(self, feature, context, feedback): #pylint: disable=no-self-use,unused-argument,missing-docstring
+    def processFeature(self, feature, context, feedback): 
 
         transects = []
         length = self.dynamicParameterAsDouble(self.LENGTH, context)

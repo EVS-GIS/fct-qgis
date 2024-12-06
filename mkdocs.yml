@@ -39,7 +39,7 @@ nav:
   - tutorials/index.md
   - Algorithms Reference:
     # Copy output of autodoc.py here
-    - Hydrography:
+    - Hydrographic Network:
       - Index: algorithms/hydrography/index.md
       - algorithms/hydrography/AggregateStreamSegments.md
       - algorithms/hydrography/AggregateUndirectedLines.md

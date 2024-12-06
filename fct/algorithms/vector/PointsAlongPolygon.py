@@ -15,11 +15,11 @@ PointsAlongPolygon - Generate a point at the middle of each segment
 
 import math
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsGeometry,
     QgsFeature,
     QgsFeatureSink,
@@ -51,7 +51,7 @@ class PointsAlongPolygon(AlgorithmMetadata, QgsProcessingAlgorithm):
     START_OFFSET = 'START_OFFSET'
     END_OFFSET = 'END_OFFSET'
 
-    def initAlgorithm(self, configuration=None): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration=None): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -70,7 +70,7 @@ class PointsAlongPolygon(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Points'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         source = self.parameterAsSource(parameters, self.INPUT, context)
         if source is None:
