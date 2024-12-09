@@ -40,7 +40,7 @@ jobs:
     - name: Check if there are any changes
       id: verify_diff
       run: |
-        git diff --quiet . || echo "changed=true" >> $GITHUB_OUTPUT
+        git status --porcelain || echo "changed=true" >> $GITHUB_OUTPUT
           
     - name: GIT Commit Build Artifacts
       if: steps.verify_diff.outputs.changed == 'true'
@@ -77,7 +77,7 @@ jobs:
     - name: Check if there are any changes
       id: verify_diff
       run: |
-        git diff --quiet . || echo "changed=true" >> $GITHUB_OUTPUT
+        git status --porcelain || echo "changed=true" >> $GITHUB_OUTPUT
 
     - name: GIT Commit Build Artifacts
       if: steps.verify_diff.outputs.changed == 'true'
