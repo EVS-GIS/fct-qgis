@@ -42,12 +42,19 @@ jobs:
         python -m pip install --upgrade pip
         pip install wheel setuptools numpy cython
         pip install --no-build-isolation -e .
-          
-    - name: GIT Commit Build Artifacts
+
+    - name: Check for changes
+      id: git_diff
       run: |
         git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
         git config --global user.email "github-actions@users.noreply.github.com"
         git pull
+        git diff --exit-code || echo "has_changes=true" >> $GITHUB_ENV
+
+    - name: Commit and push build artifacts
+      if: env.has_changes == 'true'
+      run: |
         git add -A
-        git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
+        git commit -m "${{ env.CI_COMMIT_MESSAGE }}"
         git push
+        
