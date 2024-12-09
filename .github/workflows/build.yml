@@ -18,12 +18,12 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python: [3.10, 3.11, 3.12, 3.13]
+        python: ["3.10", "3.11", "3.12", "3.13"]
     
     runs-on: ${{ matrix.os }}
     
     env: 
-      CI_COMMIT_MESSAGE: CI Build Extension for python310-linux
+      CI_COMMIT_MESSAGE: CI Build Extension ${{ matrix.os }}-${{ matrix.python }}
       CI_COMMIT_AUTHOR: github-actions[bot]
 
     steps:
@@ -31,7 +31,7 @@ jobs:
       with:
         ref: ${{ github.head_ref }}
         
-    - name: Set up Python 3.10
+    - name: Set up Python
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python }}
