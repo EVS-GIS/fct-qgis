@@ -40,19 +40,15 @@ jobs:
     - name: Install packages
       run: |
         python -m pip install --upgrade pip
-        pip install wheel numpy cython
+        pip install wheel setuptools numpy cython
         pip install --no-build-isolation -e .
-
-    - name: Check if there are any changes
-      id: git_status
-      run: |
-        echo "$(git status --porcelain)"  >> "$GITHUB_OUTPUT"; 
           
     - name: GIT Commit Build Artifacts
       if: steps.git_status.outputs != ''
       run: |
         git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
         git config --global user.email "github-actions@users.noreply.github.com"
+        git pull
         git add -A
         git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
         git push
