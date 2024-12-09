@@ -44,7 +44,6 @@ jobs:
         pip install --no-build-isolation -e .
           
     - name: GIT Commit Build Artifacts
-      if: steps.git_status.outputs != ''
       run: |
         git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
         git config --global user.email "github-actions@users.noreply.github.com"
