@@ -48,12 +48,12 @@ jobs:
       run: |
         git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
         git config --global user.email "github-actions@users.noreply.github.com"
-        git pull
         git diff --exit-code || echo "has_changes=true" >> $GITHUB_ENV
 
     - name: Commit and push build artifacts
       if: env.has_changes == 'true'
       run: |
+        git pull origin ${{ github.head_ref }}
         git add -A
         git commit -m "${{ env.CI_COMMIT_MESSAGE }}"
         git push
