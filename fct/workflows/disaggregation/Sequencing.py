@@ -15,7 +15,7 @@ Sequencing
 
 import os
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsProcessingModelAlgorithm
 )
 

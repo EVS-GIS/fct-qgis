@@ -17,11 +17,11 @@ FocalMean - Computes mean value of raster data in a fixed window
 import warnings
 import numpy as np
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -52,7 +52,7 @@ class FocalMean(AlgorithmMetadata, QgsProcessingAlgorithm):
     FIELD = 'FIELD'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.INPUT,
@@ -81,7 +81,7 @@ class FocalMean(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Focal Mean'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         raster = self.parameterAsRasterLayer(parameters, self.INPUT, context)
         points = self.parameterAsSource(parameters, self.POINTS, context)

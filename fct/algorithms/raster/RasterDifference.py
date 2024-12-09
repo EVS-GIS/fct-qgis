@@ -13,7 +13,7 @@ RasterDifference
 ***************************************************************************
 """
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsProcessingAlgorithm,
     QgsProcessingException,
     QgsProcessingParameterBand,
@@ -22,12 +22,12 @@ from qgis.core import ( # pylint:disable=no-name-in-module
     QgsProcessingParameterRasterLayer
 )
 
-from qgis.analysis import ( # pylint:disable=no-name-in-module
+from qgis.analysis import ( 
     QgsRasterCalculator,
     QgsRasterCalculatorEntry
 )
 
-from processing.algs.gdal.GdalUtils import GdalUtils # pylint:disable=import-error
+from processing.algs.gdal.GdalUtils import GdalUtils 
 from ..metadata import AlgorithmMetadata
 
 class RasterDifference(AlgorithmMetadata, QgsProcessingAlgorithm):
@@ -45,7 +45,7 @@ class RasterDifference(AlgorithmMetadata, QgsProcessingAlgorithm):
     OUTPUT = 'OUTPUT'
     USE_GDAL = 'USE_GDAL'
 
-    def initAlgorithm(self, config=None): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, config=None): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.RASTER1,
@@ -76,7 +76,7 @@ class RasterDifference(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.OUTPUT,
             self.tr('Difference')))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         use_gdal = self.parameterAsBool(parameters, self.USE_GDAL, context)
 
@@ -85,7 +85,7 @@ class RasterDifference(AlgorithmMetadata, QgsProcessingAlgorithm):
 
         return self.processWithRasterCalculator(parameters, context, feedback)
 
-    def processWithGDAL(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processWithGDAL(self, parameters, context, feedback): 
 
         from osgeo import gdal
         import numpy as np
@@ -143,7 +143,7 @@ class RasterDifference(AlgorithmMetadata, QgsProcessingAlgorithm):
 
         return {self.OUTPUT: output}
 
-    def processWithRasterCalculator(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processWithRasterCalculator(self, parameters, context, feedback): 
 
         raster1 = self.parameterAsRasterLayer(parameters, self.RASTER1, context)
         band1 = self.parameterAsInt(parameters, self.BAND1, context)

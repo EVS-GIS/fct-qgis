@@ -15,11 +15,11 @@ Knick Points Detection
 
 import math
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -65,7 +65,7 @@ class KnickPoints(AlgorithmMetadata, QgsProcessingAlgorithm):
     MIN_RSE_TOTAL = 'MIN_RSE_TOTAL'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -99,7 +99,7 @@ class KnickPoints(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Knickpoints'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         nodata = self.parameterAsDouble(parameters, self.NODATA, context)

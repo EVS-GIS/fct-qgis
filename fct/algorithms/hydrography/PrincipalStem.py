@@ -15,7 +15,7 @@ Export Main Drain
 
 from collections import defaultdict
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsFeatureRequest,
     QgsProcessing,
     QgsProcessingAlgorithm,
@@ -43,7 +43,7 @@ class PrincipalStem(AlgorithmMetadata, QgsProcessingAlgorithm):
     COST = 'COST'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -64,18 +64,12 @@ class PrincipalStem(AlgorithmMetadata, QgsProcessingAlgorithm):
             type=QgsProcessingParameterField.Numeric,
             defaultValue='NODEB'))
 
-        param_cost = QgsProcessingParameterNumber(
+        self.addParameter(QgsProcessingParameterField(
             self.COST,
-            self.tr('Traversal Cost'),
-            defaultValue=0.0)
-        param_cost.setIsDynamic(True)
-        param_cost.setDynamicLayerParameterName(self.COST)
-        param_cost.setDynamicPropertyDefinition(
-            QgsPropertyDefinition(
-                self.COST,
-                self.tr('Traversal Cost'),
-                QgsPropertyDefinition.Double))
-        self.addParameter(param_cost)
+            self.tr('Traversal Cost Field'),
+            parentLayerParameterName=self.INPUT,
+            type=QgsProcessingParameterField.Numeric,
+            defaultValue='COST'))
 
         self.addParameter(QgsProcessingParameterFeatureSink(
             self.OUTPUT,
@@ -83,14 +77,12 @@ class PrincipalStem(AlgorithmMetadata, QgsProcessingAlgorithm):
             QgsProcessing.TypeVectorLine))
 
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
         to_node_field = self.parameterAsString(parameters, self.TO_NODE_FIELD, context)
-        cost_default = self.parameterAsDouble(parameters, self.COST, context)
-        dynamic = QgsProcessingParameters.isDynamic(parameters, self.COST)
-        cost_property = parameters[self.COST] if dynamic else None
+        cost_field = self.parameterAsString(parameters, self.COST, context)
 
         (sink, dest_id) = self.parameterAsSink(
             parameters, self.OUTPUT, context,
@@ -111,16 +103,9 @@ class PrincipalStem(AlgorithmMetadata, QgsProcessingAlgorithm):
             # if toi == 0:
             #     continue
 
-            context.expressionContext().setFeature(feature)
-
             a = feature.attribute(from_node_field)
             b = feature.attribute(to_node_field)
-
-            if dynamic:
-                value, ok = cost_property.valueAsDouble(context.expressionContext(), cost_default)
-                cost = value if ok else cost_default
-            else:
-                cost = cost_default
+            cost = feature.attribute(cost_field)
 
             forwardtracks[b].append((feature.id(), a, cost))
             anodes.add(a)

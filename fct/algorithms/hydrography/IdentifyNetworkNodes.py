@@ -15,11 +15,9 @@ IdentifyNetworkNodes - Identify nodes in hydrogaphy network
 
 import numpy as np
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
-    QVariant
-)
+from qgis.PyQt.QtCore import QVariant
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import (
     QgsFeature,
     QgsField,
     QgsFields,
@@ -41,7 +39,7 @@ def simple_linestring_op(operation):
         or, in case of a multi-polyline, on each part
     """
 
-    def wrapper(geom, *args, **kwargs): #pylint: disable=missing-docstring
+    def wrapper(geom, *args, **kwargs): 
 
         if geom.isMultipart():
 
@@ -66,7 +64,7 @@ class IdentifyNetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
     OUTPUT = 'OUTPUT'
     NODES = 'NODES'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -89,9 +87,16 @@ class IdentifyNetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Nodes'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
+        quantization = self.parameterAsDouble(parameters, self.QUANTIZATION, context)
+
+        for field in layer.fields():
+            if field.name() in ['NODEA', 'NODEB']:
+                feedback.reportError(
+                    self.tr('Field "{}" already exists in input layer.').format(field.name()))
+                return {}
 
         # Step 1
         feedback.setProgressText(self.tr("[1/4] Get Line Endpoints ..."))
@@ -126,7 +131,6 @@ class IdentifyNetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
         maxx = np.max(coordinates[:, 0])
         maxy = np.max(coordinates[:, 1])
 
-        quantization = 1e8
         kx = (minx == maxx) and 1 or (maxx - minx)
         ky = (miny == maxy) and 1 or (maxy - miny)
         sx = kx / quantization

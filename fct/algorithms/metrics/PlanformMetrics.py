@@ -19,11 +19,11 @@ from functools import total_ordering
 
 import numpy as np
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -218,7 +218,7 @@ class PlanformMetrics(AlgorithmMetadata, QgsProcessingAlgorithm):
     INFLECTION_POINTS = 'INFLECTION_POINTS'
     STEMS = 'STEMS'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         # Input Parameters
 
@@ -266,7 +266,7 @@ class PlanformMetrics(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Max Amplitude'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsVectorLayer(parameters, self.INPUT, context)
         resolution = self.parameterAsDouble(parameters, self.RESOLUTION, context)

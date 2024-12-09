@@ -15,7 +15,7 @@ Cut and rotate polygon rings
 
 from collections import defaultdict
 
-from qgis.core import ( # pylint: disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsGeometry,
     QgsFeatureRequest,
     QgsFeature,
@@ -42,7 +42,7 @@ class CutAndRotateRing(AlgorithmMetadata, QgsProcessingAlgorithm):
     POINTS = 'POINTS'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -59,7 +59,7 @@ class CutAndRotateRing(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Cut Rings'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         cut_layer = self.parameterAsSource(parameters, self.POINTS, context)

@@ -19,7 +19,7 @@ import importlib
 from qgis.PyQt.QtCore import QCoreApplication
 from qgis.PyQt.QtGui import QIcon
 
-from qgis.core import ( # pylint: disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsApplication,
     QgsProcessingProvider,
     QgsProcessingAlgorithm

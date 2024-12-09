@@ -20,13 +20,13 @@ from osgeo import (
     osr
 )
 
-from qgis.core import ( # pylint: disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsGeometry,
     QgsPoint,
     QgsPointXY
 )
 
-# pylint: disable=invalid-name
+
 
 class RasterDataAccess(object):
     """ Read raster values through GDAL API

@@ -16,11 +16,11 @@ Fix Network Cycles
 from collections import defaultdict, Counter
 import itertools
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -56,7 +56,7 @@ class FixNetworkCycles(AlgorithmMetadata, QgsProcessingAlgorithm):
     FROM_NODE_FIELD = 'FROM_NODE_FIELD'
     TO_NODE_FIELD = 'TO_NODE_FIELD'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -82,7 +82,7 @@ class FixNetworkCycles(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Fixed Cycles'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, fb): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, fb): 
 
         feedback = QgsProcessingMultiStepFeedback(3, fb)
 

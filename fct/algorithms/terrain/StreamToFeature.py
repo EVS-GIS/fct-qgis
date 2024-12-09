@@ -16,11 +16,11 @@ Stream To Feature
 import numpy as np
 from osgeo import gdal
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -52,7 +52,7 @@ class StreamToFeature(AlgorithmMetadata, QgsProcessingAlgorithm):
     MIN_ACC = 'MIN_ACC'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.FLOW_ACC,
@@ -79,18 +79,18 @@ class StreamToFeature(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Vectorized Streams'),
             QgsProcessing.TypeVectorLine))
 
-    def canExecute(self): #pylint: disable=unused-argument,missing-docstring
+    def canExecute(self): 
 
         try:
-            # pylint: disable=import-error,unused-variable
+            
             from ...lib.terrain_analysis import stream_to_feature
             return True, ''
         except ImportError:
             return False, self.tr('Missing dependency: FCT terrain_analysis')
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
-        # pylint:disable=import-error,no-name-in-module
+        
         from ...lib.terrain_analysis import stream_to_feature
 
         flow_lyr = self.parameterAsRasterLayer(parameters, self.FLOW, context)

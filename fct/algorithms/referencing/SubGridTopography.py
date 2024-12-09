@@ -19,11 +19,11 @@ from collections import namedtuple, defaultdict
 import numpy as np
 from osgeo import gdal
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -72,7 +72,7 @@ class SubGridTopography(AlgorithmMetadata, QgsProcessingAlgorithm):
     IMPLEMENTATION = 'IMPLEMENTATION'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -100,9 +100,9 @@ class SubGridTopography(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('SubGrid Nodes'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
-        # pylint:disable=import-error,no-name-in-module
+        
         from ...lib import terrain_analysis as ta
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)

@@ -15,11 +15,11 @@ AggregateLineSegmentsByCat - Merge continuous line segments into a single linest
 
 from collections import Counter, namedtuple
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsExpression,
     QgsGeometry,
     QgsLineString,
@@ -52,7 +52,7 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
     TO_NODE_FIELD = 'TO_NODE_FIELD'
     COPY_FIELDS = 'COPY_FIELDS'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -92,7 +92,7 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Aggregated Lines'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         category_field = self.parameterAsString(parameters, self.CATEGORY_FIELD, context)

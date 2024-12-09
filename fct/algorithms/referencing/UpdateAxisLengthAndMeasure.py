@@ -18,11 +18,11 @@ from heapq import heappush, heappop
 
 from collections import Counter, namedtuple, defaultdict
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsFeatureRequest,
     QgsField,
@@ -66,7 +66,7 @@ class UpdateAxisLengthAndMeasure(AlgorithmMetadata, QgsProcessingAlgorithm):
     HACK_FIELD = 'HACK_FIELD'
     MEASURE_FIELD = 'MEASURE_FIELD'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -106,7 +106,7 @@ class UpdateAxisLengthAndMeasure(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Updated'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, fb): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, fb): 
 
         feedback = QgsProcessingMultiStepFeedback(2, fb)
 

@@ -15,7 +15,7 @@ MonotonicZ
 
 import numpy as np
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsGeometry,
     QgsLineString,
     # QgsMultiLineString,
@@ -41,7 +41,7 @@ class MonotonicZ(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
     NODATA = 'NODATA'
     MIN_Z_DELTA = 'MIN_Z_DELTA'
 
-    def initParameters(self, configuration=None): #pylint: disable=unused-argument,missing-docstring
+    def initParameters(self, configuration=None): 
 
         self.addParameter(QgsProcessingParameterNumber(
             self.NODATA,
@@ -55,28 +55,28 @@ class MonotonicZ(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
             type=QgsProcessingParameterNumber.Double,
             defaultValue=.0005))
 
-    def inputLayerTypes(self): #pylint: disable=no-self-use,missing-docstring
+    def inputLayerTypes(self): 
         return [QgsProcessing.TypeVectorLine]
 
-    def outputName(self): #pylint: disable=missing-docstring
+    def outputName(self): 
         return self.tr('Adjusted Long Profile')
 
-    def outputWkbType(self, inputWkbType): #pylint: disable=no-self-use,missing-docstring
+    def outputWkbType(self, inputWkbType): 
         return inputWkbType
 
-    def supportInPlaceEdit(self, layer): #pylint: disable=unused-argument,no-self-use,missing-docstring
+    def supportInPlaceEdit(self, layer): 
         return True
 
-    def canExecute(self): #pylint: disable=unused-argument,missing-docstring
+    def canExecute(self): 
 
         try:
-            # pylint: disable=unused-variable
+            
             import scipy.signal
             return True, ''
         except ImportError:
             return False, self.tr('Missing dependency: scipy.signal')
 
-    def prepareAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def prepareAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, 'INPUT', context)
 
@@ -93,7 +93,7 @@ class MonotonicZ(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
 
         return True
 
-    def processFeature(self, feature, context, feedback): #pylint: disable=no-self-use,unused-argument,missing-docstring
+    def processFeature(self, feature, context, feedback): 
 
         from scipy import signal
 

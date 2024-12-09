@@ -17,7 +17,7 @@ import numpy as np
 from osgeo import gdal
 # import osr
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterFeatureSource,
@@ -136,7 +136,7 @@ class RelativeDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
     STREAM = 'STREAM'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.INPUT,
@@ -151,18 +151,18 @@ class RelativeDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.OUTPUT,
             self.tr('Relative DEM')))
 
-    def canExecute(self): #pylint: disable=unused-argument,missing-docstring
+    def canExecute(self): 
 
         try:
-            # pylint:disable=import-error,no-name-in-module,unused-variable
+            
             import scipy.spatial
             return True, ''
         except ImportError:
             return False, self.tr('Missing dependency: scipy.spatial')
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
-        # pylint:disable=import-error,no-name-in-module
+        
         from scipy.spatial import cKDTree
 
         # if CYTHON:
@@ -181,7 +181,7 @@ class RelativeDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
         nodata = elevations_ds.GetRasterBand(1).GetNoDataValue()
         
         if not nodata:
-            feedback.reportError(self.tr('Nodata value should be set in the raster properties'), True)
+            feedback.reportError(self.tr('Nodata value should be set in the raster properties and different from 0.'), True)
             return {}
             
         transform = elevations_ds.GetGeoTransform()

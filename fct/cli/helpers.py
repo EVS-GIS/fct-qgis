@@ -20,17 +20,17 @@ import platform
 import atexit
 import click
 
-from qgis.core import ( # pylint: disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsApplication,
     QgsProcessingException,
     QgsProcessingFeedback
 )
 
-from processing.core.Processing import ( # pylint: disable=import-error,no-name-in-module
+from processing.core.Processing import ( 
     Processing
 )
 
-from processing.tools.dataobjects import ( # pylint: disable=import-error,no-name-in-module
+from processing.tools.dataobjects import ( 
     createContext
 )
 
@@ -77,7 +77,7 @@ def start_app(gui=True, cleanup=True):
     A QgsApplication singleton
     """
 
-    global QGISAPP # pylint: disable=global-variable-undefined
+    global QGISAPP 
 
     try:
         QGISAPP
@@ -112,7 +112,7 @@ def start_app(gui=True, cleanup=True):
         if cleanup:
 
             @atexit.register
-            def exitQgis(): # pylint: disable=unused-variable
+            def exitQgis(): 
                 """ Exit Qgis Application """
                 QGISAPP.exitQgis()
 

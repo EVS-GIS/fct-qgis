@@ -17,7 +17,7 @@ import os
 import yaml
 
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QCoreApplication
 )
 
@@ -29,7 +29,7 @@ class AlgorithmMetadata(object):
     in a separate YAML (.yml) file next to the .py source file.
     """
 
-    # pylint:disable=no-member,missing-docstring
+    
 
     @staticmethod
     def read(sourcefile, basename):
@@ -43,7 +43,7 @@ class AlgorithmMetadata(object):
     def createInstance(self):
         return type(self)()
 
-    def tr(self, string, context=''): #pylint:disable=no-self-use,invalid-name
+    def tr(self, string, context=''): 
 
         if context == '':
             context = 'FluvialCorridorToolbox'
@@ -78,5 +78,5 @@ class AlgorithmMetadata(object):
     def tags(self):
         return [self.tr(tag) for tag in self.METADATA.get('tags', [])]
 
-    def renderHelpText(self, text): #pylint:disable=no-self-use
+    def renderHelpText(self, text): 
         return '<br/>'.join([s.lstrip() for s in text.split('\n')]) if text else ''

@@ -13,11 +13,11 @@ NetworkNodes - Extract and categorize nodes from hydrogaphy network
 ***************************************************************************
 """
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -82,7 +82,7 @@ class NetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
     MEAS_FIELD = 'MEAS_FIELD'
     SUBSET = 'SUBSET'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -129,7 +129,7 @@ class NetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Nodes'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)

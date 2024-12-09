@@ -15,7 +15,7 @@ ReverseFlowDirection - Reverse line direction and swap node fields
 
 from collections import namedtuple
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsGeometry,
     QgsLineString,
     QgsProcessing,
@@ -40,7 +40,7 @@ class ReverseFlowDirection(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm
     FROM_NODE_FIELD = 'FROM_NODE_FIELD'
     TO_NODE_FIELD = 'TO_NODE_FIELD'
 
-    def initParameters(self, configuration=None): #pylint: disable=unused-argument,missing-docstring
+    def initParameters(self, configuration=None): 
 
         # self.addParameter(QgsProcessingParameterFeatureSource(
         #     self.INPUT,
@@ -66,19 +66,19 @@ class ReverseFlowDirection(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm
         #     self.tr('Measured Links'),
         #     QgsProcessing.TypeVectorLine))
 
-    def inputLayerTypes(self): #pylint: disable=no-self-use,missing-docstring
+    def inputLayerTypes(self): 
         return [QgsProcessing.TypeVectorLine]
 
-    def outputName(self): #pylint: disable=missing-docstring
+    def outputName(self): 
         return self.tr('Reversed Links')
 
-    def outputWkbType(self, inputWkbType): #pylint: disable=no-self-use,missing-docstring
+    def outputWkbType(self, inputWkbType): 
         return inputWkbType
 
-    def supportInPlaceEdit(self, layer): #pylint: disable=no-self-use,missing-docstring
+    def supportInPlaceEdit(self, layer): 
         return super().supportInPlaceEdit(layer) and QgsWkbTypes.isSingleType(layer.wkbType())
 
-    def prepareAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def prepareAlgorithm(self, parameters, context, feedback): 
 
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
         to_node_field = self.parameterAsString(parameters, self.TO_NODE_FIELD, context)
@@ -86,7 +86,7 @@ class ReverseFlowDirection(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm
 
         return True
 
-    def processFeature(self, feature, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processFeature(self, feature, context, feedback): 
 
         if feature.geometry().isMultipart():
             raise QgsProcessingException(self.tr('Input geometries must be single part'))

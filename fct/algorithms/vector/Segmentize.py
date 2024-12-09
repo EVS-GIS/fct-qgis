@@ -13,11 +13,11 @@ Segmentize
 ***************************************************************************
 """
 
-from qgis.PyQt.QtCore import ( #pylint: disable=import-error
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( #pylint: disable=import-error
+from qgis.core import ( 
     QgsGeometry,
     QgsFeature,
     QgsField,
@@ -44,7 +44,7 @@ class Segmentize(AlgorithmMetadata, QgsProcessingAlgorithm):
     DISTANCE = 'DISTANCE'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -62,7 +62,7 @@ class Segmentize(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Segmentized'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         distance = self.parameterAsDouble(parameters, self.DISTANCE, context)

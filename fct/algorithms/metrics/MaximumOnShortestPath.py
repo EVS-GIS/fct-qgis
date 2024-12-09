@@ -15,11 +15,11 @@ Maximum On Shortest Path
 
 import numpy as np
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module,import-error
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterFeatureSource,
@@ -67,7 +67,7 @@ class MaximumOnShortestPath(AlgorithmMetadata, QgsProcessingAlgorithm):
 
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -125,7 +125,7 @@ class MaximumOnShortestPath(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Maximum Cost'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         node_layer = self.parameterAsVectorLayer(parameters, self.INPUT, context)
         pk_field = self.parameterAsString(parameters, self.PK_FIELD, context)

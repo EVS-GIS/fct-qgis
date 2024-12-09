@@ -17,7 +17,7 @@ import numpy as np
 from osgeo import gdal
 # import osr
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     # QgsProcessing,
     QgsProcessingAlgorithm,
     # QgsProcessingParameterFeatureSource,
@@ -51,7 +51,7 @@ class LandCoverContinuity(AlgorithmMetadata, QgsProcessingAlgorithm):
     DISCONTINUITIES = 'DISCONTINUITIES'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.INPUT,
@@ -74,7 +74,7 @@ class LandCoverContinuity(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.OUTPUT,
             self.tr('Land Cover Continuity')))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         from ...lib import terrain_analysis as ta
 

@@ -96,7 +96,7 @@ class DisaggregateNetwork(AlgorithmMetadata, QgsProcessingAlgorithm):
 
     def processAlgorithm(
         self, parameters, context, feedback
-    ):  # pylint: disable=unused-argument,missing-docstring
+    ):  
         network = self.parameterAsSource(parameters, self.NETWORK, context)
         polygons = self.parameterAsSource(parameters, self.POLYGON, context)
 

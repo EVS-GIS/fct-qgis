@@ -15,7 +15,7 @@ MonotonicZ
 
 import numpy as np
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsGeometry,
     QgsLineString,
     # QgsMultiLineString,
@@ -43,7 +43,7 @@ class WienerCoordinateFilter(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorit
     Z_COORDINATE = 0
     M_COORDINATE = 1
 
-    def initParameters(self, configuration=None): #pylint: disable=unused-argument,missing-docstring
+    def initParameters(self, configuration=None): 
 
         self.addParameter(QgsProcessingParameterEnum(
             self.COORDINATE,
@@ -72,19 +72,19 @@ class WienerCoordinateFilter(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorit
             defaultValue=1.0,
             optional=True))
 
-    def inputLayerTypes(self): #pylint: disable=no-self-use,missing-docstring
+    def inputLayerTypes(self): 
         return [QgsProcessing.TypeVectorLine]
 
-    def outputName(self): #pylint: disable=missing-docstring
+    def outputName(self): 
         return self.tr('Smoothed Profile')
 
-    def outputWkbType(self, inputWkbType): #pylint: disable=no-self-use,missing-docstring
+    def outputWkbType(self, inputWkbType): 
         return inputWkbType
 
-    def supportInPlaceEdit(self, layer): #pylint: disable=unused-argument,no-self-use,missing-docstring
+    def supportInPlaceEdit(self, layer): 
         return True
 
-    def canExecute(self): #pylint: disable=unused-argument,missing-docstring
+    def canExecute(self): 
 
         try:
             import scipy.signal
@@ -92,7 +92,7 @@ class WienerCoordinateFilter(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorit
         except ImportError:
             return False, self.tr('Missing dependency: scipy.signal')
 
-    def prepareAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def prepareAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, 'INPUT', context)
         coordinate = self.parameterAsInt(parameters, self.COORDINATE, context)
@@ -120,7 +120,7 @@ class WienerCoordinateFilter(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorit
 
         return True
 
-    def processFeature(self, feature, context, feedback): #pylint: disable=no-self-use,unused-argument,missing-docstring
+    def processFeature(self, feature, context, feedback): 
 
         from scipy import signal
 
