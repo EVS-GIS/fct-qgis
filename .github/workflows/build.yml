@@ -46,9 +46,12 @@ jobs:
     - name: Check for changes
       id: git_diff
       run: |
-        git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
-        git config --global user.email "github-actions@users.noreply.github.com"
-        git diff --exit-code || echo "has_changes=true" >> $GITHUB_ENV
+        if [[ `git status --porcelain` ]]; then
+          echo "has_changes=true" >> $GITHUB_ENV
+        else
+          echo "has_changes=false" >> $GITHUB_ENV
+        fi
+      shell: bash
 
     - name: Commit and push build artifacts
       if: env.has_changes == 'true'
