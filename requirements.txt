@@ -1,8 +1,12 @@
 lxml
 doit
 qgis-plugin-ci
-PyGithub
-pylint>=1.9.4
+wheel 
+numpy 
+cython 
+setuptools
+# PyGithub
+# pylint>=1.9.4
 mkdocs>=1.0.4
 markupsafe==2.0.1
 mkdocs-material>=3.3.0
