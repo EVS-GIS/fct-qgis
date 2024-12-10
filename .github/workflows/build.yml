@@ -1,0 +1,67 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Build terrain analysis extension
+
+on:
+  push:
+    branches: [ "master" ]
+    paths-ignore: [ "fct/lib/terrain_analysis*" ]
+  pull_request:
+    branches: [ "master" ]
+permissions:
+  contents: write
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+  
+jobs:
+  build:
+    strategy:
+      max-parallel: 1
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.10", "3.11", "3.12", "3.13"]
+    
+    runs-on: ${{ matrix.os }}
+    
+    env: 
+      CI_COMMIT_MESSAGE: CI Build Extension ${{ matrix.os }}-${{ matrix.python }}
+      CI_COMMIT_AUTHOR: github-actions[bot]
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
+        
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python }}
+        
+    - name: Install packages
+      run: |
+        python -m pip install --upgrade pip
+        pip install wheel setuptools numpy cython
+        pip install --no-build-isolation -e .
+
+    - name: Check for changes
+      id: git_diff
+      run: |
+        git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+        git config --global user.email "github-actions@users.noreply.github.com"
+        if [[ `git status --porcelain` ]]; then
+          echo "has_changes=true" >> $GITHUB_ENV
+        else
+          echo "has_changes=false" >> $GITHUB_ENV
+        fi
+      shell: bash
+
+    - name: Commit and push build artifacts
+      if: env.has_changes == 'true'
+      run: |
+        git pull origin ${{ github.head_ref }}
+        git add -A
+        git commit -m "${{ env.CI_COMMIT_MESSAGE }}"
+        git push
+        
