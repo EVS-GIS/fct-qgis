@@ -49,4 +49,4 @@ parameters:
     description: The output inflection lines.
     
 seealso:
-  - "[Planform Metrics](../../../algorithms/metrics/PlanformMetrics/)"
+  - "[Planform Metrics](/fct-qgis/algorithms/metrics/PlanformMetrics/)"

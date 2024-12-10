@@ -15,6 +15,8 @@ description: |
 
   [@roux2014]
 
+  ![Segmentation result](/fct-qgis/img/Segmentation.png)
+
   Algorithm:
     
       if input type is polyline
@@ -54,5 +56,5 @@ parameters:
     description: The segmented output feature.
 
 seealso:
-  - "[Disaggregate Polygon](../../../algorithms/spatialcomponents/DisaggregatePolygon/)"
-  - "[Segmentize](../../../algorithms/vector/Segmentize/)"
+  - "[Disaggregate Polygon](/fct-qgis/algorithms/spatialcomponents/DisaggregatePolygon/)"
+  - "[Segmentize](/fct-qgis/algorithms/vector/Segmentize/)"

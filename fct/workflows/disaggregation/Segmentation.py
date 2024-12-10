@@ -112,7 +112,7 @@ class Segmentation(AlgorithmMetadata, QgsProcessingAlgorithm):
                         'NEW_FIELD': True,
                         'FORMULA': '@row_number',
                         'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-                    }, context=context, feedback=feedback)
+                    }, context=context, feedback=feedback, is_child_algorithm=True)
 
             if feedback.isCanceled():
                 return {}
@@ -124,7 +124,7 @@ class Segmentation(AlgorithmMetadata, QgsProcessingAlgorithm):
                         'disagreggationdistance': str(self.segStep),
                         'axisfidfield': 'AXIS_ID',
                         'qgis:refactorfields_1:DISAGGREGATED': parameters['OUTPUT']
-                    }, context=context, feedback=feedback)
+                    }, context=context, feedback=feedback, is_child_algorithm=True)
 
             return {self.OUTPUT: DGOs['qgis:refactorfields_1:DISAGGREGATED']}
 
@@ -136,6 +136,6 @@ class Segmentation(AlgorithmMetadata, QgsProcessingAlgorithm):
                 'DISTANCE': self.segStep,
                 'INPUT': self.layer,
                 'OUTPUT': parameters['OUTPUT']
-            }, context=context, feedback=feedback)
+            }, context=context, feedback=feedback, is_child_algorithm=True)
             
             return {self.OUTPUT: segments['OUTPUT']}

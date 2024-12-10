@@ -41,6 +41,6 @@ parameters:
     description: The output sequenced linear network (or linear feature).
 
 seealso:
-  - "[Identify Network Nodes](../../../algorithms/hydrography/IdentifyNetworkNodes/)"
-  - "[Drape Vectors](../../../algorithms/raster/DrapeVectors/)"
-  - "[Check/Fix Link Orientation](../../../algorithms/hydrography/FixLinkOrientation/)"
+  - "[Identify Network Nodes](/fct-qgis/algorithms/hydrography/IdentifyNetworkNodes/)"
+  - "[Drape Vectors](/fct-qgis/algorithms/raster/DrapeVectors/)"
+  - "[Check/Fix Link Orientation](/fct-qgis/algorithms/hydrography/FixLinkOrientation/)"

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-OrientedCenterline
+ValleyBottom
 
 ***************************************************************************
 *                                                                         *
@@ -13,21 +13,111 @@ OrientedCenterline
 ***************************************************************************
 """
 
-import os
+import processing
 
-from qgis.core import ( 
-    QgsProcessingModelAlgorithm
+from qgis.core import (
+    QgsProcessing,
+    QgsProcessingAlgorithm,
+    QgsProcessingParameterFeatureSource,
+    QgsProcessingParameterRasterLayer,
+    QgsProcessingParameterFeatureSink,
+    QgsProcessingParameterNumber,
 )
 
 from ..metadata import AlgorithmMetadata
 
-class OrientedCenterline(AlgorithmMetadata, QgsProcessingModelAlgorithm):
+class OrientedCenterline(AlgorithmMetadata, QgsProcessingAlgorithm):
     """ 
-    Oriented center-line (ie. medial axis) of the input polygons based on an auxiliary stream network.
+    Extract valley bottom over the studied area
     """
 
-    def __init__(self, *args, **kwargs):
+    METADATA = AlgorithmMetadata.read(__file__, 'OrientedCenterline')
 
-        super().__init__(*args, **kwargs)
-        self.METADATA = AlgorithmMetadata.read(__file__, type(self).__name__)
-        self.fromFile(os.path.join(os.path.dirname(__file__), type(self).__name__ + '.model3'))
+    POLYGON = 'POLYGON'
+    DISTANCE = 'DISTANCE'
+    STREAM = 'STREAM'
+    DEM = 'DEM'
+    OUT_CENTERLINE = 'OUT_CENTERLINE'
+
+    def initAlgorithm(self, configuration):
+
+        self.addParameter(QgsProcessingParameterFeatureSource(
+            self.POLYGON,
+            self.tr('Input polygon'),
+            [QgsProcessing.TypeVectorPolygon]))
+        
+        self.addParameter(QgsProcessingParameterFeatureSource(
+            self.STREAM,
+            self.tr('Stream network or up/downstream polyline (see doc)'),
+            [QgsProcessing.TypeVectorLine]))
+
+        self.addParameter(QgsProcessingParameterNumber(
+            self.DISTANCE,
+            self.tr('Disaggregation distance'),
+            defaultValue=25.0,
+            minValue=1))
+        
+        self.addParameter(QgsProcessingParameterRasterLayer(
+            self.DEM,
+            self.tr('Input DEM'),
+            [QgsProcessing.TypeRaster],
+            optional=True))
+
+        self.addParameter(QgsProcessingParameterFeatureSink(
+            self.OUT_CENTERLINE,
+            self.tr('Output oriented centerline')))
+
+    def processAlgorithm(self, parameters, context, feedback): 
+
+        dem = self.parameterAsRasterLayer(parameters, self.DEM, context)
+
+        feedback.pushInfo(self.tr('Compute centerline...'))
+
+        if dem is None:
+
+            centerline_proc = processing.run('fct:polygoncenterline',
+                {
+                    'POLYGON': self.parameterAsVectorLayer(parameters, self.POLYGON, context),
+                    'NETWORK': self.parameterAsVectorLayer(parameters, self.STREAM, context),
+                    'STEP': self.parameterAsDouble(parameters, self.DISTANCE, context), 
+                    'CENTERLINE': parameters[self.OUT_CENTERLINE],
+                }, context=context, is_child_algorithm=True, feedback=feedback)
+
+            feedback.pushInfo(self.tr('DEM not provided, skip orientation'))
+            return {self.OUT_CENTERLINE: centerline_proc['CENTERLINE']}
+        
+        else:
+
+            centerline_proc = processing.run('fct:polygoncenterline',
+                {
+                    'POLYGON': self.parameterAsVectorLayer(parameters, self.POLYGON, context),
+                    'NETWORK': self.parameterAsVectorLayer(parameters, self.STREAM, context),
+                    'STEP': self.parameterAsDouble(parameters, self.DISTANCE, context), 
+                    'CENTERLINE': QgsProcessing.TEMPORARY_OUTPUT,
+                }, context=context, is_child_algorithm=True, feedback=feedback)
+            feedback.pushInfo(self.tr('Check and fix centerline orientation...'))
+
+            networknodes_proc = processing.run('fct:identifynetworknodes',
+                {
+                    'INPUT': centerline_proc['CENTERLINE'],
+                    'NODES': QgsProcessing.TEMPORARY_OUTPUT,
+                    'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT,
+                }, context=context, is_child_algorithm=True, feedback=feedback)
+            
+            drape_proc = processing.run('native:setzfromraster',
+                {
+                    'INPUT': networknodes_proc['NODES'],
+                    'RASTER': dem,
+                    'BAND': 1,
+                    'NODATA': 0,
+                    'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT,
+                }, context=context, is_child_algorithm=True, feedback=feedback)
+            
+            fixlink_proc = processing.run('fct:fixlinkorientation',
+                {
+                    'INPUT': networknodes_proc['OUTPUT'],
+                    'NODES': drape_proc['OUTPUT'],
+                    'OUTPUT': parameters[self.OUT_CENTERLINE],
+                }, context=context, is_child_algorithm=True, feedback=feedback)
+
+            return {self.OUT_CENTERLINE: fixlink_proc['OUTPUT']}

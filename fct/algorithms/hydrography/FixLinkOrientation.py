@@ -20,7 +20,6 @@ from heapq import heappop, heappush
 from qgis.core import ( 
     QgsGeometry,
     QgsProcessing,
-    # QgsProcessingException,
     QgsProcessingFeatureBasedAlgorithm,
     QgsProcessingParameterBoolean,
     QgsProcessingParameterEnum,

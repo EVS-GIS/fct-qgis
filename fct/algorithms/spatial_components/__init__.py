@@ -18,5 +18,4 @@ from .DisaggregateNetwork import DisaggregateNetwork
 from .LandCoverContinuity import LandCoverContinuity
 from .PolygonSkeleton import PolygonSkeleton
 from .ValleyBottom import ValleyBottom
-from .ValleyCenterLine import ValleyCenterLine
 from .PolygonCenterLine import PolygonCenterLine

@@ -1,4 +1,4 @@
-displayName: Valley bottom
+displayName: Valley Bottom
 group: spatialcomponents
 summary: |
   Extract valley bottom from a DEM and a stream network.
@@ -55,10 +55,19 @@ parameters:
   THRESH_MAX:
     type: Number
     description: Maximum elevation to extract from the Relative DEM
+  SIMPLIFY:
+    type: Number
+    description: Simplification tolerance of the valley bottom polygon (in projection unit)
+  SMOOTH:
+    type: Number
+    description: Smoothing iterations of the valley bottom polygon
   OUT_VB:
     type: Polygon
     description: Output valley bottom polygon
+  # OUT_DETRENDED:
+  #   type: RasterLayer
+  #   description: Output detrended DEM (optional)
 
 seealso:
-  - "[Fill depressions](../../../algorithms/terrain/FillDepressions/)"
-  - "[Resolve flats](../../../algorithms/terrain/ResolveFlats/)"
+  - "[Fill depressions](/fct-qgis/algorithms/terrain/FillDepressions/)"
+  - "[Resolve flats](/fct-qgis/algorithms/terrain/ResolveFlats/)"

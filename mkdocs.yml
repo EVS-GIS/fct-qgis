@@ -68,6 +68,8 @@ nav:
       - algorithms/hydrography/AggregateUndirectedLines.md
       - algorithms/hydrography/ConnectLines.md
       - algorithms/hydrography/FixLinkOrientation.md
+      - algorithms/hydrography/FixNetworkConnectivity.md
+      - algorithms/hydrography/FixNetworkCycles.md
       - algorithms/hydrography/HackOrder.md
       - algorithms/hydrography/IdentifyNetworkNodes.md
       - algorithms/hydrography/LongestPathInDirectedGraph.md
@@ -76,9 +78,14 @@ nav:
       - algorithms/hydrography/PrincipalStem.md
       - algorithms/hydrography/RasterizeStreamNetwork.md
       - algorithms/hydrography/ReverseFlowDirection.md
+      - algorithms/hydrography/SelectConnectedBasins.md
       - algorithms/hydrography/SelectConnectedComponents.md
+      - algorithms/hydrography/SelectGraphCycle.md
+      - algorithms/hydrography/SelectHeadwaterBasins.md
       - algorithms/hydrography/StrahlerOrder.md
       - algorithms/hydrography/TotalUpstreamChannelLength.md
+      - algorithms/hydrography/UpstreamDownstreamLink.md
+      - algorithms/hydrography/WatershedLink.md
     - Terrain Analysis:
       - Index: algorithms/terrain/index.md
       - algorithms/terrain/BurnFill.md
@@ -87,24 +94,33 @@ nav:
       - algorithms/terrain/FillDepressions.md
       - algorithms/terrain/FlowAccumulation.md
       - algorithms/terrain/FlowDirection.md
+      - algorithms/terrain/HeightAboveNearestDrainageCombined.md
+      - algorithms/terrain/HeightAboveNearestDrainageInSameWatershed.md
+      - algorithms/terrain/MaskAccumulation.md
       - algorithms/terrain/RelativeDEM.md
       - algorithms/terrain/RelativeDEMByFlow.md
       - algorithms/terrain/ResolveFlats.md
+      - algorithms/terrain/ShortestDistance.md
+      - algorithms/terrain/ShortestDistanceReference.md
+      - algorithms/terrain/SignedShortestDistance.md
       - algorithms/terrain/StreamToFeature.md
       - algorithms/terrain/StreamToRaster.md
       - algorithms/terrain/Watershed.md
+      - algorithms/terrain/WatershedMax.md
     - Spatial Components:
       - Index: algorithms/spatialcomponents/index.md
+      - algorithms/spatialcomponents/DisaggregateNetwork.md
       - algorithms/spatialcomponents/DisaggregatePolygon.md
+      - algorithms/spatialcomponents/LandCoverContinuity.md
       - algorithms/spatialcomponents/PolygonCenterLine.md
       - algorithms/spatialcomponents/PolygonSkeleton.md
       - algorithms/spatialcomponents/ValleyBottom.md
-      - algorithms/spatialcomponents/ValleyCenterLine.md
     - Metrics:
       - Index: algorithms/metrics/index.md
       - algorithms/metrics/AggregateFeatures.md
       - algorithms/metrics/KnickPoints.md
       - algorithms/metrics/LineStringZSlope.md
+      - algorithms/metrics/MaximumOnShortestPath.md
       - algorithms/metrics/OrthogonalTransects.md
       - algorithms/metrics/PlanformMetrics.md
       - algorithms/metrics/PolygonWidth.md
@@ -115,6 +131,9 @@ nav:
       - algorithms/referencing/LocatePolygonAlongNetwork.md
       - algorithms/referencing/MeasureNetworkFromOutlet.md
       - algorithms/referencing/PointAxisTransform.md
+      - algorithms/referencing/SubGridMap.md
+      - algorithms/referencing/SubGridTopography.md
+      - algorithms/referencing/UpdateAxisLengthAndMeasure.md
     - Tools for Rasters:
       - Index: algorithms/raster/index.md
       - algorithms/raster/AnisotropicDiffusionFilter.md
@@ -136,6 +155,7 @@ nav:
       - algorithms/vector/LineMidpoints.md
       - algorithms/vector/LineStringBufferByM.md
       - algorithms/vector/LocatePointAlongLine.md
+      - algorithms/vector/MinimumOrientedBoundingBox.md
       - algorithms/vector/MonotonicZ.md
       - algorithms/vector/PointsAlongPolygon.md
       - algorithms/vector/PointsInPolygon.md
@@ -153,6 +173,7 @@ nav:
       - algorithms/vector/TransformCoordinateByExpression.md
       - algorithms/vector/UniquePoints.md
       - algorithms/vector/VariableLengthTransects.md
+      - algorithms/vector/VoronoiTransects.md
       - algorithms/vector/WienerCoordinateFilter.md
   - Workflows Reference:
     - 1- Spatial Components:
@@ -166,7 +187,9 @@ nav:
       - workflows/disaggregation/Sequencing.md
     - 3- Metrics:
       - Index: workflows/metrics/index.md
+      - workflows/metrics/ElevationAndSlope.md
       - workflows/metrics/Morphometry.md
+      - workflows/metrics/WidthVB.md
     - 4- Statistics:
       - Index: workflows/statistics/index.md
       - workflows/statistics/HubertTest.md

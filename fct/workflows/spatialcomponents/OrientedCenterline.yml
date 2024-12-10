@@ -4,12 +4,14 @@ summary: |
   Oriented center-line (ie. medial axis) of the input polygons based on an auxiliary
   stream network and a DEM.
 description: |
-  Compute the medial axis of a polygon and orient lines from upstream to downstream with provided DEM. 
+  Compute the medial axis of a polygon. Orient lines from upstream to downstream if provided DEM. 
   Useful for computing centerlines of a valley bottom or any other 
   polygon for which you have a corresponding stream network.
 
   If a stream network is not available for your polygon (ex. historical channel), it is possible to 
   use instead a created LineString which cut the polygon boundaries upstream and downstream.
+
+  ![Extend lines to cut the polygon upstream and downstream](/fct-qgis/img/dem_to_dgo_extend_lines.png)
 
   Algorithm:
   
@@ -21,6 +23,10 @@ description: |
       Remove duplicate lines
       Drape lines on DEM
       Check/Fix links orientation
+
+  The resulting centerline is oriented from upstream to downstream if you provided a DEM.
+
+  ![Oriented Centerline](/fct-qgis/img/OrientedCenterline.png)
       
 tags:
   - vector
@@ -34,28 +40,27 @@ tags:
   - dem
 
 parameters:
-  polygon:
+  POLYGON:
     type: Polygon
     description:
       Polygon to compute the centerline.
-  mnt:
+  DEM:
     type: Raster
     description:
       Digital Elevation Model.
-  streamnetwork:
+  STREAM:
     type: LineString
     description: |
-      Stream network to compute the upstream and downstream points.
+      Stream polyline to compute the upstream and downstream points.
       ex. french BDCarthage.
-  disaggregationdistance:
+  DISTANCE:
     type: Number
     description: |
       Distance between points on the input polygon sides to compute the
       Voronoi polygons. The smaller the distance, the smoother the result will be.
-  Oriented centerline:
+  OUT_CENTERLINE:
     type: LineString
     description:
-      Resulting centerline.
+      Resulting oriented centerline.
 seealso:
-  - "[PolygonCenterLine](../../../algorithms/spatialcomponents/PolygonCenterLine/)"
-  - "[ValleyCenterLine](../../../algorithms/spatialcomponents/ValleyCenterLine/)"
+  - "[PolygonCenterLine](/fct-qgis/algorithms/spatialcomponents/PolygonCenterLine/)"
