@@ -1,14 +1,33 @@
-site_name: Fluvial Corridor Toolbox Documentation
+site_name: Fluvial Corridor Toolbox for QGIS - Documentation
+site_url: https://evs-gis.github.io/fct-qgis/
 
 repo_name: EVS-GIS/fct-qgis
 repo_url: https://github.com/EVS-GIS/fct-qgis
 
+copyright: Copyright &copy; 2016 - 2024 - UMR5600 Environnement, Ville, Société
+
 theme:
   name: material
   language: en
+  logo: img/icon.png
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - search.suggest
+    - search.highlight
   palette:
-    primary: blue
-    accent: blue
+    - scheme: default
+      toggle:
+        icon: material/brightness-5
+        name: Switch to light mode
+      primary: indigo
+      accent: light blue
+    - scheme: slate
+      toggle:
+        icon: material/brightness-2
+        name: Switch to dark mode
+      primary: indigo
+      accent: light blue
 
 extra:
   manifest: 'manifest.webmanifest'
@@ -18,6 +37,9 @@ extra:
 
 extra_javascript: 
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+
+extra_css:
+  - style.css
 
 markdown_extensions:
   - abbr
@@ -36,7 +58,8 @@ markdown_extensions:
 nav:
   - Introduction: index.md
   - install.md
-  - tutorials/index.md
+  - Tutorials:
+    - tutorials/dem_to_dgo.md
   - Algorithms Reference:
     # Copy output of autodoc.py here
     - Hydrographic Network:

@@ -2,23 +2,25 @@
 
 ## Quick install
 
-To quickly install the latest released version, add the following repository to your QGIS plugin repositories :
+The latest stable release of the Fluvial Corridor Toolbox is now available from the official QGIS plugins repository. 
 
-    https://evs-gis.github.io/fct-qgis/repo/plugins.xml
+## Install the plugin from source (for development purpose)
 
-Then check the ```Show experimental plugins``` box, and install the Fluvial Corridor Toolbox plugin with the QGIS plugin manager. 
+### Create a virtualenv for the fct-qgis package
 
-This package does not contain optional dependencies and cython extensions. If you want to use them, you need to follow the instruction below.
+    python -m venv env --system-site-packages
+    echo /usr/share/qgis/python/plugins > ./env/lib/python<version>/site-packages/qgis_plugins.pth
 
-## Install the plugin from source
+    source ./env/bin/activate
+    python -m pip install -U pip
+    python -m pip install -r requirements.txt
+    python -m pip install --no-build-isolation -e .
+
 
 ### Using `doit`
 
-On all platforms, you can install/update the plugin automatically with `doit` dependency. Install it with:
-
-    python -m pip install doit
-
-Then, the following command will install the plugin in your local plugin folder:
+On all platforms, you can install/update the plugin automatically with `doit` dependency.
+The following command will install the plugin in your local plugin folder:
 
     python -m doit install
 
@@ -44,16 +46,11 @@ to point to your local folder where QGis stores installed plugins.
 
 On Linux, the default is `$(HOME)/.local/share/QGIS/QGIS3/profiles/default`.
 
-## Install Dependencies
+### Building Cython Extensions
 
-The recommended way to install dependencies is using  `pip`.
-`pip` is installed by default in recent versions of Python.
+Cython extensions are built when you install fct-qgis. 
 
-    pip3 install -r requirements.txt
-
-## Building Cython Extensions
-
-You can build and install the Cython extension for Terrain Analysis algorithms
+Alternatively, you can build and install the Cython extension for Terrain Analysis algorithms
 with the following command :
 
     make extensions

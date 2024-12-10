@@ -3,7 +3,7 @@ group: hydrography
 summary: Identify the nodes of a LineString network.
 description: |
   Identify the nodes of an input LineString network. 
-  ![Identified nodes](https://evs-gis.github.io/fct-qgis/img/IdentifyNetworkNodes.png)
+  ![Identified nodes](/fct-qgis/img/IdentifyNetworkNodes.png)
 tags:
   - hydrography
   - graph

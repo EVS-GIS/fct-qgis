@@ -11,11 +11,7 @@ This branch is under development and is an open effort to support QGis 3 (curren
 
 ## Quick install
 
-To quickly install the latest released version, add the following repository to your QGIS plugin repositories :
-
-    https://evs-gis.github.io/fct-qgis/repo/plugins.xml
-
-Then check the ```Show experimental plugins``` box, and install the Fluvial Corridor Toolbox plugin with the QGIS plugin manager.
+The latest stable release of the Fluvial Corridor Toolbox is now available from the official QGIS plugins repository. 
 
 ## Acknowledgements
 
@@ -23,8 +19,8 @@ The toolbox is developed within the programme
 [Trame bleue, espaces et continuités](https://www.tramebleue.fr/)
 in collaboration with :
 
-* [GeoPeka](http://www.geopeka.com)
 * [UMR 5600 Environnement, ville et société](http://umr5600.cnrs.fr/fr/accueil/).
+* [GeoPeka](http://www.geopeka.com)
 
 Funding and support have been kindly provided by :
 
@@ -37,6 +33,4 @@ Funding and support have been kindly provided by :
 
 ## License
 
-The Fluvial Corridor Toolbox is released under the [GNU Public License][].
-
-[GNU Public License]: https://github.com/EVS-GIS/fct/blob/master/LICENSE
+The Fluvial Corridor Toolbox is released under the [GNU Public License](https://github.com/EVS-GIS/fct-qgis/blob/master/LICENSE).

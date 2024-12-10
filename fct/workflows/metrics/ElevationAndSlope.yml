@@ -1,18 +1,14 @@
 displayName: Elevation and slope
 group: metrics
+shortHelpString: NULL
+helpString: NULL
+helpUrl: NULL
 summary: |
   Calculate elevation and slome of an oriented network based on a DEM.
-
-
 description: |
   Detailed description
-
-parameters:
-
-
 tags:
   - hydrography
   - metrics
   - elevation
   - slope
-
