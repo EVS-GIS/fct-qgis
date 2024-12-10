@@ -9,14 +9,16 @@ on:
     paths-ignore: [ "fct/lib/terrain_analysis*" ]
   pull_request:
     branches: [ "master" ]
-
 permissions:
   contents: write
-
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+  
 jobs:
   build:
     strategy:
-      fail-fast: false
+      max-parallel: 1
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python: ["3.10", "3.11", "3.12", "3.13"]
