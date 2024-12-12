@@ -9,7 +9,10 @@ description: |
   polygon for which you have a corresponding stream network.
 
   If a stream network is not available for your polygon (ex. historical channel), it is possible to 
-  use instead a created LineString which cut the polygon boundaries upstream and downstream.
+  use instead a created LineString which cut the polygon boundaries upstream and downstream. 
+  This LineString needs to be an approximation of the medial axis to guide the centerline computation.
+
+  
 
   The polygons and the stream network features are linked using a common attribute (like a FID). 
 
@@ -60,4 +63,4 @@ parameters:
     description:
       Resulting centerline.
 seealso:
-- "[Oriented Centerline](/fct-qgis/workflows/spatialcomponents/OrientedCenterLine/)"
+- "[Centerline](/fct-qgis/workflows/spatialcomponents/Centerline/)"

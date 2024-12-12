@@ -23,9 +23,10 @@ setup(
     include_package_data=True,
     install_requires=[
         'Click>=7.0',
-        'numpy>=1.26.3',
-        'scipy>=1.11.4',
-        'plotly>=3.3'
+        'numpy>=1.26',
+        'scipy>=1.11',
+        'plotly>=3.3',
+        'pytest>=8.3',
     ],
     entry_points='''
 [console_scripts]

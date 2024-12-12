@@ -1,8 +1,8 @@
-displayName: Oriented Centerline
+displayName: Centerline
 group: spatialcomponents
 summary: |
-  Oriented center-line (ie. medial axis) of the input polygons based on an auxiliary
-  stream network and a DEM.
+  Centerline (ie. medial axis) of the input polygons based on an auxiliary
+  stream network and, optionally, a DEM to orient the centerline from upstream to downstream.
 description: |
   Compute the medial axis of a polygon. Orient lines from upstream to downstream if provided DEM. 
   Useful for computing centerlines of a valley bottom or any other 
@@ -10,6 +10,7 @@ description: |
 
   If a stream network is not available for your polygon (ex. historical channel), it is possible to 
   use instead a created LineString which cut the polygon boundaries upstream and downstream.
+  This LineString needs to be an approximation of the medial axis to guide the centerline computation.
 
   ![Extend lines to cut the polygon upstream and downstream](/fct-qgis/img/dem_to_dgo_extend_lines.png)
 
@@ -26,7 +27,7 @@ description: |
 
   The resulting centerline is oriented from upstream to downstream if you provided a DEM.
 
-  ![Oriented Centerline](/fct-qgis/img/OrientedCenterline.png)
+  ![Centerline](/fct-qgis/img/Centerline.png)
       
 tags:
   - vector
@@ -61,6 +62,6 @@ parameters:
   OUT_CENTERLINE:
     type: LineString
     description:
-      Resulting oriented centerline.
+      Resulting Centerline.
 seealso:
   - "[PolygonCenterLine](/fct-qgis/algorithms/spatialcomponents/PolygonCenterLine/)"

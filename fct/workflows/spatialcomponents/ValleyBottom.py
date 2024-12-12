@@ -48,7 +48,7 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
     SIMPLIFY = 'SIMPLIFY'
     SMOOTH = 'SMOOTH'
     OUT_VB = 'OUT_VB'
-
+    
     def initAlgorithm(self, configuration):
 
         self.addParameter(QgsProcessingParameterRasterLayer(

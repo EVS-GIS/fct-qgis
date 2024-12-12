@@ -40,22 +40,22 @@ To process the nexts steps, your valley bottom layer must respect the following 
 
 ![A clean valley bottom output](/fct-qgis/img/dem_to_dgo_clean_vb.png)
 
-## Calculate the oriented centerline
+## Calculate the Centerline
 
 You can directly calculate the DGOs using the network polyline but the result is better using the centerline (ie. medial axis) of the valley bottom. 
 To calculate it, you will need a polyline that intersects the valley bottom polygon at least upstream and downstream. You can use the QGIS [Extend Lines](https://docs.qgis.org/latest/en/docs/user_manual/processing_algs/qgis/vectorgeometry.html#qgisextendlines) algorithm with the network polyline or just draw a dummy polyline that does the job. This polyline will never be used after. 
 
 ![Extend Lines tool and the result](/fct-qgis/img/dem_to_dgo_extend_lines.png)
 
-Run the [Oriented Centerline Workflow](/fct-qgis/workflows/spatialcomponents/OrientedCenterline/) with your DEM, your refined valley bottom, and your polyline that instersect it. The result is a centerline which is oriented upstream to downstream. If you want to smooth it more, you can use the QGIS [Simplify](https://docs.qgis.org/latest/en/docs/user_manual/processing_algs/qgis/vectorgeometry.html#qgissimplifygeometries) Douglas-Peucker algorithm, then the QGIS [Smooth Geometry](https://docs.qgis.org/latest/en/docs/user_manual/processing_algs/qgis/vectorgeometry.html#qgissmoothgeometry) algorithm.
+Run the [Centerline Workflow](/fct-qgis/workflows/spatialcomponents/Centerline/) with your DEM, your refined valley bottom, and your polyline that instersect it. The result is a centerline which is oriented upstream to downstream. If you want to smooth it more, you can use the QGIS [Simplify](https://docs.qgis.org/latest/en/docs/user_manual/processing_algs/qgis/vectorgeometry.html#qgissimplifygeometries) Douglas-Peucker algorithm, then the QGIS [Smooth Geometry](https://docs.qgis.org/latest/en/docs/user_manual/processing_algs/qgis/vectorgeometry.html#qgissmoothgeometry) algorithm.
 
-![Resulting oriented centerline](/fct-qgis/img/OrientedCenterline.png)
+![Resulting Centerline](/fct-qgis/img/Centerline.png)
 
 ## Disaggregate the valley bottom along the centerline
 
 Before carrying out the disaggregation, we advise to simplify the valley bottom polygon with the QGIS [Simplify](https://docs.qgis.org/latest/en/docs/user_manual/processing_algs/qgis/vectorgeometry.html#qgissimplifygeometries) Douglas-Peucker algorithm. Disaggregating the raw valley bottom is possible, but will take a lot of time and resources. 
 
-From now, you are ready to disaggregate the valley bottom in DGOs. Use the [Segmentation Workflow](/fct-qgis/workflows/disaggregation/Segmentation/) to do it, using the valley bottom polygon as feature to segment and the oriented centerline. Choose the segmentation step (in map unit) you want for your DGOs size. 
+From now, you are ready to disaggregate the valley bottom in DGOs. Use the [Segmentation Workflow](/fct-qgis/workflows/disaggregation/Segmentation/) to do it, using the valley bottom polygon as feature to segment and the centerline. Choose the segmentation step (in map unit) you want for your DGOs size. 
 
 ![Segmentation result](/fct-qgis/img/Segmentation.png)
 

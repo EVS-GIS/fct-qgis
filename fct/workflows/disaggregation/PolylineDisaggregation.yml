@@ -8,12 +8,10 @@ summary: |
 description: |
   In order to characterize fluvial corridors thanks to a set of metrics, 
   it is necessary to create entities which do not necessarily have a 
-  physical reality. It is the case of the inflection line, used during 
+  physical reality [@roux2014]. It is the case of the inflection line, used during 
   a set of planimetric metrics assessment such as the streamline sinuosity 
   or the half-amplitude of bends. The inflection line of a curve is 
   defined as the line passing through its inflection points. 
-
-  [@roux2014]
 
   Algorithm: 
 

@@ -5,15 +5,13 @@ summary: |
 
 description: |
   Mutliscale characterization of fluvial system is based on fluvial linear such 
-  as the hydrographic network or the centerline network. To ensure a consistent 
+  as the hydrographic network or the centerline network [@roux2014]. To ensure a consistent 
   process, one of the necessary conditions is that networks must be (i) oriented, 
   (ii) connected and (iii) relevant of the in-field configuration. Sequencing tool 
   aiming at ordering and, if it is needed, flipping streams of a network, to ensure :
   
   1. a good flow direction from upstream to downstream.
   2. a good ordination of streams in order to spatially and hierarchically located them within a network.
-
-  [@roux2014]
 
   Algorithm:
 

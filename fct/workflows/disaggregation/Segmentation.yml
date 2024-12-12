@@ -5,15 +5,13 @@ summary: |
 
 description: |
   Prior to assess metrics to characterize a fluvial system, fluvial units 
-  have to be disaggregated. This step enables to discretize a continuum 
+  have to be disaggregated [@roux2014]. This step enables to discretize a continuum 
   with a constant length in order to provide a higher resolution for 
   characterizing fluvial units. The constant length must be set precisely 
   to ensure spatial trends or relationships between several variables to be 
   correctly detected either at a network scale or at a local scale. Spatial 
   disaggregation can be run both for linear (e.g. hydrographic network, 
   centerline) and polygon feature (valley bottom, active channel).
-
-  [@roux2014]
 
   ![Segmentation result](/fct-qgis/img/Segmentation.png)
 

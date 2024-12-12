@@ -26,12 +26,12 @@ from qgis.core import (
 
 from ..metadata import AlgorithmMetadata
 
-class OrientedCenterline(AlgorithmMetadata, QgsProcessingAlgorithm):
+class Centerline(AlgorithmMetadata, QgsProcessingAlgorithm):
     """ 
     Extract valley bottom over the studied area
     """
 
-    METADATA = AlgorithmMetadata.read(__file__, 'OrientedCenterline')
+    METADATA = AlgorithmMetadata.read(__file__, 'Centerline')
 
     POLYGON = 'POLYGON'
     DISTANCE = 'DISTANCE'
@@ -65,7 +65,7 @@ class OrientedCenterline(AlgorithmMetadata, QgsProcessingAlgorithm):
 
         self.addParameter(QgsProcessingParameterFeatureSink(
             self.OUT_CENTERLINE,
-            self.tr('Output oriented centerline')))
+            self.tr('Output Centerline')))
 
     def processAlgorithm(self, parameters, context, feedback): 
 

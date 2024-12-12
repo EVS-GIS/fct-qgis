@@ -8,7 +8,7 @@ The latest stable release of the Fluvial Corridor Toolbox is now available from 
 
 ### Create a virtualenv for the fct-qgis package
 
-    python -m venv env --system-site-packages
+    python3 -m venv env --system-site-packages
     echo /usr/share/qgis/python/plugins > ./env/lib/python<version>/site-packages/qgis_plugins.pth
 
     source ./env/bin/activate

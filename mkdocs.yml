@@ -55,6 +55,11 @@ markdown_extensions:
   #     bibtex_file: docs/bibliography.bib
   #     order: sorted
 
+plugins:
+  - search
+  - bibtex:
+      bib_file: docs/bibliography.bib
+
 nav:
   - Introduction: index.md
   - install.md
@@ -178,7 +183,7 @@ nav:
   - Workflows Reference:
     - 1- Spatial Components:
       - Index: workflows/spatialcomponents/index.md
-      - workflows/spatialcomponents/OrientedCenterline.md
+      - workflows/spatialcomponents/Centerline.md
       - workflows/spatialcomponents/ValleyBottom.md
     - 2- Disaggregation Processes:
       - Index: workflows/disaggregation/index.md

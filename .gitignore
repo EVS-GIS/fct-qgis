@@ -11,7 +11,7 @@ alien/
 release/
 site/
 cython/terrain/*.cpp
-tests/testdata/*.aux.xml
+*.aux.xml
 .DS_Store
 .vscode/
 env/

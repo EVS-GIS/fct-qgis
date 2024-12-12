@@ -28,6 +28,7 @@ from qgis.core import (
 )
 
 from ..metadata import AlgorithmMetadata
+from ...utils.assertions import assertLayersCompatibility
 
 
 class PolygonCenterLine(AlgorithmMetadata, QgsProcessingAlgorithm):
@@ -85,6 +86,11 @@ class PolygonCenterLine(AlgorithmMetadata, QgsProcessingAlgorithm):
     def processAlgorithm(
         self, parameters, context, feedback
     ):  
+        
+        assertLayersCompatibility([
+            self.parameterAsVectorLayer(parameters, self.NETWORK, context), 
+            self.parameterAsVectorLayer(parameters, self.POLYGON, context)], feedback)
+        
         network = self.parameterAsSource(parameters, self.NETWORK, context)
         polygons = self.parameterAsSource(parameters, self.POLYGON, context)
         step = self.parameterAsInt(parameters, self.STEP, context)
@@ -121,7 +127,7 @@ class PolygonCenterLine(AlgorithmMetadata, QgsProcessingAlgorithm):
                 if len(pts) < 2:
                     feedback.reportError(
                         self.tr(
-                            f"Not enough intersection points between polygon and network features (2 needed)"
+                            f"Not enough intersection points between polygon and network features (2 needed)."
                         )
                     )
                     break
@@ -204,6 +210,17 @@ class PolygonCenterLine(AlgorithmMetadata, QgsProcessingAlgorithm):
                 geom = side[0].intersection(polygon_geom)
 
                 centerline = geom.smooth(smooth)
+
+                # Warning if multiple parts
+                # if centerline.isMultipart():
+                #     feedback.pushWarning(
+                #         self.tr(
+                #             f"Centerline is multipart for polygon {polygon.id()}. \
+                #             Consider precising the stream polyline if you draw it by hand. \
+                #             Consider reducing the disaggregation distance."
+                #         )
+                #     )
+
                 feat = QgsFeature()
                 feat.setGeometry(centerline)
                 feat.setAttributes(polygon.attributes())
