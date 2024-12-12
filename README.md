@@ -1,6 +1,7 @@
-[![.github/workflows/release.yml](https://github.com/EVS-GIS/fct-qgis/actions/workflows/release.yml/badge.svg?branch=master)](https://github.com/EVS-GIS/fct-qgis/actions/workflows/release.yml)
 [![Build terrain analysis extension](https://github.com/EVS-GIS/fct-qgis/actions/workflows/build.yml/badge.svg)](https://github.com/EVS-GIS/fct-qgis/actions/workflows/build.yml)
-[![pages-build-deployment](https://github.com/EVS-GIS/fct-qgis/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/EVS-GIS/fct-qgis/actions/workflows/pages/pages-build-deployment)
+[![FCT algorithms & workflows tests](https://github.com/EVS-GIS/fct-qgis/actions/workflows/test.yml/badge.svg)](https://github.com/EVS-GIS/fct-qgis/actions/workflows/test.yml)
+[![Documentation](https://github.com/EVS-GIS/fct-qgis/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/EVS-GIS/fct-qgis/actions/workflows/pages/pages-build-deployment)
+[![Release](https://github.com/EVS-GIS/fct-qgis/actions/workflows/release.yml/badge.svg?branch=master)](https://github.com/EVS-GIS/fct-qgis/actions/workflows/release.yml)
 
 # Fluvial Corridor Toolbox
 
