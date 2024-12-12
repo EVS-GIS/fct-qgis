@@ -3,14 +3,13 @@ import tempfile
 import shutil
 
 from qgis.testing import QgisTestCase, start_app
-from qgis.core import (
-    QgsProject, QgsVectorLayer, QgsRasterLayer)
+from qgis.core import QgsVectorLayer, QgsRasterLayer
 from processing.core.Processing import Processing
 import processing
 
 from fct.FluvialCorridorToolbox import FluvialCorridorToolboxProvider, FluvialCorridorWorkflowsProvider
 
-qgis_app = start_app(cleanup=True)
+qgis_app = start_app(cleanup=False)
 
 Processing.initialize()
 fct = FluvialCorridorToolboxProvider()
