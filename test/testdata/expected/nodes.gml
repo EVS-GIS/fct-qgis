@@ -37,8 +37,8 @@
   </ogr:featureMember>
   <ogr:featureMember>
     <ogr:nodes gml:id="nodes.4">
-      <gml:boundedBy><gml:Envelope srsName="urn:ogc:def:crs:EPSG::2154"><gml:lowerCorner>914253.100267768 6447214.50072857</gml:lowerCorner><gml:upperCorner>914253.100267768 6447214.50072857</gml:upperCorner></gml:Envelope></gml:boundedBy>
-      <ogr:geometryProperty><gml:Point srsName="urn:ogc:def:crs:EPSG::2154" gml:id="nodes.geom.4"><gml:pos>914253.100267768 6447214.50072857</gml:pos></gml:Point></ogr:geometryProperty>
+      <gml:boundedBy><gml:Envelope srsName="urn:ogc:def:crs:EPSG::2154"><gml:lowerCorner>925598.651180723 6444887.22254707</gml:lowerCorner><gml:upperCorner>925598.651180723 6444887.22254707</gml:upperCorner></gml:Envelope></gml:boundedBy>
+      <ogr:geometryProperty><gml:Point srsName="urn:ogc:def:crs:EPSG::2154" gml:id="nodes.geom.4"><gml:pos>925598.651180723 6444887.22254707</gml:pos></gml:Point></ogr:geometryProperty>
       <ogr:GID>4</ogr:GID>
     </ogr:nodes>
   </ogr:featureMember>
@@ -236,6 +236,13 @@
       <gml:boundedBy><gml:Envelope srsName="urn:ogc:def:crs:EPSG::2154"><gml:lowerCorner>960317.099718714 6438410.99968736</gml:lowerCorner><gml:upperCorner>960317.099718714 6438410.99968736</gml:upperCorner></gml:Envelope></gml:boundedBy>
       <ogr:geometryProperty><gml:Point srsName="urn:ogc:def:crs:EPSG::2154" gml:id="nodes.geom.32"><gml:pos>960317.099718714 6438410.99968736</gml:pos></gml:Point></ogr:geometryProperty>
       <ogr:GID>32</ogr:GID>
+    </ogr:nodes>
+  </ogr:featureMember>
+  <ogr:featureMember>
+    <ogr:nodes gml:id="nodes.33">
+      <gml:boundedBy><gml:Envelope srsName="urn:ogc:def:crs:EPSG::2154"><gml:lowerCorner>914253.100267768 6447214.50072857</gml:lowerCorner><gml:upperCorner>914253.100267768 6447214.50072857</gml:upperCorner></gml:Envelope></gml:boundedBy>
+      <ogr:geometryProperty><gml:Point srsName="urn:ogc:def:crs:EPSG::2154" gml:id="nodes.geom.33"><gml:pos>914253.100267768 6447214.50072857</gml:pos></gml:Point></ogr:geometryProperty>
+      <ogr:GID>33</ogr:GID>
     </ogr:nodes>
   </ogr:featureMember>
 </ogr:FeatureCollection>

@@ -59,3 +59,42 @@ class TestIdentifyNetworkNodes(QgisTestCase):
     @classmethod
     def tearDownClass(self):
         shutil.rmtree(self.outdir, True)
+
+
+class TestAggregateStreamSegments(QgisTestCase):
+
+    @classmethod
+    def setUpClass(self):
+        self.outdir = tempfile.mkdtemp()
+        self.network = QgsVectorLayer(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), 
+            'testdata', 'input', 'network.gpkg'))
+        
+    def test_network_input(self):
+
+        self.assertTrue(self.network.isValid(), f'Failed to load {self.network.source()}')
+
+    def test_aggregatestreamsegments(self):
+
+        proc_alg = processing.run('fct:aggregatestreamsegments', {
+            'INPUT': self.network,
+            'FROM_NODE_FIELD': '',
+            'TO_NODE_FIELD': '',
+            'COPY_FIELDS': ['GID'],
+            'OUTPUT': os.path.join(self.outdir, 'aggregatedstreams.gml')
+        })
+
+        aggregated_output = QgsVectorLayer(proc_alg['OUTPUT'])
+        self.assertTrue(aggregated_output.isValid(), 'Aggregated output is not a valid layer')
+
+        expected_aggregated = QgsVectorLayer(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testdata', 'expected', 'aggregatedstreams.gml'))
+        self.assertTrue(expected_aggregated.isValid(), f'Failed to load {expected_aggregated.source()}')
+
+        self.assertLayersEqual(expected_aggregated, aggregated_output)
+        
+
+    @classmethod
+    def tearDownClass(self):
+        shutil.rmtree(self.outdir, True)
+
+

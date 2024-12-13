@@ -30,8 +30,11 @@ from qgis.core import (
     QgsProcessingAlgorithm,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingParameterField
+    QgsProcessingParameterField,
+    QgsProcessingUtils
 )
+
+import processing
 
 from .graph import create_link_index
 from ..metadata import AlgorithmMetadata
@@ -71,14 +74,16 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('From Node Field'),
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
-            defaultValue='NODEA'))
+            defaultValue='NODEA',
+            optional=True))
 
         self.addParameter(QgsProcessingParameterField(
             self.TO_NODE_FIELD,
             self.tr('To Node Field'),
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
-            defaultValue='NODEB'))
+            defaultValue='NODEB',
+            optional=True))
 
         self.addParameter(QgsProcessingParameterField(
             self.COPY_FIELDS,
@@ -99,6 +104,17 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
         to_node_field = self.parameterAsString(parameters, self.TO_NODE_FIELD, context)
         copy_fields = self.parameterAsFields(parameters, self.COPY_FIELDS, context)
+
+        if not from_node_field or not to_node_field:
+            identifynodes = processing.run('fct:identifynetworknodes', {
+                'INPUT': self.parameterAsVectorLayer(parameters, self.INPUT, context),
+                'NODES': QgsProcessing.TEMPORARY_OUTPUT,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }, context=context, feedback=feedback, is_child_algorithm=True)
+
+            layer = QgsProcessingUtils.variantToSource(identifynodes['OUTPUT'], context)
+            from_node_field = 'NODEA'
+            to_node_field = 'NODEB'
 
         feedback.pushInfo('%s' % copy_fields)
 
@@ -200,7 +216,6 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
 
             current = 0
             seen_nodes = set()
-            srclayer = context.getMapLayer(layer.sourceName())
 
             while process_stack:
 
@@ -215,7 +230,7 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
 
                 for link in downward_index[from_node]:
 
-                    segment = srclayer.getFeature(link.feature_id)
+                    segment = next(layer.getFeatures(QgsFeatureRequest(link.feature_id)))
                     copy_values = [segment.attribute(field) for field in copy_fields]
                     vertices = [v for v in segment.geometry().vertices()]
 
@@ -225,7 +240,7 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
                     while degree[link.b] == 2 and downward_index[link.b]:
 
                         next_link = downward_index[link.b][0]
-                        segment = srclayer.getFeature(next_link.feature_id)
+                        segment = next(layer.getFeatures(QgsFeatureRequest(next_link.feature_id)))
                         vertices = vertices[:-1] + [v for v in segment.geometry().vertices()]
 
                         current = current + 1
