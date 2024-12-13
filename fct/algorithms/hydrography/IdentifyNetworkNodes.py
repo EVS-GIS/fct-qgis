@@ -89,14 +89,12 @@ class IdentifyNetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
 
     def processAlgorithm(self, parameters, context, feedback): 
 
-        layer = self.parameterAsSource(parameters, self.INPUT, context)
+        layer = self.parameterAsVectorLayer(parameters, self.INPUT, context)
         quantization = self.parameterAsDouble(parameters, self.QUANTIZATION, context)
 
-        for field in layer.fields():
+        for field in layer.dataProvider().fields():
             if field.name() in ['NODEA', 'NODEB']:
-                feedback.reportError(
-                    self.tr('Field "{}" already exists in input layer.').format(field.name()))
-                return {}
+                layer.dataProvider().deleteAttributes([layer.fields().indexFromName(field.name())])
 
         # Step 1
         feedback.setProgressText(self.tr("[1/4] Get Line Endpoints ..."))

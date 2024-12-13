@@ -25,6 +25,7 @@ from qgis.core import (
 )
 
 from ..metadata import AlgorithmMetadata
+from ...utils.assertions import assertLayersCompatibility
 
 class Centerline(AlgorithmMetadata, QgsProcessingAlgorithm):
     """ 
@@ -69,7 +70,15 @@ class Centerline(AlgorithmMetadata, QgsProcessingAlgorithm):
 
     def processAlgorithm(self, parameters, context, feedback): 
 
+        polygon = self.parameterAsVectorLayer(parameters, self.POLYGON, context)
+        stream = self.parameterAsVectorLayer(parameters, self.STREAM, context)
         dem = self.parameterAsRasterLayer(parameters, self.DEM, context)
+
+        layers = [polygon, stream]
+        if dem is not None:
+            layers.append(dem)
+
+        assertLayersCompatibility(layers, feedback)
 
         feedback.pushInfo(self.tr('Compute centerline...'))
 
@@ -77,8 +86,8 @@ class Centerline(AlgorithmMetadata, QgsProcessingAlgorithm):
 
             centerline_proc = processing.run('fct:polygoncenterline',
                 {
-                    'POLYGON': self.parameterAsVectorLayer(parameters, self.POLYGON, context),
-                    'NETWORK': self.parameterAsVectorLayer(parameters, self.STREAM, context),
+                    'POLYGON': polygon,
+                    'NETWORK': stream,
                     'STEP': self.parameterAsDouble(parameters, self.DISTANCE, context), 
                     'CENTERLINE': parameters[self.OUT_CENTERLINE],
                 }, context=context, is_child_algorithm=True, feedback=feedback)
@@ -90,8 +99,8 @@ class Centerline(AlgorithmMetadata, QgsProcessingAlgorithm):
 
             centerline_proc = processing.run('fct:polygoncenterline',
                 {
-                    'POLYGON': self.parameterAsVectorLayer(parameters, self.POLYGON, context),
-                    'NETWORK': self.parameterAsVectorLayer(parameters, self.STREAM, context),
+                    'POLYGON': polygon,
+                    'NETWORK': stream,
                     'STEP': self.parameterAsDouble(parameters, self.DISTANCE, context), 
                     'CENTERLINE': QgsProcessing.TEMPORARY_OUTPUT,
                 }, context=context, is_child_algorithm=True, feedback=feedback)

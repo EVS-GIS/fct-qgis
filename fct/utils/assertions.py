@@ -13,10 +13,10 @@ Generic assertions used by FCT
 ***************************************************************************
 """
 
-from qgis.core import QgsWkbTypes, QgsProcessingFeedback, QgsProcessingException
+from qgis.core import QgsWkbTypes, QgsProcessingFeedback, QgsProcessingException, QgsVectorLayer, QgsRasterLayer
 
 
-def assertLayersCompatibility(layers: list, feedback: QgsProcessingFeedback, same_crs: bool = True, mutli_geom_allowed: bool = True):
+def assertLayersCompatibility(layers: list[QgsVectorLayer|QgsRasterLayer], feedback: QgsProcessingFeedback, same_crs: bool = True, mutli_geom_allowed: bool = True):
     """ Assert that a list of layers are compatible
 
     Parameters
@@ -33,6 +33,10 @@ def assertLayersCompatibility(layers: list, feedback: QgsProcessingFeedback, sam
     for layer in layers:
         if not layer.isValid():
             feedback.reportError(f'Layer {layer.name()} is not valid')
+            valid = False
+
+        if not layer.crs():
+            feedback.reportError(f'Input layer {layer.name()} has no CRS')
             valid = False
 
         if same_crs:

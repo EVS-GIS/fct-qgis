@@ -13,8 +13,6 @@ DisaggregateNetwork
 ***************************************************************************
 """
 
-import os
-
 from PyQt5.QtCore import QVariant
 from qgis.core import (
     QgsProcessing,
@@ -27,7 +25,6 @@ from qgis.core import (
     QgsProcessingParameterField,
     QgsFeatureRequest,
     QgsExpression,
-    QgsVectorLayer,
     QgsGeometry,
     QgsFeature,
 )

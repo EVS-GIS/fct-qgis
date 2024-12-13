@@ -22,10 +22,14 @@ from qgis.core import (
     QgsPointXY,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterFeatureSink,
+    QgsProcessingUtils,
     QgsProcessingParameterNumber,
     QgsGeometry,
     QgsFeature,
+    QgsProcessingException,
 )
+
+import processing
 
 from ..metadata import AlgorithmMetadata
 from ...utils.assertions import assertLayersCompatibility
@@ -96,9 +100,8 @@ class PolygonCenterLine(AlgorithmMetadata, QgsProcessingAlgorithm):
         step = self.parameterAsInt(parameters, self.STEP, context)
         smooth = self.parameterAsInt(parameters, self.SMOOTH, context)
 
-        (sink, dest_id) = self.parameterAsSink(
-            parameters,
-            self.CENTERLINE,
+        (sink, dest_id) = QgsProcessingUtils.createFeatureSink(
+            'memory:',
             context,
             polygons.fields(),
             QgsWkbTypes.LineString,
@@ -115,6 +118,7 @@ class PolygonCenterLine(AlgorithmMetadata, QgsProcessingAlgorithm):
                 QgsWkbTypes.LineGeometry
             )
 
+            complete_stream_found = False
             for polyline in network.getFeatures():
                 stream_geom = polyline.geometry()
                 pts_collection = stream_geom.intersection(
@@ -130,7 +134,7 @@ class PolygonCenterLine(AlgorithmMetadata, QgsProcessingAlgorithm):
                             f"Not enough intersection points between polygon and network features (2 needed)."
                         )
                     )
-                    break
+                    continue
 
                 elif len(pts) > 2:
                     matrix = np.array(np.meshgrid(pts, pts)).T.reshape(-1, 2)
@@ -152,6 +156,8 @@ class PolygonCenterLine(AlgorithmMetadata, QgsProcessingAlgorithm):
                 else:
                     first_vertex = pts[0].asPoint()
                     second_vertex = pts[1].asPoint()
+
+                complete_stream_found = True
 
                 vertex1 = geom_ring.closestVertex(first_vertex)
                 vertex2 = geom_ring.closestVertex(second_vertex)
@@ -226,4 +232,21 @@ class PolygonCenterLine(AlgorithmMetadata, QgsProcessingAlgorithm):
                 feat.setAttributes(polygon.attributes())
                 sink.addFeature(feat)
 
-        return {self.CENTERLINE: dest_id}
+        if not complete_stream_found:
+            raise QgsProcessingException(
+                self.tr("No complete polyline found for the polygon. The input stream polyline should cut the polygon at up and downstream points.")
+            )
+        
+        feedback.pushInfo(self.tr('Clean aggregation of the output centerlines...'))
+        identify = processing.run('fct:identifynetworknodes', {
+            'INPUT': dest_id,
+            'NODES': QgsProcessing.TEMPORARY_OUTPUT,
+            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+        }, feedback=feedback, context=context, is_child_algorithm=True)
+
+        aggregate = processing.run('fct:aggregateundirectedlines', {
+            'INPUT': identify['OUTPUT'],
+            'OUTPUT': parameters['CENTERLINE']
+        }, feedback=feedback, context=context, is_child_algorithm=True)
+
+        return {self.CENTERLINE: aggregate['OUTPUT']}

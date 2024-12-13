@@ -25,10 +25,10 @@ from qgis.core import (
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterNumber,
     QgsProcessingParameterEnum,
-    QgsProcessingParameterExtent,
 )
 
 from ..metadata import AlgorithmMetadata
+from ...utils.assertions import assertLayersCompatibility
 
 class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
     """ 
@@ -113,7 +113,12 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Output valley bottom')))
 
     def processAlgorithm(self, parameters, context, feedback): 
-        
+
+        assertLayersCompatibility([
+            self.parameterAsRasterLayer(parameters, self.IN_DEM, context),
+            self.parameterAsVectorLayer(parameters, self.IN_STREAM, context)
+        ], feedback, same_crs=True)
+            
         # Step 1: Detrend DEM
 
         method = self.parameterAsString(parameters, self.METHOD, context)
