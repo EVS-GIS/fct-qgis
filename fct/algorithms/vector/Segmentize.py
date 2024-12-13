@@ -27,7 +27,8 @@ from qgis.core import (
     QgsProcessingAlgorithm,
     QgsProcessingParameterDistance,
     QgsProcessingParameterFeatureSink,
-    QgsProcessingParameterFeatureSource
+    QgsProcessingParameterFeatureSource,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -90,7 +91,7 @@ class Segmentize(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             geom = feature.geometry()
             length = geom.length()

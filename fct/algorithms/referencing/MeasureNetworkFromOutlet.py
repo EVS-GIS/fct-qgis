@@ -127,7 +127,7 @@ class MeasureNetworkFromOutlet(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, edge in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = edge.attribute(from_node_field)
             b = edge.attribute(to_node_field)
@@ -158,7 +158,7 @@ class MeasureNetworkFromOutlet(AlgorithmMetadata, QgsProcessingAlgorithm):
         while stack:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             node = stack.pop()
             if node in seen_nodes:
@@ -214,7 +214,7 @@ class MeasureNetworkFromOutlet(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, edge in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             b = edge.attribute(to_node_field)
             measure = measures.get(b, 0.0)

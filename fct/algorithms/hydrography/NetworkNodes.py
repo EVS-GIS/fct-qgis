@@ -20,7 +20,6 @@ from qgis.PyQt.QtCore import (
 from qgis.core import ( 
     QgsFeature,
     QgsField,
-    QgsFields,
     QgsGeometry,
     QgsProcessing,
     QgsProcessingAlgorithm,
@@ -28,7 +27,8 @@ from qgis.core import (
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -193,7 +193,7 @@ class NetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
 
             feedback.setProgress(int(current * total))
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
         feedback.pushInfo(self.tr("Compute in-degree ..."))
 
@@ -215,7 +215,7 @@ class NetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
 
             feedback.setProgress(int(current * total))
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             din = in_degree[gid]
             dout = len(adjacency[gid])

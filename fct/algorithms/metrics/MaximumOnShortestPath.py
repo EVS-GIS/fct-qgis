@@ -28,7 +28,8 @@ from qgis.core import (
     QgsProcessingParameterFeatureSink,
     QgsFeature,
     QgsField,
-    QgsFields
+    QgsFields,
+    QgsProcessingException
 )
 
 # from processing.core.ProcessingConfig import ProcessingConfig
@@ -148,7 +149,7 @@ class MaximumOnShortestPath(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, target in enumerate(node_layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             node_type = target.attribute(type_field)
             if node_type > 0:
@@ -182,7 +183,7 @@ class MaximumOnShortestPath(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(node_layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             node_type = feature.attribute(type_field)
             if node_type > 0:
@@ -198,7 +199,7 @@ class MaximumOnShortestPath(AlgorithmMetadata, QgsProcessingAlgorithm):
                 for entry in iterator:
 
                     if feedback.isCanceled():
-                        break
+                        raise QgsProcessingException(self.tr('Cancelled by user'))
 
                     if entry.key in targets:
                         weight = entry.weight

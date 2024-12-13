@@ -21,7 +21,8 @@ from qgis.core import (
     QgsProcessingParameterEnum,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
-    QgsVectorLayer
+    QgsVectorLayer,
+    QgsProcessingException,
 )
 
 from ..metadata import AlgorithmMetadata
@@ -91,7 +92,7 @@ class SelectConnectedComponents(AlgorithmMetadata, QgsProcessingAlgorithm):
             for current, feature in enumerate(layer.getFeatures()):
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 from_node = feature.attribute(from_node_field)
                 to_node = feature.attribute(to_node_field)
@@ -110,7 +111,7 @@ class SelectConnectedComponents(AlgorithmMetadata, QgsProcessingAlgorithm):
             for feature in layer.selectedFeatures():
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 from_node = feature.attribute(from_node_field)
                 to_node = feature.attribute(to_node_field)
@@ -125,7 +126,7 @@ class SelectConnectedComponents(AlgorithmMetadata, QgsProcessingAlgorithm):
             while stack:
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 node = stack.pop()
 
@@ -154,7 +155,7 @@ class SelectConnectedComponents(AlgorithmMetadata, QgsProcessingAlgorithm):
             for current, feature in enumerate(layer.getFeatures()):
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 from_node = feature.attribute(from_node_field)
                 to_node = feature.attribute(to_node_field)
@@ -169,7 +170,7 @@ class SelectConnectedComponents(AlgorithmMetadata, QgsProcessingAlgorithm):
             while process_stack:
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 node, segment_id = process_stack.pop()
                 selection.add(segment_id)

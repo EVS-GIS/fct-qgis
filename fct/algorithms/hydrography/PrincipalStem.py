@@ -22,9 +22,7 @@ from qgis.core import (
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
-    QgsProcessingParameterNumber,
-    QgsProcessingParameters,
-    QgsPropertyDefinition
+    QgsProcessingException,
 )
 
 from ..metadata import AlgorithmMetadata
@@ -123,7 +121,7 @@ class PrincipalStem(AlgorithmMetadata, QgsProcessingAlgorithm):
         while stack:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             nb = stack.pop()
 
@@ -159,14 +157,14 @@ class PrincipalStem(AlgorithmMetadata, QgsProcessingAlgorithm):
         for source in sources:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             na = source
 
             while na in backtracks:
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 segment, nb, cost = backtracks[na]
 

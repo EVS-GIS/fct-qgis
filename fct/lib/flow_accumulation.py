@@ -1,5 +1,7 @@
 import numpy as np
 
+from qgis.core import QgsProcessingException
+
 # D8 directions in 3x3 neighborhood
 
 d8_directions = np.power(2, np.array([7, 0, 1, 6, 0, 2, 5, 4, 3], dtype=np.uint8))
@@ -91,7 +93,7 @@ def flow_accumulation(flow, out=None, feedback=None):
     for i in range(height):
 
         if feedback.isCanceled():
-            break
+            raise QgsProcessingException(self.tr('Cancelled by user'))
 
         for j in range(width):
 
@@ -127,7 +129,7 @@ def flow_accumulation(flow, out=None, feedback=None):
     while stack:
 
         if feedback.isCanceled():
-            break
+            raise QgsProcessingException(self.tr('Cancelled by user'))
 
         i, j = stack.pop()
         inflow[i, j] = -1

@@ -13,39 +13,15 @@ SelectByDistance - Select vectors within a specific distance to layer
 ***************************************************************************
 """
 
-import math
-
-from qgis.PyQt.QtCore import ( 
-    QVariant
-)
-
 from qgis.core import ( 
-    QgsApplication,
-    QgsExpression,
-    QgsGeometry,
-    QgsFeatureSink,
-    QgsFeatureRequest,
-    QgsFeature,
-    QgsField,
-    QgsFields,
-    QgsPointXY,
     QgsProcessing,
     QgsProcessingAlgorithm,
-    QgsProcessingFeatureBasedAlgorithm,
     QgsProcessingException,
     QgsProcessingParameterDistance,
-    QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingParameterNumber,
-    QgsProcessingParameterString,
-    QgsProcessingParameterField,
-    QgsProcessingParameterVectorLayer,
     QgsSpatialIndex,
     QgsVectorLayer,
-    QgsWkbTypes
 )
-
-from processing.algs.qgis.QgisAlgorithm import QgisAlgorithm 
 
 from ..metadata import AlgorithmMetadata
 
@@ -83,7 +59,7 @@ class SelectByDistance(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(target_layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
             
             search_box = feature.geometry().boundingBox()
             search_box.grow(distance)

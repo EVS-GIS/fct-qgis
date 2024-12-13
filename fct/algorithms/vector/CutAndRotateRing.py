@@ -25,7 +25,8 @@ from qgis.core import (
     QgsProcessingParameterFeatureSource,
     QgsSpatialIndex,
     QgsVectorLayer,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -81,7 +82,7 @@ class CutAndRotateRing(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current_polygon, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current_polygon * total))
 
@@ -109,7 +110,7 @@ class CutAndRotateRing(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current_point, feature in enumerate(cut_layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current_point * total))
 
@@ -177,7 +178,7 @@ class CutAndRotateRing(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current_polygon, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current_polygon * total))
 

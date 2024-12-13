@@ -28,7 +28,8 @@ from qgis.core import (
     QgsProcessingMultiStepFeedback,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingParameterField
+    QgsProcessingParameterField,
+    QgsProcessingException,
 )
 
 from ..metadata import AlgorithmMetadata
@@ -103,7 +104,7 @@ class StrahlerOrder(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, edge in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = edge.attribute(from_node_field)
             b = edge.attribute(to_node_field)
@@ -134,7 +135,7 @@ class StrahlerOrder(AlgorithmMetadata, QgsProcessingAlgorithm):
         while sources:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             source = sources.pop(0)
             order = strahler_order[source]

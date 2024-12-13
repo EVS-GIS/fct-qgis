@@ -36,7 +36,8 @@ from qgis.core import (
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -128,7 +129,7 @@ class AggregateUndirectedLines(AlgorithmMetadata, QgsProcessingAlgorithm):
             for current, feature in enumerate(layer.getFeatures()):
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 category = feature.attribute(category_field)
                 categories[category] += 1
@@ -164,7 +165,7 @@ class AggregateUndirectedLines(AlgorithmMetadata, QgsProcessingAlgorithm):
             for current, feature in enumerate(iterator):
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 from_node = feature.attribute(from_node_field)
                 to_node = feature.attribute(to_node_field)
@@ -193,7 +194,7 @@ class AggregateUndirectedLines(AlgorithmMetadata, QgsProcessingAlgorithm):
             while process_stack:
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 node = process_stack.pop()
                 if node in seen_nodes:
@@ -204,7 +205,7 @@ class AggregateUndirectedLines(AlgorithmMetadata, QgsProcessingAlgorithm):
                 for link in link_index[node]:
 
                     if feedback.isCanceled():
-                        break
+                        raise QgsProcessingException(self.tr('Cancelled by user'))
 
                     if link.feature_id in seen_links:
                         continue
@@ -223,7 +224,7 @@ class AggregateUndirectedLines(AlgorithmMetadata, QgsProcessingAlgorithm):
                     while degree[link.other] == 2:
 
                         if feedback.isCanceled():
-                            break
+                            raise QgsProcessingException(self.tr('Cancelled by user'))
 
                         next_link = link_index[link.other][0]
 
@@ -231,7 +232,7 @@ class AggregateUndirectedLines(AlgorithmMetadata, QgsProcessingAlgorithm):
                             next_link = link_index[link.other][1]
 
                         if next_link.feature_id in seen_links:
-                            break
+                            raise QgsProcessingException(self.tr('Cancelled by user'))
 
                         segment = srclayer.getFeature(next_link.feature_id)
                         linestring = QgsLineString([v for v in segment.geometry().vertices()])

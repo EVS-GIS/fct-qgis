@@ -31,6 +31,7 @@ from qgis.core import (
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
+    QgsProcessingException,
     QgsWkbTypes,
     NULL
 )
@@ -96,7 +97,7 @@ class AggregateFeatures(AlgorithmMetadata, QgsProcessingAlgorithm):
 
         for current, feature in enumerate(layer.getFeatures()):
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             distance = feature.attribute(ordering_field)
             value = feature.attribute(metric_field)
@@ -200,7 +201,7 @@ class AggregateFeatures(AlgorithmMetadata, QgsProcessingAlgorithm):
             for current, feature in enumerate(layer.getFeatures()):
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 outfeature = QgsFeature()
                 outfeature.setGeometry(QgsGeometry(feature.geometry()))

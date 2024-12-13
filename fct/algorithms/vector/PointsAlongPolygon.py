@@ -123,7 +123,7 @@ class PointsAlongPolygon(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, input_feature in enumerate(features):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             input_geometry = input_feature.geometry()
 

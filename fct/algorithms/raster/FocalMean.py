@@ -31,7 +31,8 @@ from qgis.core import (
     QgsProcessingParameterRasterLayer,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingParameterString
+    QgsProcessingParameterString,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -113,7 +114,7 @@ class FocalMean(AlgorithmMetadata, QgsProcessingAlgorithm):
                 for current, feature in enumerate(points.getFeatures()):
 
                     if feedback.isCanceled():
-                        break
+                        raise QgsProcessingException(self.tr('Cancelled by user'))
 
                     data = rdata.window(feature.geometry().asPoint(), width, height)
 

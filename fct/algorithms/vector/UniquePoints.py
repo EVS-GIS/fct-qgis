@@ -12,32 +12,15 @@ UniquePoints - Generate a point if last vertex
 *                                                                         *
 ***************************************************************************
 """
-from qgis.PyQt.QtCore import (
-    QVariant
-)
 
 from qgis.core import (
-    QgsApplication,
-    QgsExpression,
     QgsGeometry,
-    QgsFeatureSink,
-    QgsFeatureRequest,
     QgsFeature,
-    QgsField,
-    QgsFields,
-    QgsPointXY,
     QgsProcessing,
     QgsProcessingAlgorithm,
-    QgsProcessingFeatureBasedAlgorithm,
     QgsProcessingException,
-    QgsProcessingParameterDistance,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingParameterNumber,
-    QgsProcessingParameterString,
-    QgsProcessingParameterField,
-    QgsProcessingParameterVectorLayer,
-    QgsSpatialIndex,
     QgsWkbTypes
 )
 
@@ -83,7 +66,7 @@ class UniquePoints(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-              break
+              raise QgsProcessingException(self.tr('Cancelled by user'))
 
             geometry = feature.geometry()
             if geometry.isMultipart():
@@ -106,7 +89,7 @@ class UniquePoints(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, p in enumerate(points):
 
             if feedback.isCanceled():
-              break  
+              raise QgsProcessingException(self.tr('Cancelled by user'))  
 
             feature = QgsFeature()
             

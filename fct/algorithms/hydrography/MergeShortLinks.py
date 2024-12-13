@@ -165,7 +165,7 @@ class MergeShortLinks(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, edge in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = edge.attribute(from_node_field)
             b = edge.attribute(to_node_field)
@@ -205,7 +205,7 @@ class MergeShortLinks(AlgorithmMetadata, QgsProcessingAlgorithm):
         while stack:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             node = stack.pop()
 
@@ -222,7 +222,7 @@ class MergeShortLinks(AlgorithmMetadata, QgsProcessingAlgorithm):
                 current = current + 1
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 if link.feature_id in output_links:
                     continue
@@ -250,7 +250,7 @@ class MergeShortLinks(AlgorithmMetadata, QgsProcessingAlgorithm):
                 while merged_length < min_length or indegree[next_link.a] == 1:
 
                     if feedback.isCanceled():
-                        break
+                        raise QgsProcessingException(self.tr('Cancelled by user'))
 
                     # Find upstream link with same order
 

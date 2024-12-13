@@ -15,6 +15,8 @@ Watershed Analysis
 
 import numpy as np
 
+from qgis.core import QgsProcessingException
+
 from .grid import (
     D8POW2_UPWARD,
     D8_SEARCH,
@@ -61,7 +63,7 @@ def watershed(flow, values, nodata, feedback=None):
 
         feedback.setProgress(int(i*width*total))
         if feedback.isCanceled():
-            break
+            raise QgsProcessingException(self.tr('Cancelled by user'))
 
         for j in range(width):
 
@@ -93,7 +95,7 @@ def propagate(flow, values, nodata, i0, j0, feedback=None):
     while stack:
 
         if feedback.isCanceled():
-            break
+            raise QgsProcessingException(self.tr('Cancelled by user'))
 
         i, j = stack.pop()
 

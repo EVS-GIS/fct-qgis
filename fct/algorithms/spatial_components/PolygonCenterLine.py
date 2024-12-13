@@ -110,8 +110,7 @@ class PolygonCenterLine(AlgorithmMetadata, QgsProcessingAlgorithm):
 
         for polygon in polygons.getFeatures():
             if feedback.isCanceled():
-                feedback.reportError(self.tr("Aborted"), True)
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             polygon_geom = polygon.geometry().simplify(step)
             geom_ring = polygon_geom.removeInteriorRings().convertToType(

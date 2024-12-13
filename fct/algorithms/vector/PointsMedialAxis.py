@@ -31,7 +31,8 @@ from qgis.core import (
     QgsProcessingParameterField,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -118,7 +119,7 @@ class PointsMedialAxis(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             if feature.geometry():
                 points.append((feature.id(), feature.geometry().asPoint()))
@@ -138,7 +139,7 @@ class PointsMedialAxis(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, (p, q, ridge) in enumerate(medial_axis(voronoi, groups)):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feature = QgsFeature()
             feature.setGeometry(ridge)

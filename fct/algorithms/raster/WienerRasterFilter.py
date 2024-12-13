@@ -20,7 +20,8 @@ from qgis.core import (
     QgsProcessingParameterBand,
     QgsProcessingParameterNumber,
     QgsProcessingParameterRasterDestination,
-    QgsProcessingParameterRasterLayer
+    QgsProcessingParameterRasterLayer,
+    QgsProcessingException
 )
 
 from processing.algs.gdal.GdalUtils import GdalUtils 
@@ -114,7 +115,7 @@ class WienerRasterFilter(AlgorithmMetadata, QgsProcessingAlgorithm):
         for i, n in enumerate(bands):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             band = ds.GetRasterBand(n)
             data = band.ReadAsArray()

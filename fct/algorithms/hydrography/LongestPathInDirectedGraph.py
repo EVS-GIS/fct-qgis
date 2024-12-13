@@ -21,7 +21,8 @@ from qgis.core import (
     QgsProcessingParameterBoolean,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingParameterField
+    QgsProcessingParameterField,
+    QgsProcessingException,
 )
 
 from .graph import create_link_index
@@ -131,7 +132,7 @@ class LongestPathInDirectedGraph(AlgorithmMetadata, QgsProcessingAlgorithm):
         while stack:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             node = stack.pop()
             if node in seen_nodes:

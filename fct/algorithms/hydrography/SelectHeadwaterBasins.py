@@ -13,12 +13,12 @@ SelectConnectedComponents - Select Connected Components
 ***************************************************************************
 """
 
-from collections import defaultdict, Counter
+from collections import Counter
 
 from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
-    QgsProcessingParameterEnum,
+    QgsProcessingException,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
     QgsVectorLayer,
@@ -84,7 +84,7 @@ class SelectHeadwaterBasins(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             gid = feature.attribute(id_field)
             downstream = feature.attribute(downstream_field)

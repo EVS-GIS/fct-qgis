@@ -104,31 +104,15 @@ class Segmentation(AlgorithmMetadata, QgsProcessingAlgorithm):
         if self.input_type == 'Polygon':
 
             feedback.pushInfo('Compute polygon DGOs...')
-            axis = processing.run('qgis:fieldcalculator',
-                    {
-                        'INPUT': self.cl_layer,
-                        'FIELD_NAME': 'AXIS_ID',
-                        'FIELD_TYPE': 1,
-                        'FIELD_LENGTH': 3,
-                        'FIELD_PRECISION': 0,
-                        'NEW_FIELD': True,
-                        'FORMULA': '@row_number',
-                        'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-                    }, context=context, feedback=feedback, is_child_algorithm=True)
-
-            if feedback.isCanceled():
-                raise QgsProcessingException(self.tr('Canceled'))
-
             DGOs = processing.run('fct:disaggregatepolygon',
                     {
                         'polygon': self.layer,
-                        'centerline': axis['OUTPUT'],
+                        'centerline': self.cl_layer,
                         'disagreggationdistance': str(self.segStep),
-                        'axisfidfield': 'AXIS_ID',
-                        'qgis:refactorfields_1:DISAGGREGATED': parameters['OUTPUT']
+                        'DISAGGREGATED': parameters['OUTPUT']
                     }, context=context, feedback=feedback, is_child_algorithm=True)
 
-            return {self.OUTPUT: DGOs['qgis:refactorfields_1:DISAGGREGATED']}
+            return {self.OUTPUT: DGOs['DISAGGREGATED']}
 
         elif self.input_type == 'LineString':
 

@@ -82,7 +82,7 @@ class SelectNearestFeature(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, ref_feature in enumerate(reference_layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
             
             ref_geometry = ref_feature.geometry()
             search_box = ref_geometry.boundingBox()

@@ -24,7 +24,8 @@ from qgis.core import (
     QgsProcessingAlgorithm,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -157,7 +158,7 @@ class SciPyVoronoiPolygons(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             if feature.geometry():
                 points.append((feature.id(), feature.geometry().asPoint()))
@@ -173,7 +174,7 @@ class SciPyVoronoiPolygons(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, (index, polygon) in enumerate(voronoi_polygons(voronoi, diameter)):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             if polygon.isGeosValid():
 

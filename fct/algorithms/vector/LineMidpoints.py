@@ -13,32 +13,13 @@ LineMidPoints - Generate a point at the middle of each segment
 ***************************************************************************
 """
 
-from qgis.PyQt.QtCore import (
-    QVariant
-)
-
 from qgis.core import (
-    QgsApplication,
-    QgsExpression,
-    QgsGeometry,
-    QgsFeatureSink,
-    QgsFeatureRequest,
     QgsFeature,
-    QgsField,
-    QgsFields,
-    QgsPointXY,
     QgsProcessing,
     QgsProcessingAlgorithm,
-    QgsProcessingFeatureBasedAlgorithm,
     QgsProcessingException,
-    QgsProcessingParameterDistance,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingParameterNumber,
-    QgsProcessingParameterString,
-    QgsProcessingParameterField,
-    QgsProcessingParameterVectorLayer,
-    QgsSpatialIndex,
     QgsWkbTypes
 )
 
@@ -81,7 +62,7 @@ class LineMidpoints(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
         
             if feedback.isCanceled():
-              break
+              raise QgsProcessingException(self.tr('Cancelled by user'))
             
             geom = feature.geometry()
             midpoint = geom.interpolate(0.5 * geom.length())

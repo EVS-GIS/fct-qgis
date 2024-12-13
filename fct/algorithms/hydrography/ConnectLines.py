@@ -26,7 +26,8 @@ from qgis.core import (
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
-    QgsSpatialIndex
+    QgsSpatialIndex,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -110,7 +111,7 @@ class ConnectLines(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             from_node = feature.attribute(from_node_field)
             to_node = feature.attribute(to_node_field)
@@ -137,7 +138,7 @@ class ConnectLines(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, node in enumerate(node_index):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             point = node_index[node]
             search_box = point.boundingBox()
@@ -175,7 +176,7 @@ class ConnectLines(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures(request)):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             geometry = feature.geometry()
 
@@ -275,7 +276,7 @@ class ConnectLines(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             if feature.id() not in modified_features:
                 sink.addFeature(feature)

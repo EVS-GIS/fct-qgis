@@ -21,7 +21,8 @@ from qgis.core import (
     QgsProcessingParameterEnum,
     QgsProcessingParameterNumber,
     QgsProcessingParameterRasterDestination,
-    QgsProcessingParameterRasterLayer
+    QgsProcessingParameterRasterLayer,
+    QgsProcessingException
 )
 
 from processing.algs.gdal.GdalUtils import GdalUtils 
@@ -140,7 +141,7 @@ class AnisotropicDiffusionFilter(AlgorithmMetadata, QgsProcessingAlgorithm):
         for i, n in enumerate(bands):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             band = ds.GetRasterBand(n)
             data = band.ReadAsArray()

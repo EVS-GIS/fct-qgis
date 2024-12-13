@@ -13,10 +13,8 @@ LengthOrder
 ***************************************************************************
 """
 
-from heapq import heappush, heappop, heapify
+from heapq import heappop, heapify
 from functools import (
-    partial,
-    reduce,
     total_ordering
 )
 
@@ -35,7 +33,8 @@ from qgis.core import (
     QgsProcessingParameterBoolean,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingParameterField
+    QgsProcessingParameterField,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -153,7 +152,7 @@ class HackOrder(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, edge in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = edge.attribute(from_node_field)
             b = edge.attribute(to_node_field)
@@ -216,7 +215,7 @@ class HackOrder(AlgorithmMetadata, QgsProcessingAlgorithm):
         while queue:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             entry = heappop(queue)
             a = entry.key

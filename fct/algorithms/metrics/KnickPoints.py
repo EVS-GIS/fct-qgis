@@ -130,7 +130,7 @@ class KnickPoints(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             geometry = feature.geometry()
             vertices = [v for v in geometry.vertices()]
@@ -148,7 +148,7 @@ class KnickPoints(AlgorithmMetadata, QgsProcessingAlgorithm):
             for vertex in vertices[1:-1]:
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 if vertex.z() == nodata:
                     continue

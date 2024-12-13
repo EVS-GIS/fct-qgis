@@ -29,7 +29,8 @@ from qgis.core import (
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterNumber,
     QgsSpatialIndex,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -115,7 +116,7 @@ class IdentifyNetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             extract_coordinates(feature.geometry())
             feedback.setProgress(int(total * current))
@@ -160,7 +161,7 @@ class IdentifyNetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
         for i, coordinate in enumerate(coordinates):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             c = tuple(coordinate)
 
@@ -234,7 +235,7 @@ class IdentifyNetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             geom = feature.geometry()
 

@@ -23,7 +23,8 @@ from qgis.core import (
     QgsProcessingParameterBoolean,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterRasterDestination,
-    QgsProcessingParameterRasterLayer
+    QgsProcessingParameterRasterLayer,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -194,7 +195,7 @@ class DistanceToStream(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(stream_layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 
@@ -230,7 +231,7 @@ class DistanceToStream(AlgorithmMetadata, QgsProcessingAlgorithm):
         for row in range(height):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(row*total))
 

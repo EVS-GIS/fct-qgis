@@ -1,5 +1,7 @@
 import numpy as np
-from heapq import heapify, heappop, heappush
+from heapq import heappop, heappush
+
+from qgis.core import QgsProcessingException
 
 # D8 directions in 3x3 neighborhood
 
@@ -142,7 +144,7 @@ def topo_stream_burn(elevations, streams, nodata, rx, ry, minslope=1e-3, feedbac
     for i in range(height):
 
         if feedback.isCanceled():
-            break
+            raise QgsProcessingException(self.tr('Cancelled by user'))
 
         for j in range(width):
 
@@ -174,7 +176,7 @@ def topo_stream_burn(elevations, streams, nodata, rx, ry, minslope=1e-3, feedbac
     while queue:
 
         if feedback.isCanceled():
-            break
+            raise QgsProcessingException(self.tr('Cancelled by user'))
 
         instream, z, i, j = heappop(queue)
         if out[i, j] == -1:

@@ -26,7 +26,8 @@ from qgis.core import (
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
     QgsVectorLayer,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -153,7 +154,7 @@ class FixLinkOrientation(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
         while queue:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             minz, node = heappop(queue)
 
@@ -166,7 +167,7 @@ class FixLinkOrientation(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
             while stack:
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 node = stack.pop()
 
@@ -215,7 +216,7 @@ class FixLinkOrientation(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             from_node = feature.attribute(from_node_field)
             to_node = feature.attribute(to_node_field)
@@ -238,7 +239,7 @@ class FixLinkOrientation(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
         for current, feature in enumerate(nodes.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             node = feature.attribute(pk_field)
             z = feature.geometry().vertexAt(0).z()
@@ -311,7 +312,7 @@ class FixLinkOrientation(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
             if feedback.isCanceled():
                 z, node = heappop(queue)
                 feedback.pushInfo('z = %f, node = %d' % (z, node))
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             if sinks:
 
@@ -366,7 +367,7 @@ class FixLinkOrientation(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
             while stack:
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 node = stack.pop()
                 if node in seen_nodes:

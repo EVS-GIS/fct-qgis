@@ -33,7 +33,8 @@ from qgis.core import (
     QgsProcessingParameterField,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -140,7 +141,7 @@ class VoronoiTransects(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             if feature.geometry():
 
@@ -166,7 +167,7 @@ class VoronoiTransects(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, (p, q, ridge) in enumerate(voronoi_transect(voronoi, attrs)):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             x, y = 0.5 * (points[p] + points[q])
 

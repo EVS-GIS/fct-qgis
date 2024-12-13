@@ -31,7 +31,8 @@ from qgis.core import (
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
-    QgsProcessingUtils
+    QgsProcessingUtils,
+    QgsProcessingException
 )
 
 import processing
@@ -154,7 +155,7 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
             for current, feature in enumerate(layer.getFeatures()):
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 category = feature.attribute(category_field)
                 categories[category] += 1
@@ -190,7 +191,7 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
             for current, feature in enumerate(iterator):
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 from_node = feature.attribute(from_node_field)
                 to_node = feature.attribute(to_node_field)
@@ -220,7 +221,7 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
             while process_stack:
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 from_node = process_stack.pop()
                 if from_node in seen_nodes:

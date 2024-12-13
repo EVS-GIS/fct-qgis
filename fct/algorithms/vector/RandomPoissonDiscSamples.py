@@ -32,7 +32,8 @@ from qgis.core import (
     QgsProcessingParameterNumber,
     QgsProcessingParameterField,
     QgsSpatialIndex,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -273,7 +274,7 @@ class RandomPoissonDiscSamples(AlgorithmMetadata, QgsProcessingFeatureBasedAlgor
         for sample in sampler:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             if polygon.contains(sample):
 

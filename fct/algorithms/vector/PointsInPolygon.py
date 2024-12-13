@@ -120,7 +120,7 @@ class PointsInPolygon(QgsProcessingAlgorithm):
         total = 100.0 / poly_source.featureCount() if poly_source.featureCount() else 0
         for current, polygon_feature in enumerate(features):
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             count = 0
             output_feature = QgsFeature()
@@ -138,7 +138,7 @@ class PointsInPolygon(QgsProcessingAlgorithm):
                     request.setSubsetOfAttributes(point_attribute_indices)
                     for point_feature in point_source.getFeatures(request):
                         if feedback.isCanceled():
-                            break
+                            raise QgsProcessingException(self.tr('Cancelled by user'))
 
                         if engine.contains(point_feature.geometry().constGet()):
                             if weight_field_index >= 0:

@@ -16,10 +16,9 @@ Select Graph Cycles
 from collections import defaultdict
 
 from qgis.core import ( 
-    QgsFeatureRequest,
     QgsProcessing,
     QgsProcessingAlgorithm,
-    QgsProcessingParameterEnum,
+    QgsProcessingException,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
     QgsVectorLayer
@@ -81,7 +80,7 @@ class SelectGraphCycle(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             from_node = feature.attribute(from_node_field)
             to_node = feature.attribute(to_node_field)
@@ -145,7 +144,7 @@ class SelectGraphCycle(AlgorithmMetadata, QgsProcessingAlgorithm):
         for node in node_index:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             if node not in seen_nodes:
                 connect(node)

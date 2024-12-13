@@ -27,6 +27,7 @@ from qgis.core import (
     QgsExpression,
     QgsGeometry,
     QgsFeature,
+    QgsProcessingException,
 )
 
 from ..metadata import AlgorithmMetadata
@@ -125,8 +126,7 @@ class DisaggregateNetwork(AlgorithmMetadata, QgsProcessingAlgorithm):
 
         for current, axis_number in enumerate(axes):
             if feedback.isCanceled():
-                feedback.reportError(self.tr("Aborted"), True)
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             network_features = network.getFeatures(
                 request=QgsFeatureRequest(

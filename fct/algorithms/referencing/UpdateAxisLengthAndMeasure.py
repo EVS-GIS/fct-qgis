@@ -144,7 +144,7 @@ class UpdateAxisLengthAndMeasure(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
 
             a = feature.attribute(from_node_field)
@@ -209,7 +209,7 @@ class UpdateAxisLengthAndMeasure(AlgorithmMetadata, QgsProcessingAlgorithm):
             axis += 1
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             axis_order = order[source]
             axis_segments = set()

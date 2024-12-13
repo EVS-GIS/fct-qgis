@@ -22,6 +22,7 @@ from qgis.core import (
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
     QgsVectorLayer,
+    QgsProcessingException,
     NULL
 )
 
@@ -91,7 +92,7 @@ class SelectConnectedBasins(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             gid = feature.attribute(id_field)
             downstream = feature.attribute(downstream_field)
@@ -113,7 +114,7 @@ class SelectConnectedBasins(AlgorithmMetadata, QgsProcessingAlgorithm):
             for feature in layer.selectedFeatures():
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 stack = [feature.attribute(id_field)]
 
@@ -138,7 +139,7 @@ class SelectConnectedBasins(AlgorithmMetadata, QgsProcessingAlgorithm):
             for feature in layer.selectedFeatures():
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 component = feature.attribute(id_field)
 

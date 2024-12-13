@@ -29,6 +29,7 @@ from qgis.core import (
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
+    QgsProcessingException,
     QgsProcessingParameterNumber
 )
 
@@ -120,7 +121,7 @@ class TotalUpstreamChannelLength(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, edge in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = edge.attribute(from_node_field)
             b = edge.attribute(to_node_field)
@@ -154,7 +155,7 @@ class TotalUpstreamChannelLength(AlgorithmMetadata, QgsProcessingAlgorithm):
         while stack:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             node = stack.pop()
             if node in seen_nodes:
@@ -237,7 +238,7 @@ class TotalUpstreamChannelLength(AlgorithmMetadata, QgsProcessingAlgorithm):
             while stack:
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 node = stack.pop()
                 seen_nodes.add(node)
@@ -276,7 +277,7 @@ class TotalUpstreamChannelLength(AlgorithmMetadata, QgsProcessingAlgorithm):
         while stack:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = stack.popleft()
             if a in other_seen_nodes:
@@ -314,7 +315,7 @@ class TotalUpstreamChannelLength(AlgorithmMetadata, QgsProcessingAlgorithm):
         while queue:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = queue.popleft()
 
@@ -343,7 +344,7 @@ class TotalUpstreamChannelLength(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, edge in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = edge.attribute(from_node_field)
             b = edge.attribute(to_node_field)

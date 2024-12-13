@@ -13,33 +13,20 @@ Fix Network Connectivity
 ***************************************************************************
 """
 
-from heapq import heappush, heappop, heapify
-from functools import (
-    partial,
-    reduce,
-    total_ordering
-)
-
 from collections import defaultdict, Counter
 
-from qgis.PyQt.QtCore import ( 
-    QVariant
-)
 
 from qgis.core import ( 
-    QgsFeature,
     QgsFeatureRequest,
-    QgsField,
     QgsProcessing,
     QgsProcessingAlgorithm,
-    QgsProcessingParameterBoolean,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingParameterField
+    QgsProcessingParameterField,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
-from ..util import appendUniqueField
 
 class FixNetworkConnectivity(AlgorithmMetadata, QgsProcessingAlgorithm):
     """
@@ -115,7 +102,7 @@ class FixNetworkConnectivity(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = feature.attribute(from_node_field)
             b = feature.attribute(to_node_field)
@@ -134,7 +121,7 @@ class FixNetworkConnectivity(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(subset.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = feature.attribute(from_node_field)
             b = feature.attribute(to_node_field)
@@ -158,7 +145,7 @@ class FixNetworkConnectivity(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, origin in enumerate(tobefixed):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current * total))
 
