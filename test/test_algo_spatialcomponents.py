@@ -41,7 +41,7 @@ class TestDisaggregatePolygon(QgisTestCase):
             'CENTERLINE': self.centerline,
             'POLYGON': self.polygon,
             'STEP': 100.0,
-            'DISAGGREGATED': os.path.join('/home/sdunesme', 'disaggregatepolygon.gml')
+            'DISAGGREGATED': os.path.join(self.outdir, 'disaggregatepolygon.gml')
         })
 
         output = QgsVectorLayer(proc_alg['DISAGGREGATED'])
