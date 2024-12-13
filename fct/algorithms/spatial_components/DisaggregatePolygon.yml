@@ -1,10 +1,65 @@
 displayName: Disaggregate Polygon
 group: spatialcomponents
-shortHelpString: NULL
-helpString: NULL
-helpUrl: NULL
+summary: |
+  Disaggregation of an input polygon (ex. valley bottom) along a centerline.
+  Please note that the DGO_WIDTH value is only valid if you used the centerline of the polygon.
+
 tags:
   - vector
   - DGO
   - disaggregation
   - model
+  - voronoi
+
+description: |
+  Disaggregation in DGOs (Disaggregated Geographic Objects) of an input polygon (ex. valley bottom) along a centerline.
+  
+  ![Disaggregate Polygon](/fct-qgis/img/DisaggregatePolygon.png)
+
+  Prior to assess metrics to characterize a fluvial system, fluvial units 
+  have to be disaggregated [@roux2014]. This step enables to discretize a continuum 
+  with a constant length in order to provide a higher resolution for 
+  characterizing fluvial units. The constant length must be set precisely 
+  to ensure spatial trends or relationships between several variables to be 
+  correctly detected either at a network scale or at a local scale. 
+
+  The disaggregation process is based on delaunay triangulation around regularly spaced points along the centerline. 
+  The width of the DGOs are calculated using the following algorithm: 
+
+      place a point every STEP/10 along the polygon ring (so approximately 10 points are placed per DGO per side)
+
+      for each point:
+        find the nearest DGO center point
+        calculate the distance between the two points
+        multiply this distance by 2
+
+      for each DGO:
+        find all associated points along the polygon ring
+        calculate the mean of the distances between the DGO center point and the associated points
+
+  This width is only an approximation and meaningful if the polyline supplied is the centerline of the disaggregated polygon. 
+
+parameters:
+  CENTERLINE:
+    type: LineString
+    description:
+      Centerline of the polygon to disaggregate
+  POLYGON:
+    type: Polygon
+    description: |
+      Polygon to disaggregate (ex. valley bottom)
+  STEP:
+    type: Number
+    description: |
+      Size of the output DGOs (in map unit along the centerline)
+  DISAGGREGATED:
+    type: Polygon
+    description: |
+      Output DGOs with the following fields: 
+      - DGO_FID: unique identifier of the DGO
+      - DISTANCE: position of the DGO along the centerline
+      - DGO_WIDTH: approximation of the DGO width
+
+seealso:
+- "[Centerline](/fct-qgis/workflows/spatialcomponents/Centerline/)"
+- '[Segmentation](/fct-qgis/workflows/disaggregation/Segmentation/)'

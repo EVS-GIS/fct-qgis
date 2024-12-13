@@ -25,6 +25,9 @@ description: |
           calculate a AXIS FID field on centerline
           run disaggregate polygon algorithm
 
+  For more details on the disaggregation process, please refer to the 
+  [Disaggregate Polygon](/fct-qgis/algorithms/spatialcomponents/DisaggregatePolygon/) documentation.
+
 tags:
   - dgo
   - polygon

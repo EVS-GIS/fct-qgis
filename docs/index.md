@@ -9,9 +9,21 @@ please go to [Fluvial Corridor Toolbox for ArcGIS](https://github.com/EVS-GIS/Fl
 
 This branch is under development and is an open effort to support QGis 3 (currently QGis 3.4).
 
-## Quick install
+## Quick start
+
+### Installation
 
 The latest stable release of the Fluvial Corridor Toolbox is now available from the official QGIS plugins repository. 
+
+### Usage
+
+Most of the users will find all the tools they are looking for in the Fluvial Corridor Workflows, in the QGIS Processing panel.
+
+![The FCT Workflows in the QGIS toolbox](img/fct_workflows.png)
+
+The Fluvial Corridor Workflows are sets of algorithms from the Fluvial Corridor Toolbox prepared to math common users needs like calculating a Valley Bottom from a DEM, creating centerlines of polygons, disaggregate polygons or polylines and calculate metrics.
+
+In the Fluvial Corridor Toolbox, you will find all the detailed algorithms used in the workflow, and many more!
 
 ## Acknowledgements
 
@@ -28,8 +40,6 @@ Funding and support have been kindly provided by :
   and [Région Auvergne-Rhône-Alpes](https://www.auvergnerhonealpes.fr/)
 * [Association nationale pour la recherche technologique](http://www.anrt.asso.fr/fr)
 * [Agence de l'eau Rhône-Méditerranée-Corse](https://www.eaurmc.fr/)
-
-![Supporting Partners](img/partners.png)
 
 ## License
 
