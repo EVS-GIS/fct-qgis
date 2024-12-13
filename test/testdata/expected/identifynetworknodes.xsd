@@ -34,12 +34,19 @@
     </xs:extension>
   </xs:complexContent>
 </xs:complexType>
-<xs:element name="centerline_stream" type="ogr:centerline_stream_Type" substitutionGroup="gml:AbstractFeature"/>
-<xs:complexType name="centerline_stream_Type">
+<xs:element name="identifynetworknodes" type="ogr:identifynetworknodes_Type" substitutionGroup="gml:AbstractFeature"/>
+<xs:complexType name="identifynetworknodes_Type">
   <xs:complexContent>
     <xs:extension base="gml:AbstractFeatureType">
       <xs:sequence>
-        <xs:element name="geometryProperty" type="gml:MultiCurvePropertyType" nillable="true" minOccurs="0" maxOccurs="1"/> <!-- restricted to MultiLineString --><!-- srsName="urn:ogc:def:crs:EPSG::2154" -->
+        <xs:element name="geometryProperty" type="gml:CurvePropertyType" nillable="true" minOccurs="0" maxOccurs="1"/> <!-- restricted to LineString --><!-- srsName="urn:ogc:def:crs:EPSG::2154" -->
+        <xs:element name="fid" nillable="true" minOccurs="0" maxOccurs="1">
+          <xs:simpleType>
+            <xs:restriction base="xs:long">
+              <xs:totalDigits value="20"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
         <xs:element name="GID" nillable="true" minOccurs="0" maxOccurs="1">
           <xs:simpleType>
             <xs:restriction base="xs:integer">
@@ -47,18 +54,17 @@
             </xs:restriction>
           </xs:simpleType>
         </xs:element>
-        <xs:element name="LENGTH" nillable="true" minOccurs="0" maxOccurs="1">
+        <xs:element name="NODEA" nillable="true" minOccurs="0" maxOccurs="1">
           <xs:simpleType>
-            <xs:restriction base="xs:decimal">
-              <xs:totalDigits value="11"/>
-              <xs:fractionDigits value="2"/>
+            <xs:restriction base="xs:integer">
+              <xs:totalDigits value="10"/>
             </xs:restriction>
           </xs:simpleType>
         </xs:element>
-        <xs:element name="CATEGORY" nillable="true" minOccurs="0" maxOccurs="1">
+        <xs:element name="NODEB" nillable="true" minOccurs="0" maxOccurs="1">
           <xs:simpleType>
-            <xs:restriction base="xs:string">
-              <xs:maxLength value="16"/>
+            <xs:restriction base="xs:integer">
+              <xs:totalDigits value="10"/>
             </xs:restriction>
           </xs:simpleType>
         </xs:element>

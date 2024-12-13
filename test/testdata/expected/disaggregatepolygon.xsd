@@ -34,31 +34,28 @@
     </xs:extension>
   </xs:complexContent>
 </xs:complexType>
-<xs:element name="centerline_stream" type="ogr:centerline_stream_Type" substitutionGroup="gml:AbstractFeature"/>
-<xs:complexType name="centerline_stream_Type">
+<xs:element name="disaggregatepolygon" type="ogr:disaggregatepolygon_Type" substitutionGroup="gml:AbstractFeature"/>
+<xs:complexType name="disaggregatepolygon_Type">
   <xs:complexContent>
     <xs:extension base="gml:AbstractFeatureType">
       <xs:sequence>
-        <xs:element name="geometryProperty" type="gml:MultiCurvePropertyType" nillable="true" minOccurs="0" maxOccurs="1"/> <!-- restricted to MultiLineString --><!-- srsName="urn:ogc:def:crs:EPSG::2154" -->
-        <xs:element name="GID" nillable="true" minOccurs="0" maxOccurs="1">
+        <xs:element name="geometryProperty" type="gml:MultiSurfacePropertyType" nillable="true" minOccurs="0" maxOccurs="1"/> <!-- restricted to MultiPolygon --><!-- srsName="urn:ogc:def:crs:EPSG::2154" -->
+        <xs:element name="DGO_FID" nillable="true" minOccurs="0" maxOccurs="1">
           <xs:simpleType>
             <xs:restriction base="xs:integer">
               <xs:totalDigits value="10"/>
             </xs:restriction>
           </xs:simpleType>
         </xs:element>
-        <xs:element name="LENGTH" nillable="true" minOccurs="0" maxOccurs="1">
+        <xs:element name="DISTANCE" nillable="true" minOccurs="0" maxOccurs="1">
           <xs:simpleType>
             <xs:restriction base="xs:decimal">
-              <xs:totalDigits value="11"/>
-              <xs:fractionDigits value="2"/>
             </xs:restriction>
           </xs:simpleType>
         </xs:element>
-        <xs:element name="CATEGORY" nillable="true" minOccurs="0" maxOccurs="1">
+        <xs:element name="DGO_WIDTH" nillable="true" minOccurs="0" maxOccurs="1">
           <xs:simpleType>
-            <xs:restriction base="xs:string">
-              <xs:maxLength value="16"/>
+            <xs:restriction base="xs:decimal">
             </xs:restriction>
           </xs:simpleType>
         </xs:element>

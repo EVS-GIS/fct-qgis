@@ -34,12 +34,12 @@
     </xs:extension>
   </xs:complexContent>
 </xs:complexType>
-<xs:element name="centerline_stream" type="ogr:centerline_stream_Type" substitutionGroup="gml:AbstractFeature"/>
-<xs:complexType name="centerline_stream_Type">
+<xs:element name="centerline" type="ogr:centerline_Type" substitutionGroup="gml:AbstractFeature"/>
+<xs:complexType name="centerline_Type">
   <xs:complexContent>
     <xs:extension base="gml:AbstractFeatureType">
       <xs:sequence>
-        <xs:element name="geometryProperty" type="gml:MultiCurvePropertyType" nillable="true" minOccurs="0" maxOccurs="1"/> <!-- restricted to MultiLineString --><!-- srsName="urn:ogc:def:crs:EPSG::2154" -->
+        <xs:element name="geometryProperty" type="gml:CurvePropertyType" nillable="true" minOccurs="0" maxOccurs="1"/> <!-- restricted to LineString --><!-- srsName="urn:ogc:def:crs:EPSG::2154" -->
         <xs:element name="GID" nillable="true" minOccurs="0" maxOccurs="1">
           <xs:simpleType>
             <xs:restriction base="xs:integer">

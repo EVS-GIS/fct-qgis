@@ -153,37 +153,39 @@ class TestCenterlineWorkflow(QgisTestCase):
         self.assertTrue(expected.isValid(), f'Failed to load {expected.source()}')
 
 
-    def test_centerline_stream(self):
+    def test_orientedcenterline_stream(self):
         # Test the centerline algorithm with the real stream as input
 
         proc_alg = processing.run('fcw:centerline', {
             'POLYGON': self.vb,
             'DISTANCE': 25.0,
             'STREAM': self.stream_layer,
-            'OUT_CENTERLINE': os.path.join(self.outdir, 'centerline_stream.gml')
+            'DEM': self.dem_layer,
+            'OUT_CENTERLINE': os.path.join(self.outdir, 'oriented_cl_stream.gml')
         })
 
         output = QgsVectorLayer(proc_alg['OUT_CENTERLINE'])
         self.assertTrue(output.isValid(), 'Output is not a valid layer')
 
-        expected = QgsVectorLayer(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testdata', 'expected', 'centerline_stream.gml'))
+        expected = QgsVectorLayer(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testdata', 'expected', 'oriented_cl_stream.gml'))
         self.assertTrue(expected.isValid(), f'Failed to load {expected.source()}')
 
 
-    def test_centerline_cutline(self):
+    def test_orientedcenterline_cutline(self):
         # Test the centerline workflow with a dummy polyline as input
 
         proc_alg = processing.run('fcw:centerline', {
             'POLYGON': self.vb,
             'DISTANCE': 25.0,
             'STREAM': self.cutline,
-            'OUT_CENTERLINE': os.path.join(self.outdir, 'centerline_cutline.gml')
+            'DEM': self.dem_layer,
+            'OUT_CENTERLINE': os.path.join(self.outdir, 'oriented_cl_cutline.gml')
         })
 
         output = QgsVectorLayer(proc_alg['OUT_CENTERLINE'])
         self.assertTrue(output.isValid(), 'Output is not a valid layer')
 
-        expected = QgsVectorLayer(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testdata', 'expected', 'centerline_cutline.gml'))
+        expected = QgsVectorLayer(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testdata', 'expected', 'oriented_cl_cutline.gml'))
         self.assertTrue(expected.isValid(), f'Failed to load {expected.source()}')
 
 
