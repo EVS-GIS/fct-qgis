@@ -106,9 +106,9 @@ class Segmentation(AlgorithmMetadata, QgsProcessingAlgorithm):
             feedback.pushInfo('Compute polygon DGOs...')
             DGOs = processing.run('fct:disaggregatepolygon',
                     {
-                        'polygon': self.layer,
-                        'centerline': self.cl_layer,
-                        'disagreggationdistance': str(self.segStep),
+                        'POLYGON': self.layer,
+                        'CENTERLINE': self.cl_layer,
+                        'STEP': str(self.segStep),
                         'DISAGGREGATED': parameters['OUTPUT']
                     }, context=context, feedback=feedback, is_child_algorithm=True)
 

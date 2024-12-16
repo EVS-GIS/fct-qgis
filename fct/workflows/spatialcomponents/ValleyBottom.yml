@@ -18,6 +18,8 @@ description: |
     - Nearest is fast and helpful if your stream network does not match perfectly with your DEM.
     - Flow is slower, but precise. You may need to fill depressions of your DEM and resolve flat lands before trying to extract the valley bottom.
 
+  ![Valley Bottom](/fct-qgis/img/dem_to_dgo_clean_vb.png)
+
 tags:
   - hydrography
   - spatial components
@@ -69,3 +71,7 @@ parameters:
 seealso:
   - "[Fill depressions](/fct-qgis/algorithms/terrain/FillDepressions/)"
   - "[Resolve flats](/fct-qgis/algorithms/terrain/ResolveFlats/)"
+  - "[Relative DEM (nearest)](/fct-qgis/algorithms/terrain/RelativeDEM/)"
+  - "[Relative DEM (flow)](/fct-qgis/algorithms/terrain/RelativeDEMByFlow/)"
+  - "[Relative DEM (topological)](/fct-qgis/algorithms/terrain/RelativeDEMTopological/)"
+  - "[Valley Bottom](/fct-qgis/algorithms/spatialcomponents/ValleyBottom/)"
