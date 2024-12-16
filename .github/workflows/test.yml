@@ -1,26 +1,27 @@
 name: 'Run the FCT tests'
 
-description: 'Test all the FCT algorithms and workflows with pytest'
-
-on: [push]
+on:
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
+      qgis_version:
+        required: true
+        type: string
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.os }}
+    
     container:
-      image: qgis/qgis:ltr
+      image: qgis/qgis:${{ inputs.qgis_version }}
       env:
         QGIS_PLUGIN_IN_CI: 1
         PYTHONPATH: /usr/share/qgis/python/plugins
+        
     steps:
       - uses: actions/checkout@v4
-      - name: Install fct
-        run: |
-          python3 -m venv --system-site-packages /env
-          /env/bin/python -m pip install -q -r requirements.txt
-          /env/bin/python -m pip install --no-build-isolation -q -e .
       - name: Run tests
         run: |
-          xvfb-run -s '+extension GLX -screen 0 1024x768x24' /env/bin/python -m pytest -v
-
-
+          xvfb-run -s '+extension GLX -screen 0 1024x768x24' /usr/bin/python3 -m pytest -v
