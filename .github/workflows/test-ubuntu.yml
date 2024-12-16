@@ -1,18 +1,15 @@
-name: 'Run the FCT tests'
+name: 'Run the FCT tests with QGIS official Docker image'
 
 on:
   workflow_call:
     inputs:
-      os:
-        required: true
-        type: string
       qgis_version:
         required: true
         type: string
 
 jobs:
   test:
-    runs-on: ${{ inputs.os }}
+    runs-on: ubuntu-latest
     
     container:
       image: qgis/qgis:${{ inputs.qgis_version }}

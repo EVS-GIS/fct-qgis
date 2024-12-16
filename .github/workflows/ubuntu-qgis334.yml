@@ -3,8 +3,7 @@ name: 'Ubuntu / QGIS 3.34'
 on: push
 
 jobs:
-  ubuntu-qgis334-test:
-    uses: ./.github/workflows/test.yml
+  test:
+    uses: ./.github/workflows/test-ubuntu.yml
     with:
-      os: ubuntu-latest
       qgis_version: '3.34'
