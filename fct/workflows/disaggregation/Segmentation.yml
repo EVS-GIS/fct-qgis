@@ -1,7 +1,8 @@
-displayName: Segmentation
+displayName: Segmentation and VB width
 group: disaggregation
 summary: |
   Disaggregate fluvial units (polygons or polylines) in DGO of chosen size.
+  Output contains Valley Bottom Width by DGO.
 
 description: |
   Prior to assess metrics to characterize a fluvial system, fluvial units 
@@ -37,6 +38,8 @@ tags:
   - vector
   - disaggregation
   - centerline
+  - width
+  - valley bottom
 
 parameters:
   INPUT:

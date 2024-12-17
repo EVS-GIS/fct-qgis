@@ -10,6 +10,7 @@ theme:
   name: material
   language: en
   logo: img/icon.png
+  favicon: img/icon.ico
   features:
     - navigation.tabs
     - navigation.tabs.sticky
@@ -193,8 +194,6 @@ nav:
     - 3- Metrics:
       - Index: workflows/metrics/index.md
       - workflows/metrics/ElevationAndSlope.md
-      - workflows/metrics/Morphometry.md
-      - workflows/metrics/WidthVB.md
     - 4- Statistics:
       - Index: workflows/statistics/index.md
       - workflows/statistics/HubertTest.md

@@ -14,5 +14,3 @@ Metrics Workflows
 """
 
 from .ElevationAndSlope import ElevationAndSlope
-from .Morphometry import Morphometry
-from .WidthVB import WidthVB

@@ -1,4 +1,4 @@
-displayName: Inflection Disaggregation
+displayName: Inflection Disaggregation (Morphometry)
 group: disaggregation
 summary: |
   Disaggregate input polyline on inflection points and calculate bendlength, 
@@ -34,6 +34,8 @@ tags:
   - polyline
   - disaggregation
   - longitudinal profile
+  - morphometry
+  - metrics
 
 parameters:
   INPUT:
