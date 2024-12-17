@@ -13,6 +13,11 @@ description: |
   1. a good flow direction from upstream to downstream.
   2. a good ordination of streams in order to spatially and hierarchically located them within a network.
 
+  ![Sequencing](/fct-qgis/img/Sequencing.png)
+
+  If you don't have a DEM, you can use the [Fix Link Orientation](/fct-qgis/algorithms/hydrography/FixLinkOrientation/) algorithm
+  with the selected node or dangling node method.
+
   Algorithm:
 
       run Identify Network Nodes algorithm with input lines
