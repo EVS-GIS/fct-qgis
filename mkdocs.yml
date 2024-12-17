@@ -187,7 +187,7 @@ nav:
       - workflows/spatialcomponents/ValleyBottom.md
     - 2- Disaggregation Processes:
       - Index: workflows/disaggregation/index.md
-      - workflows/disaggregation/PolylineDisaggregation.md
+      - workflows/disaggregation/InflectionDisaggregation.md
       - workflows/disaggregation/Segmentation.md
       - workflows/disaggregation/Sequencing.md
     - 3- Metrics:

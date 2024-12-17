@@ -1,9 +1,9 @@
-displayName: Polyline disaggregation
+displayName: Inflection Disaggregation
 group: disaggregation
 summary: |
   Disaggregate input polyline on inflection points and calculate bendlength, 
   wavelength, sinuosity, amplitude, omega0 and omega1 of each disaggregated segment.
-  Return also attributed inflexion points and inflection lines.
+  Return also attributed inflection points and inflection lines.
 
 description: |
   In order to characterize fluvial corridors thanks to a set of metrics, 
@@ -12,6 +12,12 @@ description: |
   a set of planimetric metrics assessment such as the streamline sinuosity 
   or the half-amplitude of bends. The inflection line of a curve is 
   defined as the line passing through its inflection points. 
+
+  This workflow simplyfy and smooth the input network, then extract inflection points. 
+  If you prefer to use the raw network without simplification, use the [Planform Metrics](/fct-qgis/algorithms/metrics/PlanformMetrics) 
+  algorithm directly.
+
+  ![Planform Metrics](/fct-qgis/img/PlanformMetrics.png)
 
   Algorithm: 
 
@@ -30,21 +36,30 @@ tags:
   - longitudinal profile
 
 parameters:
-  sequencednetwork:
+  INPUT:
     type: LineString or MultiLineString
-    description: Linear features on which the inflection lines and inflection points are extracted. Can be a unique LineString or a full network.
-  simplifyoffset:
+    description: Linear features on which the inflection lines and inflection points are extracted. Can be a unique LineString or a full network
+  SIMPLIFY:
     type: Number
-    description: Threshold used to ignore small fluctuations and noise (in map unit).
-  Ouput inflexion points:
+    description: Threshold used to ignore small fluctuations and noise (in map unit)
+  MAX_DISTANCE:
+    type: Number
+    description: Maximum distance between two inflection points (in map unit)
+  MIN_AMPLITUDE:
+    type: Number
+    description: Minimum amplitude of a bend to be considered (in map unit)
+  MAX_ANGLE:
+    type: Number
+    description: Maximum angle to create an inflection point (in degrees)
+  OUTPUT_POINTS:
     type: Points
-    description: The output inflection points.
-  Output disaggregated line:
+    description: The output inflection points
+  OUTPUT_DISAGGREGATED:
     type: LineString
     description: The output disaggregated line features
-  Output inflection line:
+  OUTPUT_LINES:
     type: LineString
-    description: The output inflection lines.
+    description: The output inflection lines
     
 seealso:
   - "[Planform Metrics](/fct-qgis/algorithms/metrics/PlanformMetrics/)"

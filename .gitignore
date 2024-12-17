@@ -16,3 +16,4 @@ cython/terrain/*.cpp
 .vscode/
 env/
 build/
+.coverage
