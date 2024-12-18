@@ -54,9 +54,9 @@ class LineStringZSlope(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
             feedback.reportError(self.tr('Input must have Z coordinate.'), True)
             return False
 
-        if QgsWkbTypes.isMultiType(layer.wkbType()):
-            feedback.reportError(self.tr('Multipart geometries are not currently supported'), True)
-            return False
+        # if QgsWkbTypes.isMultiType(layer.wkbType()):
+        #     feedback.reportError(self.tr('Multipart geometries are not currently supported'), True)
+        #     return False
 
         return True
 

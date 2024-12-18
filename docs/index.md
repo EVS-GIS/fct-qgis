@@ -9,6 +9,9 @@ please go to [Fluvial Corridor Toolbox for ArcGIS](https://github.com/EVS-GIS/Fl
 
 This toolbox is maintained only for LTR versions of QGIS, but should work with all versions >= 3.34.
 
+[![Ubuntu / QGIS 3.34](https://github.com/EVS-GIS/fct-qgis/actions/workflows/ubuntu-qgis334.yml/badge.svg)](https://github.com/EVS-GIS/fct-qgis/actions/workflows/ubuntu-qgis334.yml)
+[![Ubuntu / QGIS 3.40](https://github.com/EVS-GIS/fct-qgis/actions/workflows/ubuntu-qgis340.yml/badge.svg)](https://github.com/EVS-GIS/fct-qgis/actions/workflows/ubuntu-qgis340.yml)
+
 ## Quick start
 
 ### Installation

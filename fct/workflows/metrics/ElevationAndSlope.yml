@@ -1,14 +1,30 @@
 displayName: Elevation and slope
 group: metrics
-shortHelpString: NULL
-helpString: NULL
-helpUrl: NULL
 summary: |
-  Calculate elevation and slome of an oriented network based on a DEM.
+  Calculate elevation and slope of polylines based on a DEM.
+  The polylines can be a sequenced network or a disaggregated network.
+
 description: |
-  Detailed description
+  Calculate elevation and slope of polylines based on a DEM.
+  The polylines can be a sequenced network or a disaggregated network.
+
+  Algorithm:
+
+      drape the polylines on the DEM
+      run the LineStringZSlope algorithm with draped polylines
+      extract the elevation and slope values from the outputs
+      join the outputs
+
+  The output polylines contains new attributes `_mean`, `_median`, `_min`, `_max`, `_stddev`, `_first`, `_last` for elevation and slope.
+
 tags:
   - hydrography
   - metrics
   - elevation
   - slope
+  - polyline
+  - network
+  - DEM
+
+seealso:
+  - "[LineStringZSlope](/fct-qgis/algorithms/metrics/LineStringZSlope/)"

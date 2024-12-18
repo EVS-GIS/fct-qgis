@@ -60,10 +60,13 @@ plugins:
   - search
   - bibtex:
       bib_file: docs/bibliography.bib
+      cite_inline: True
+      csl_file: https://raw.githubusercontent.com/citation-style-language/styles/refs/heads/master/apa.csl
 
 nav:
-  - Introduction: index.md
-  - install.md
+  - Getting started: 
+    - Introduction: index.md
+    - Installation: install.md
   - Tutorials:
     - tutorials/dem_to_dgo.md
   - Algorithms Reference:
@@ -197,3 +200,4 @@ nav:
     - 4- Statistics:
       - Index: workflows/statistics/index.md
       - workflows/statistics/HubertTest.md
+  - Bibliography: bibliography.md

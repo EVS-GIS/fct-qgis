@@ -6,11 +6,10 @@ summary: |
 description: |
   Within a watershed, extraction of a valley bottom related to a hydrographic network is a
   crucial step for the fluvial corridor characterization. Defined as the modern alluvial floodplain [@alberSpatialDisaggregationAggregation2011], valley bottom is the deposition zone of alluvium since
-  Holocene (Schumm, 1977) and includes both riverbed and floodplain. This valley bottom
-  crucial fluvial unit with important water, material and biota transfers (Nanson and Croke,
-  1992). Valley corridor width also controls fluvial dynamics and patterns so that extracting this
+  Holocene [@Gregory1979] and includes both riverbed and floodplain. This valley bottom
+  crucial fluvial unit with important water, material and biota transfers [@Nanson1992]. Valley corridor width also controls fluvial dynamics and patterns so that extracting this
   layer is often a preliminary step in the biogeomorphic characterization of stream networks
-  (Notebaert et Piégay, 2013)[@roux2014].
+  [@Notebaert2013;@roux2014].
 
   3 methods to detrend DEM are proposed:
     
