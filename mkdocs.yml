@@ -3,6 +3,8 @@ site_name: Fluvial Corridor Toolbox Documentation
 repo_name: EVS-GIS/fct-qgis
 repo_url: https://github.com/EVS-GIS/fct-qgis
 
+copyright: Copyright &copy; 2016-2025 - UMR5600 Environnement, Ville, Société
+
 theme:
   name: material
   language: en
