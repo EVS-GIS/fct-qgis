@@ -4,7 +4,7 @@ site_url: https://evs-gis.github.io/fct-qgis/
 repo_name: EVS-GIS/fct-qgis
 repo_url: https://github.com/EVS-GIS/fct-qgis
 
-copyright: Copyright &copy; 2016 - 2024 - UMR5600 Environnement, Ville, Société
+copyright: Copyright &copy; 2016-2025 - UMR5600 Environnement, Ville, Société
 
 theme:
   name: material
