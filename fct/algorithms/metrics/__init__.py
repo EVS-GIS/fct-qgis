@@ -19,4 +19,3 @@ from .LineStringZSlope import LineStringZSlope
 from .MaximumOnShortestPath import MaximumOnShortestPath
 from .OrthogonalTransects import OrthogonalTransects
 from .PlanformMetrics import PlanformMetrics
-from .PolygonWidth import PolygonWidth

@@ -1,7 +1,7 @@
-displayName: Mean polygon width by DGO
+displayName: Disaggregated object width
 group: metrics
 summary: |
-  Calculate a poylgon width (ex. active channel width) with the VariableLengthTransects tool
+  Calculate a poylgon width (ex. active channel or valley bottom) with the VariableLengthTransects tool
   and resume the result by DGO. 
 description: |
   Algorithm:
@@ -20,6 +20,7 @@ tags:
   - metric
   - width
   - dgo
+  - polygon
 parameters:
   dgos:
     type: Polygon

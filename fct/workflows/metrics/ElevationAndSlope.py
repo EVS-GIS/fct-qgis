@@ -21,8 +21,6 @@ from qgis.core import (
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterVectorDestination,
     QgsProcessingParameterRasterLayer,
-    QgsProcessingParameterNumber,
-    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata

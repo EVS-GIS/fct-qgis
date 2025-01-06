@@ -5,11 +5,10 @@ summary: |
 
 description: |
   Aggregate disaggregated objects with respect to a given metric, using the Hubert-Kehagias segmentation procedure.
-  A ID_AGO field is created with the homogeneous segments. 
+  A ID_AGO field is created to identify the homogeneous segments. 
   The Hubert Test is an univariate statistical test based on the standard deviation, enabling to identify locations of breaks into a set of
   numerical data. The output set of data is modeled as succession of straight and
-  constant lines (or “segments”) ended by breaks (or discontinuities). These breaks must be
-  located so that the difference between two consecutive segments is consistent. [@roux2014]
+  constant lines (or “segments”). [@roux2014]
 
   ![Hubert AGOs](/fct-qgis/img/HubertAGO.png)
   (Figure from [@roux2014])

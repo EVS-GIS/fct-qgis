@@ -14,3 +14,4 @@ Metrics Workflows
 """
 
 from .ElevationAndSlope import ElevationAndSlope
+from .PolygonWidth import PolygonWidth
