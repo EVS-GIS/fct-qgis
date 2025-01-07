@@ -71,7 +71,8 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
         self.addParameter(QgsProcessingParameterNumber(
             self.STEP,
             self.tr('Disaggregation step (topological detrending only)'),
-            defaultValue=50,
+            defaultValue=50.0,
+            type=QgsProcessingParameterNumber.Double,
             minValue=1))
 
         self.addParameter(QgsProcessingParameterNumber(

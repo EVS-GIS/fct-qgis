@@ -37,7 +37,7 @@ class DetrendDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
 
     def initAlgorithm(self, configuration):
         self.addParameter(QgsProcessingParameterRasterLayer('dem', 'Input DEM', defaultValue=None))
-        self.addParameter(QgsProcessingParameterDistance('disaggregationdistance', 'Disaggregation Distance', parentParameterName='dem', defaultValue=None))
+        self.addParameter(QgsProcessingParameterDistance('disaggregationdistance', 'Disaggregation Distance', parentParameterName='dem', defaultValue=None, type=QgsProcessingParameterDistance.Double))
         self.addParameter(QgsProcessingParameterFeatureSource('stream', 'Stream network', types=[QgsProcessing.TypeVectorLine], defaultValue=None))
         self.addParameter(QgsProcessingParameterRasterDestination('Detrended', 'Output detrended DEM', createByDefault=True, defaultValue=None))
 
