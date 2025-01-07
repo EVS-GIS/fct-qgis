@@ -72,7 +72,6 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.STEP,
             self.tr('Disaggregation step (topological detrending only)'),
             defaultValue=50.0,
-            type=QgsProcessingParameterNumber.Double,
             minValue=1))
 
         self.addParameter(QgsProcessingParameterNumber(
@@ -85,7 +84,6 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.BUFFER,
             self.tr('Max width (large buffer size)'),
             defaultValue=1500.0,
-            type=QgsProcessingParameterNumber.Double,
             minValue=1))
 
         self.addParameter(QgsProcessingParameterNumber(
@@ -103,8 +101,7 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
         self.addParameter(QgsProcessingParameterNumber(
             self.SIMPLIFY,
             self.tr('Simplify Valley Bottom tolerance'),
-            defaultValue=10,
-            type=QgsProcessingParameterNumber.Double))
+            defaultValue=10))
         
         self.addParameter(QgsProcessingParameterNumber(
             self.SMOOTH,
