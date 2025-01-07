@@ -19,7 +19,7 @@ import tempfile
 import shutil
 
 from qgis.testing import QgisTestCase, start_app
-from qgis.core import QgsVectorLayer, QgsRasterLayer
+from qgis.core import QgsVectorLayer, QgsRasterLayer, QgsProperty
 from processing.core.Processing import Processing
 import processing
 
@@ -95,3 +95,57 @@ class TestElevationAndSlope(QgisTestCase):
     def tearDownClass(self):
         shutil.rmtree(self.outdir, True)
 
+
+class TestPolygonWidth(QgisTestCase):
+
+    @classmethod
+    def setUpClass(self):
+        self.outdir = tempfile.mkdtemp()
+        self.ac = QgsVectorLayer(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), 
+            'testdata', 'input', 'disaggregated_ac.gml'))
+        self.centerline = QgsVectorLayer(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), 
+            'testdata', 'input', 'ac_centerline.gml'))
+        
+
+    def test_polygonwidth_inputs(self):
+
+        self.assertTrue(self.ac.isValid(), f'Failed to load {self.ac.source()}')
+        self.assertTrue(self.centerline.isValid(), f'Failed to load {self.centerline.source()}')
+
+
+    def test_polygonwidth(self):
+
+        proc_alg = processing.run("fcw:polygonwidth", {
+            'INPUT_POLYGONS':self.ac,
+            'INPUT_MEDIAL_AXIS':self.centerline,
+            'INPUT_POLYGONS_FID':'DGO_FID',
+            'INPUT_MEDIAL_AXIS_FID':'DGO_FID',
+            'SAMPLING_INTERVAL':5,
+            'MAX_WIDTH':QgsProperty.fromExpression('"DGO_WIDTH"'),
+            'OUTPUT_TABLE':os.path.join(self.outdir, 'transects_stats.csv'),
+            'OUTPUT_TRANSECTS':os.path.join(self.outdir, 'transects.gpkg')
+        })
+
+        output_transects = QgsVectorLayer(proc_alg['OUTPUT_TRANSECTS'])
+        self.assertTrue(output_transects.isValid(), 'Output is not a valid layer')
+
+        expected_transects = QgsVectorLayer(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testdata', 'expected', 'transects.gpkg'))
+        self.assertTrue(expected_transects.isValid(), f'Failed to load {expected_transects.source()}')
+
+        self.assertLayersEqual(expected_transects, output_transects, compare={'unordered': True, 'fields': {'fid': 'skip'}})
+
+        output_table = QgsVectorLayer(proc_alg['OUTPUT_TABLE'])
+        self.assertTrue(output_table.isValid(), 'Output is not a valid layer')
+
+        expected_table = QgsVectorLayer(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testdata', 'expected', 'transects_stats.csv'))
+        self.assertTrue(expected_table.isValid(), f'Failed to load {expected_table.source()}')
+    
+        self.assertLayersEqual(expected_table, output_table, compare={'fields': {'__all__': {'cast': 'float', 'precision': 6}}})
+
+
+    @classmethod
+    def tearDownClass(self):
+        #shutil.rmtree(self.outdir, True)
+        pass

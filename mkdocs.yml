@@ -132,7 +132,6 @@ nav:
       - algorithms/metrics/MaximumOnShortestPath.md
       - algorithms/metrics/OrthogonalTransects.md
       - algorithms/metrics/PlanformMetrics.md
-      - algorithms/metrics/PolygonWidth.md
     - Spatial Reference:
       - Index: algorithms/referencing/index.md
       - algorithms/referencing/AxisTransform.md
@@ -197,6 +196,7 @@ nav:
     - 3- Metrics:
       - Index: workflows/metrics/index.md
       - workflows/metrics/ElevationAndSlope.md
+      - workflows/metrics/PolygonWidth.md
     - 4- Statistics:
       - Index: workflows/statistics/index.md
       - workflows/statistics/HubertTest.md
