@@ -122,6 +122,9 @@ class TestCenterlineWorkflow(QgisTestCase):
         self.vb = QgsVectorLayer(os.path.join(
             os.path.dirname(os.path.realpath(__file__)), 
             'testdata', 'input', 'vb_nearest.gml'))
+        self.ac = QgsVectorLayer(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), 
+            'testdata', 'input', 'active_channel.gml'))
         self.dem_layer = QgsRasterLayer(os.path.join(
             os.path.dirname(os.path.realpath(__file__)), 
             'testdata', 'input', 'dem.tif'))
@@ -132,6 +135,7 @@ class TestCenterlineWorkflow(QgisTestCase):
         self.assertTrue(self.stream_layer.isValid(), f'Failed to load {self.stream_layer.source()}')
         self.assertTrue(self.cutline.isValid(), f'Failed to load {self.cutline.source()}')
         self.assertTrue(self.vb.isValid(), f'Failed to load {self.vb.source()}')
+        self.assertTrue(self.ac.isValid(), f'Failed to load {self.ac.source()}')
         self.assertTrue(self.dem_layer.isValid(), f'Failed to load {self.dem_layer.source()}')
 
 
@@ -202,6 +206,23 @@ class TestCenterlineWorkflow(QgisTestCase):
         self.assertTrue(output.isValid(), 'Output is not a valid layer')
 
         expected = QgsVectorLayer(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testdata', 'expected', 'oriented_cl_cutline.gml'))
+        self.assertTrue(expected.isValid(), f'Failed to load {expected.source()}')
+
+
+    def test_centerline_ac(self):
+        # Test the active channel centerline algorithm with the real stream as input
+
+        proc_alg = processing.run('fcw:centerline', {
+            'POLYGON': self.ac,
+            'DISTANCE': 1.0,
+            'STREAM': self.stream_layer,
+            'OUT_CENTERLINE': os.path.join(self.outdir, 'centerline_ac.gml')
+        })
+
+        output = QgsVectorLayer(proc_alg['OUT_CENTERLINE'])
+        self.assertTrue(output.isValid(), 'Output is not a valid layer')
+
+        expected = QgsVectorLayer(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testdata', 'expected', 'centerline_ac.gml'))
         self.assertTrue(expected.isValid(), f'Failed to load {expected.source()}')
 
 
