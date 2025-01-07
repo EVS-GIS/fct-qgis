@@ -147,5 +147,4 @@ class TestPolygonWidth(QgisTestCase):
 
     @classmethod
     def tearDownClass(self):
-        #shutil.rmtree(self.outdir, True)
-        pass
+        shutil.rmtree(self.outdir, True)

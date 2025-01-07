@@ -52,7 +52,7 @@ class TestVariableLengthTransects(QgisTestCase):
     def test_identifynetworknodes(self):
 
         proc_alg = processing.run("fct:variablelengthtransects", {
-            'INPUT':'/home/sdunesme/git/fct-qgis/test/testdata/input/ac_centerline.gml|layername=ac_centerline',
+            'INPUT':self.ac,
             'LENGTH':QgsProperty.fromExpression('"DGO_WIDTH"'),
             'INTERVAL':20,
             'OUTPUT': os.path.join(self.outdir, 'variablelengthtransects.gpkg')
