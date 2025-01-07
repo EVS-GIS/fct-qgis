@@ -21,4 +21,4 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run tests
         run: |
-          xvfb-run -s '+extension GLX -screen 0 800x600x24' /usr/bin/python3 -m pytest -v
+          xvfb-run -s '+extension GLX -screen 0 1024x768x24' /usr/bin/python3 -m pytest -v
