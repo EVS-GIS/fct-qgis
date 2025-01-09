@@ -19,7 +19,7 @@ import tempfile
 import shutil
 
 from qgis.testing import QgisTestCase, start_app
-from qgis.core import QgsVectorLayer, QgsRasterLayer
+from qgis.core import QgsVectorLayer
 from processing.core.Processing import Processing
 import processing
 
@@ -70,8 +70,7 @@ class TestIdentifyNetworkNodes(QgisTestCase):
     
         self.assertLayersEqual(expected_network, network_output)
         self.assertLayersEqual(expected_nodes, nodes_output)
-        
-                         
+                       
     @classmethod
     def tearDownClass(self):
         shutil.rmtree(self.outdir, True)
@@ -108,6 +107,41 @@ class TestAggregateStreamSegments(QgisTestCase):
 
         self.assertLayersEqual(expected_aggregated, aggregated_output)
         
+    @classmethod
+    def tearDownClass(self):
+        shutil.rmtree(self.outdir, True)
+
+
+class TestAggregateUndirectedLines(QgisTestCase):
+
+    @classmethod
+    def setUpClass(self):
+        self.outdir = tempfile.mkdtemp()
+        self.network = QgsVectorLayer(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), 
+            'testdata', 'input', 'identified_messy.gpkg'))
+        
+    def test_network_input(self):
+
+        self.assertTrue(self.network.isValid(), f'Failed to load {self.network.source()}')
+
+    def test_aggregateundirectedlines(self):
+
+        proc_alg = processing.run("fct:aggregateundirectedlines", {
+            'INPUT':self.network.source(),
+            'FROM_NODE_FIELD':'NODEA',
+            'TO_NODE_FIELD':'NODEB',
+            'OUTPUT':os.path.join(self.outdir, 'aggregate_undirected.gpkg')
+        })
+
+        aggregated_output = QgsVectorLayer(proc_alg['OUTPUT'])
+        self.assertTrue(aggregated_output.isValid(), 'Aggregated output is not a valid layer')
+
+        expected_aggregated = QgsVectorLayer(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testdata', 'expected', 'aggregate_undirected.gpkg'))
+        self.assertTrue(expected_aggregated.isValid(), f'Failed to load {expected_aggregated.source()}')
+
+        self.assertLayersEqual(expected_aggregated, aggregated_output)
+
 
     @classmethod
     def tearDownClass(self):
