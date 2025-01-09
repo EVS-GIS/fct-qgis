@@ -63,3 +63,10 @@ where `/path/to/plugin` is the installation folder for the FCT plugin,
 for example `$QGIS_USER_DIR/FluvialCorridorToolbox`.
 
 *[FCT]: Fluvial Corridor Toolbox
+
+### Testing algorithms
+
+Unit tests can be run with pytest an pytest-cov packages : 
+
+    pytest --cov=fct --cov-report json:test/reports/coverage.json test
+
