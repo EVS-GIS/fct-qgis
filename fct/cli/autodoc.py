@@ -16,13 +16,11 @@ The documentation is generated in directory `docs/algorithms`.
 ***************************************************************************
 """
 
-import sys
 import os
 from collections import defaultdict
 from itertools import chain
 import click
-
-
+import json
 
 import jinja2
 import bleach
@@ -62,17 +60,6 @@ def fieldlist(fields):
 
     return jinja2.Markup('<ul><li>' + '</li><li>'.join(buf) + '</li></ul>')
 
-
-# import markdown
-# md = markdown.Markdown(extensions=[
-#     'abbr',
-#     'admonition',
-#     'footnotes',
-#     'nl2br',
-#     'sane_lists',
-#     'smarty'
-# ])
-
 loader = jinja2.FileSystemLoader(searchpath="./templates")
 environment = jinja2.Environment(loader=loader)
 # environment.filters['markdown'] = lambda text: jinja2.Markup(md.convert(text))
@@ -83,6 +70,9 @@ environment.filters['fieldlist'] = fieldlist
 
 ALGORITHM_TEMPLATE = environment.get_template('algorithm.md')
 GROUP_TEMPLATE = environment.get_template('group.md')
+
+with open('test/reports/coverage.json', 'r') as file:
+    coverage_data= json.load(file)
 
 def unindent(text):
     """
@@ -133,6 +123,8 @@ def generate_alg(alg, destination):
     directory = os.path.join(destination, group)
     key = alg.__class__.__name__
     filename = os.path.join(directory, key + '.md')
+
+    pythonfile = os.path.join('fct', *(directory.split(os.path.sep)[1:]), alg.__class__.__name__ + '.py')
 
     click.echo(click.style('Generating file %s' % filename, fg='green'))
 
@@ -209,11 +201,18 @@ def generate_alg(alg, destination):
 
     summary = metadata.get('summary', alg.__doc__)
 
+    if pythonfile in coverage_data['files'].keys():
+        cov = coverage_data['files'][pythonfile]['summary']['percent_covered_display']
+    else:
+        cov = 0
+    
     metadata.update(
         summary=unindent(summary or ''),
         description=metadata.get('description', None) or 'No Description Yet.',
         parameters=parameters,
-        tags=[tag for tag in metadata.get('tags', [])])
+        tags=[tag for tag in metadata.get('tags', [])],
+        coverage=cov)
+    
 
     with open(filename, 'w', encoding="utf-8") as output:
         output.write(ALGORITHM_TEMPLATE.render(metadata))
