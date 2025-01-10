@@ -1,5 +1,7 @@
 displayName: Hack (Length-wise) Stream Order
 group: hydrography
+description: |
+  ![Hack Order](/fct-qgis/img/hack_order.png)
 shortHelpString: NULL
 helpString: NULL
 helpUrl: NULL

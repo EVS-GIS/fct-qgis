@@ -148,3 +148,121 @@ class TestAggregateUndirectedLines(QgisTestCase):
         shutil.rmtree(self.outdir, True)
 
 
+class TestHackOrder(QgisTestCase):
+
+    @classmethod
+    def setUpClass(self):
+        self.outdir = tempfile.mkdtemp()
+        self.network = QgsVectorLayer(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), 
+            'testdata', 'input', 'network.gpkg'))
+        
+
+    def test_input(self):
+
+        self.assertTrue(self.network.isValid(), f'Failed to load {self.network.source()}')
+
+
+    def test_hackorder(self):
+
+        proc_alg = processing.run("fct:hackorder", {
+            'INPUT':self.network,
+            'FROM_NODE_FIELD':'',
+            'TO_NODE_FIELD':'',
+            'MEASURE_FIELD':'',
+            'IS_DOWNSTREAM_MEAS':True,
+            'OUTPUT': os.path.join(self.outdir, 'hack_order.gpkg')
+        })
+
+        output = QgsVectorLayer(proc_alg['OUTPUT'])
+        self.assertTrue(output.isValid(), 'Output transects is not a valid layer')
+
+        expected_output = QgsVectorLayer(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testdata', 'expected', 'hack_order.gpkg'))
+        self.assertTrue(expected_output.isValid(), f'Failed to load {expected_output.source()}')
+    
+        self.assertLayersEqual(expected_output, output)
+
+
+    @classmethod
+    def tearDownClass(self):
+        shutil.rmtree(self.outdir, True)
+
+
+class TestStrahlerOrder(QgisTestCase):
+
+    @classmethod
+    def setUpClass(self):
+        self.outdir = tempfile.mkdtemp()
+        self.network = QgsVectorLayer(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), 
+            'testdata', 'input', 'network.gpkg'))
+        
+
+    def test_input(self):
+
+        self.assertTrue(self.network.isValid(), f'Failed to load {self.network.source()}')
+
+
+    def test_strahlerorder(self):
+
+        proc_alg = processing.run("fct:strahlerorder", {
+            'INPUT':self.network,
+            'FROM_NODE_FIELD':'',
+            'TO_NODE_FIELD':'',
+            'AXIS_FIELD':'',
+            'OUTPUT': os.path.join(self.outdir, 'strahler_order.gpkg')
+        })
+
+        output = QgsVectorLayer(proc_alg['OUTPUT'])
+        self.assertTrue(output.isValid(), 'Output transects is not a valid layer')
+
+        expected_output = QgsVectorLayer(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testdata', 'expected', 'strahler_order.gpkg'))
+        self.assertTrue(expected_output.isValid(), f'Failed to load {expected_output.source()}')
+    
+        self.assertLayersEqual(expected_output, output)
+
+
+    @classmethod
+    def tearDownClass(self):
+        shutil.rmtree(self.outdir, True)
+
+
+class TestNetworkNodes(QgisTestCase):
+
+    @classmethod
+    def setUpClass(self):
+        self.outdir = tempfile.mkdtemp()
+        self.network = QgsVectorLayer(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), 
+            'testdata', 'input', 'network.gpkg'))
+        
+
+    def test_input(self):
+
+        self.assertTrue(self.network.isValid(), f'Failed to load {self.network.source()}')
+
+
+    def test_strahlerorder(self):
+
+        proc_alg = processing.run("fct:networknodes", {
+            'INPUT':self.network,
+            'FROM_NODE_FIELD':'',
+            'TO_NODE_FIELD':'',
+            'MEAS_FIELD':'',
+            'SUBSET':0,
+            'OUTPUT': os.path.join(self.outdir, 'network_nodes.gpkg')
+        })
+
+        output = QgsVectorLayer(proc_alg['OUTPUT'])
+        self.assertTrue(output.isValid(), 'Output transects is not a valid layer')
+
+        expected_output = QgsVectorLayer(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testdata', 'expected', 'network_nodes.gpkg'))
+        self.assertTrue(expected_output.isValid(), f'Failed to load {expected_output.source()}')
+    
+        self.assertLayersEqual(expected_output, output)
+
+
+    @classmethod
+    def tearDownClass(self):
+        shutil.rmtree(self.outdir, True)
+

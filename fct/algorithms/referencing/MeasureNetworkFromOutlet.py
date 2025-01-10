@@ -28,6 +28,7 @@ from qgis.core import (
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingException,
+    QgsProcessingUtils,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
@@ -36,6 +37,9 @@ from qgis.core import (
 
 from ..metadata import AlgorithmMetadata
 from ..util import asQgsFields
+from ...utils.assertions import assertLayersCompatibility
+
+import processing
 
 Link = namedtuple('Link', ('a', 'b', 'edge_id', 'length'))
 
@@ -83,14 +87,16 @@ class MeasureNetworkFromOutlet(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('From Node Field'),
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
-            defaultValue='NODEA'))
+            defaultValue='NODEA',
+            optional=True))
 
         self.addParameter(QgsProcessingParameterField(
             self.TO_NODE_FIELD,
             self.tr('To Node Field'),
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
-            defaultValue='NODEB'))
+            defaultValue='NODEB',
+            optional=True))
 
         self.addParameter(QgsProcessingParameterFeatureSink(
             self.OUTPUT,
@@ -102,6 +108,19 @@ class MeasureNetworkFromOutlet(AlgorithmMetadata, QgsProcessingAlgorithm):
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
         to_node_field = self.parameterAsString(parameters, self.TO_NODE_FIELD, context)
+
+        assertLayersCompatibility([self.parameterAsVectorLayer(parameters, self.INPUT, context)], feedback=feedback)
+
+        if not from_node_field or not to_node_field:
+            identifynodes = processing.run('fct:identifynetworknodes', {
+                'INPUT': self.parameterAsVectorLayer(parameters, self.INPUT, context),
+                'NODES': QgsProcessing.TEMPORARY_OUTPUT,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }, context=context, feedback=feedback, is_child_algorithm=True)
+
+            layer = QgsProcessingUtils.variantToSource(identifynodes['OUTPUT'], context)
+            from_node_field = 'NODEA'
+            to_node_field = 'NODEB'
 
         fields = layer.fields().toList() + [
             QgsField('MEASURE', QVariant.Double, len=10, prec=2),

@@ -30,10 +30,14 @@ from qgis.core import (
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
     QgsProcessingException,
+    QgsProcessingUtils
 )
 
 from ..metadata import AlgorithmMetadata
 from ..util import appendUniqueField
+from ...utils.assertions import assertLayersCompatibility
+
+import processing
 
 class StrahlerOrder(AlgorithmMetadata, QgsProcessingAlgorithm):
     """ Horton-Strahler stream order of each link in a stream network
@@ -59,14 +63,16 @@ class StrahlerOrder(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('From Node Field'),
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
-            defaultValue='NODEA'))
+            defaultValue='NODEA',
+            optional=True))
 
         self.addParameter(QgsProcessingParameterField(
             self.TO_NODE_FIELD,
             self.tr('To Node Field'),
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
-            defaultValue='NODEB'))
+            defaultValue='NODEB',
+            optional=True))
 
         self.addParameter(QgsProcessingParameterField(
             self.AXIS_FIELD,
@@ -74,7 +80,7 @@ class StrahlerOrder(AlgorithmMetadata, QgsProcessingAlgorithm):
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
             defaultValue='HACK',
-            optional=False))
+            optional=True))
 
         self.addParameter(QgsProcessingParameterFeatureSink(
             self.OUTPUT,
@@ -89,6 +95,22 @@ class StrahlerOrder(AlgorithmMetadata, QgsProcessingAlgorithm):
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
         to_node_field = self.parameterAsString(parameters, self.TO_NODE_FIELD, context)
         axis_field = self.parameterAsString(parameters, self.AXIS_FIELD, context)
+
+        assertLayersCompatibility([self.parameterAsVectorLayer(parameters, self.INPUT, context)], feedback=feedback)
+
+        if not from_node_field or not to_node_field or not axis_field:
+            hackorder = processing.run('fct:hackorder', {
+                'INPUT': self.parameterAsVectorLayer(parameters, self.INPUT, context),
+                'FROM_NODE_FIELD': '',
+                'TO_NODE_FIELD': '',
+                'MEASURE_FIELD': '',
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }, context=context, feedback=feedback, is_child_algorithm=True)
+
+            layer = QgsProcessingUtils.variantToSource(hackorder['OUTPUT'], context)
+            from_node_field = 'NODEA'
+            to_node_field = 'NODEB'
+            axis_field = 'HACK'
 
         # Step 1 - Build adjacency index
 

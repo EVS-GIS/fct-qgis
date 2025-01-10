@@ -1,5 +1,7 @@
 displayName: Strahler Stream Order
 group: hydrography
+description: |
+  ![Strahler Order](/fct-qgis/img/strahler_order.png)
 shortHelpString: NULL
 helpString: NULL
 helpUrl: NULL

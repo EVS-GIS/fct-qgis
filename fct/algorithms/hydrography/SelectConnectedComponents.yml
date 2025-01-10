@@ -1,9 +1,22 @@
 displayName: Select Connected Reaches
 group: hydrography
-shortHelpString: NULL
-helpString: NULL
-helpUrl: NULL
+summary: Select reaches connected to the selected one in the input layer.
+description: |
+  The input hydrographic network needs to be well oriented. You can use the [Fix Link Orientation](/fct-qgis/algorithms/hydrography/FixLinkOrientation/) to check that.
+  
+  This tool is useful to extract a subset of a hydrographic network.
+
+  Examples: 
+  
+    - Select a downstream reach in the network, then execute *Select Connected Reaches* with upstream `DIRECTION` parameter. All the upstream reaches will be selected.
+    - Select an upstream reach in the network, then execute *Select Connected Reaches* with downstream `DIRECTION` parameter. All the downstream axis will be selected.
+
 tags:
   - hydrography
   - graph
   - selection
+  - connectivity
+
+seealso:
+  - "[IdentifyNetworkNodes](/fct-qgis/algorithms/hydrography/IdentifyNetworkNodes/)"
+  - "[FixLinkOrientation](/fct-qgis/algorithms/hydrography/FixLinkOrientation/)"
