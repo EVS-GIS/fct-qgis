@@ -4,10 +4,10 @@ on:
   push:
     branches: [ "master" ]
     paths-ignore: [ "fct/lib/terrain_analysis*" ]
-  pull_request:
-    branches: [ "master" ]
+
 permissions:
   contents: write
+  
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
