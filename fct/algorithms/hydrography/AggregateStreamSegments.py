@@ -15,11 +15,11 @@ AggregateLineSegmentsByCat - Merge continuous line segments into a single linest
 
 from collections import Counter, namedtuple
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsExpression,
     QgsGeometry,
     QgsLineString,
@@ -30,8 +30,12 @@ from qgis.core import ( # pylint:disable=no-name-in-module
     QgsProcessingAlgorithm,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingParameterField
+    QgsProcessingParameterField,
+    QgsProcessingUtils,
+    QgsProcessingException
 )
+
+import processing
 
 from .graph import create_link_index
 from ..metadata import AlgorithmMetadata
@@ -52,7 +56,7 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
     TO_NODE_FIELD = 'TO_NODE_FIELD'
     COPY_FIELDS = 'COPY_FIELDS'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -71,14 +75,16 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('From Node Field'),
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
-            defaultValue='NODEA'))
+            defaultValue='NODEA',
+            optional=True))
 
         self.addParameter(QgsProcessingParameterField(
             self.TO_NODE_FIELD,
             self.tr('To Node Field'),
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
-            defaultValue='NODEB'))
+            defaultValue='NODEB',
+            optional=True))
 
         self.addParameter(QgsProcessingParameterField(
             self.COPY_FIELDS,
@@ -92,13 +98,24 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Aggregated Lines'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         category_field = self.parameterAsString(parameters, self.CATEGORY_FIELD, context)
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
         to_node_field = self.parameterAsString(parameters, self.TO_NODE_FIELD, context)
         copy_fields = self.parameterAsFields(parameters, self.COPY_FIELDS, context)
+
+        if not from_node_field or not to_node_field:
+            identifynodes = processing.run('fct:identifynetworknodes', {
+                'INPUT': self.parameterAsVectorLayer(parameters, self.INPUT, context),
+                'NODES': QgsProcessing.TEMPORARY_OUTPUT,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }, context=context, feedback=feedback, is_child_algorithm=True)
+
+            layer = QgsProcessingUtils.variantToSource(identifynodes['OUTPUT'], context)
+            from_node_field = 'NODEA'
+            to_node_field = 'NODEB'
 
         feedback.pushInfo('%s' % copy_fields)
 
@@ -138,7 +155,7 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
             for current, feature in enumerate(layer.getFeatures()):
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 category = feature.attribute(category_field)
                 categories[category] += 1
@@ -174,7 +191,7 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
             for current, feature in enumerate(iterator):
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 from_node = feature.attribute(from_node_field)
                 to_node = feature.attribute(to_node_field)
@@ -200,12 +217,11 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
 
             current = 0
             seen_nodes = set()
-            srclayer = context.getMapLayer(layer.sourceName())
 
             while process_stack:
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 from_node = process_stack.pop()
                 if from_node in seen_nodes:
@@ -215,7 +231,7 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
 
                 for link in downward_index[from_node]:
 
-                    segment = srclayer.getFeature(link.feature_id)
+                    segment = next(layer.getFeatures(QgsFeatureRequest(link.feature_id)))
                     copy_values = [segment.attribute(field) for field in copy_fields]
                     vertices = [v for v in segment.geometry().vertices()]
 
@@ -225,7 +241,7 @@ class AggregateStreamSegments(AlgorithmMetadata, QgsProcessingAlgorithm):
                     while degree[link.b] == 2 and downward_index[link.b]:
 
                         next_link = downward_index[link.b][0]
-                        segment = srclayer.getFeature(next_link.feature_id)
+                        segment = next(layer.getFeatures(QgsFeatureRequest(next_link.feature_id)))
                         vertices = vertices[:-1] + [v for v in segment.geometry().vertices()]
 
                         current = current + 1

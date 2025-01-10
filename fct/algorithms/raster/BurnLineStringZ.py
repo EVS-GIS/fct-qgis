@@ -16,7 +16,7 @@ BurnLineStringZ
 import numpy as np
 from osgeo import gdal
 
-from qgis.core import ( # pylint:disable=no-name-in-module,import-error
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterBand,
@@ -25,7 +25,8 @@ from qgis.core import ( # pylint:disable=no-name-in-module,import-error
     QgsProcessingParameterNumber,
     QgsProcessingParameterRasterDestination,
     QgsProcessingParameterRasterLayer,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -51,7 +52,7 @@ class BurnLineStringZ(AlgorithmMetadata, QgsProcessingAlgorithm):
     OFFSET = 'OFFSET'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.INPUT,
@@ -90,7 +91,7 @@ class BurnLineStringZ(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.OUTPUT,
             self.tr('Burned Raster')))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         raster = self.parameterAsRasterLayer(parameters, self.INPUT, context)
         band = self.parameterAsInt(parameters, self.BAND, context)
@@ -138,7 +139,7 @@ class BurnLineStringZ(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 
@@ -159,7 +160,7 @@ class BurnLineStringZ(AlgorithmMetadata, QgsProcessingAlgorithm):
                 if row >= 0 and row < datasource.RasterYSize and \
                     col >= 0 and col < datasource.RasterXSize:
 
-                    # pylint:disable=unsupported-assignment-operation
+                    
                     data[row, col] = z + offset
 
         feedback.setProgressText(self.tr('Write output raster'))

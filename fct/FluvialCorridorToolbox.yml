@@ -1,6 +1,6 @@
 groups:
   - id: hydrography
-    displayName: Hydrography
+    displayName: Hydrographic Network
   - id: terrain
     displayName: Terrain Analysis
   - id: spatialcomponents

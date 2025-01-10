@@ -16,7 +16,7 @@ SciPyVoronoiPolygons - Generates Voronoi polygons based on SciPy Voronoi impleme
 from collections import defaultdict
 import numpy as np
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsGeometry,
     QgsPointXY,
@@ -24,12 +24,13 @@ from qgis.core import ( # pylint:disable=no-name-in-module
     QgsProcessingAlgorithm,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
 
-def voronoi_polygons(voronoi, diameter): # pylint: disable=too-many-locals
+def voronoi_polygons(voronoi, diameter): 
     """Generate shapely.geometry.Polygon objects corresponding to the
     regions of a scipy.spatial.Voronoi object, in the order of the
     input points. The polygons for the infinite regions are large
@@ -40,7 +41,7 @@ def voronoi_polygons(voronoi, diameter): # pylint: disable=too-many-locals
     https://stackoverflow.com/questions/23901943/voronoi-compute-exact-boundaries-of-every-region/52727406#52727406
     """
 
-    # pylint: disable=invalid-name,
+    
 
     centroid = voronoi.points.mean(axis=0)
 
@@ -113,7 +114,7 @@ class SciPyVoronoiPolygons(AlgorithmMetadata, QgsProcessingAlgorithm):
     INPUT = 'INPUT'
     OUTPUT = 'OUTPUT'
 
-    def canExecute(self): #pylint: disable=unused-argument,missing-docstring
+    def canExecute(self): 
 
         try:
             from scipy.spatial import Voronoi
@@ -121,7 +122,7 @@ class SciPyVoronoiPolygons(AlgorithmMetadata, QgsProcessingAlgorithm):
         except ImportError:
             return False, self.tr('Missing dependency: scipy.spatial')
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -133,9 +134,9 @@ class SciPyVoronoiPolygons(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Voronoi Polygons'),
             QgsProcessing.TypeVectorPolygon))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
-        from scipy.spatial import Voronoi #pylint: disable=no-name-in-module
+        from scipy.spatial import Voronoi 
 
         layer = self.parameterAsVectorLayer(parameters, self.INPUT, context)
         (sink, dest_id) = self.parameterAsSink(
@@ -157,7 +158,7 @@ class SciPyVoronoiPolygons(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             if feature.geometry():
                 points.append((feature.id(), feature.geometry().asPoint()))
@@ -173,7 +174,7 @@ class SciPyVoronoiPolygons(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, (index, polygon) in enumerate(voronoi_polygons(voronoi, diameter)):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             if polygon.isGeosValid():
 

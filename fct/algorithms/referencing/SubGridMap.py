@@ -17,12 +17,13 @@ import numpy as np
 from osgeo import gdal
 # import osr
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterRasterDestination,
-    QgsProcessingParameterRasterLayer
+    QgsProcessingParameterRasterLayer,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -39,7 +40,7 @@ class SubGridMap(AlgorithmMetadata, QgsProcessingAlgorithm):
     INPUT = 'INPUT'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -54,7 +55,7 @@ class SubGridMap(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.OUTPUT,
             self.tr('Subgrid Map')))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         from ...lib.terrain_analysis import watershed
 
@@ -80,7 +81,7 @@ class SubGridMap(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 

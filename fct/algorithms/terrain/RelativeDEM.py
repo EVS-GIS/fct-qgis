@@ -17,12 +17,13 @@ import numpy as np
 from osgeo import gdal
 # import osr
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterRasterDestination,
-    QgsProcessingParameterRasterLayer
+    QgsProcessingParameterRasterLayer,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -136,7 +137,7 @@ class RelativeDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
     STREAM = 'STREAM'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.INPUT,
@@ -151,18 +152,18 @@ class RelativeDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.OUTPUT,
             self.tr('Relative DEM')))
 
-    def canExecute(self): #pylint: disable=unused-argument,missing-docstring
+    def canExecute(self): 
 
         try:
-            # pylint:disable=import-error,no-name-in-module,unused-variable
+            
             import scipy.spatial
             return True, ''
         except ImportError:
             return False, self.tr('Missing dependency: scipy.spatial')
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
-        # pylint:disable=import-error,no-name-in-module
+        
         from scipy.spatial import cKDTree
 
         # if CYTHON:
@@ -205,7 +206,7 @@ class RelativeDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(stream_layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 
@@ -236,7 +237,7 @@ class RelativeDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
         for row in range(height):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(row*total))
 

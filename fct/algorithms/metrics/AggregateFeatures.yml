@@ -1,11 +1,44 @@
 displayName: Hubert-Kehagias Aggregation
 group: metrics
-shortHelpString: NULL
-helpString: NULL
-helpUrl: NULL
+summary: |
+  Perform a basic Hubert test and aggregate homogeneous segments in an AGO field.
+
+description: |
+  Aggregate disaggregated objects with respect to a given metric, using the Hubert-Kehagias segmentation procedure.
+  A ID_AGO field is created to identify the homogeneous segments. 
+  The Hubert Test is an univariate statistical test based on the standard deviation, enabling to identify locations of breaks into a set of
+  numerical data. The output set of data is modeled as succession of straight and
+  constant lines (or “segments”). [@roux2014]
+
+  ![Hubert AGOs](/fct-qgis/img/HubertAGO.png)
+  (Figure from [@roux2014])
+
 tags:
-  - AGO
-  - aggregation
-  - segmentation
-  - statistics
+  - hydrography
   - hubert
+  - statistics
+  - aggregation
+  - ago
+  - dgo
+  - segmentation
+
+parameters:
+  INPUT:
+    type: Table or any kind of geometry with associated table
+    description: The table containening the metric do aggregate and an ordering field
+  ORDERING_FIELD:
+    type: Field
+    description: The field used to order the input table
+  METRIC_FIELD:
+    type: Field
+    description: The field containing the metric to aggregate
+  DISSOLVE:
+    type: Boolean
+    description: If true, the output will be a dissolved layer by AGO
+  OUTPUT:
+    type: Table or any kind of geometry with associated table
+    description: The output table with the ID_AGO field
+
+seealso:
+  - "[Hubert test](/fct-qgis/workflows/statistics/HubertTest/)"
+  

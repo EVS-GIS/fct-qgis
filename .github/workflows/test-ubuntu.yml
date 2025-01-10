@@ -1,0 +1,24 @@
+name: 'Run the FCT tests with QGIS official Docker image'
+
+on:
+  workflow_call:
+    inputs:
+      qgis_version:
+        required: true
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    container:
+      image: qgis/qgis:${{ inputs.qgis_version }}
+      env:
+        QGIS_PLUGIN_IN_CI: 1
+        PYTHONPATH: /usr/share/qgis/python/plugins
+        
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: |
+          xvfb-run -s '+extension GLX -screen 0 1024x768x24' /usr/bin/python3 -m pytest -v

@@ -16,11 +16,11 @@ MeasureNetworkFromOutlet - Compute a new `measure` attribute
 
 from collections import Counter, defaultdict, namedtuple
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsGeometry,
@@ -28,6 +28,7 @@ from qgis.core import ( # pylint:disable=import-error,no-name-in-module
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingException,
+    QgsProcessingUtils,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
@@ -36,6 +37,9 @@ from qgis.core import ( # pylint:disable=import-error,no-name-in-module
 
 from ..metadata import AlgorithmMetadata
 from ..util import asQgsFields
+from ...utils.assertions import assertLayersCompatibility
+
+import processing
 
 Link = namedtuple('Link', ('a', 'b', 'edge_id', 'length'))
 
@@ -71,7 +75,7 @@ class MeasureNetworkFromOutlet(AlgorithmMetadata, QgsProcessingAlgorithm):
     FROM_NODE_FIELD = 'FROM_NODE_FIELD'
     TO_NODE_FIELD = 'TO_NODE_FIELD'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -83,25 +87,40 @@ class MeasureNetworkFromOutlet(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('From Node Field'),
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
-            defaultValue='NODEA'))
+            defaultValue='NODEA',
+            optional=True))
 
         self.addParameter(QgsProcessingParameterField(
             self.TO_NODE_FIELD,
             self.tr('To Node Field'),
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
-            defaultValue='NODEB'))
+            defaultValue='NODEB',
+            optional=True))
 
         self.addParameter(QgsProcessingParameterFeatureSink(
             self.OUTPUT,
             self.tr('Measured Links'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
         to_node_field = self.parameterAsString(parameters, self.TO_NODE_FIELD, context)
+
+        assertLayersCompatibility([self.parameterAsVectorLayer(parameters, self.INPUT, context)], feedback=feedback)
+
+        if not from_node_field or not to_node_field:
+            identifynodes = processing.run('fct:identifynetworknodes', {
+                'INPUT': self.parameterAsVectorLayer(parameters, self.INPUT, context),
+                'NODES': QgsProcessing.TEMPORARY_OUTPUT,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }, context=context, feedback=feedback, is_child_algorithm=True)
+
+            layer = QgsProcessingUtils.variantToSource(identifynodes['OUTPUT'], context)
+            from_node_field = 'NODEA'
+            to_node_field = 'NODEB'
 
         fields = layer.fields().toList() + [
             QgsField('MEASURE', QVariant.Double, len=10, prec=2),
@@ -127,7 +146,7 @@ class MeasureNetworkFromOutlet(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, edge in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = edge.attribute(from_node_field)
             b = edge.attribute(to_node_field)
@@ -158,7 +177,7 @@ class MeasureNetworkFromOutlet(AlgorithmMetadata, QgsProcessingAlgorithm):
         while stack:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             node = stack.pop()
             if node in seen_nodes:
@@ -214,7 +233,7 @@ class MeasureNetworkFromOutlet(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, edge in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             b = edge.attribute(to_node_field)
             measure = measures.get(b, 0.0)

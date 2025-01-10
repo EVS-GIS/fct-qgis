@@ -15,13 +15,14 @@ SelectConnectedComponents - Select Connected Components
 
 from collections import defaultdict
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterEnum,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
-    QgsVectorLayer
+    QgsVectorLayer,
+    QgsProcessingException,
 )
 
 from ..metadata import AlgorithmMetadata
@@ -38,7 +39,7 @@ class SelectConnectedComponents(AlgorithmMetadata, QgsProcessingAlgorithm):
     TO_NODE_FIELD = 'TO_NODE_FIELD'
     DIRECTION = 'DIRECTION'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -70,7 +71,7 @@ class SelectConnectedComponents(AlgorithmMetadata, QgsProcessingAlgorithm):
         #     self.tr('Strahler Order'),
         #     QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsVectorLayer(parameters, self.INPUT, context)
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
@@ -91,7 +92,7 @@ class SelectConnectedComponents(AlgorithmMetadata, QgsProcessingAlgorithm):
             for current, feature in enumerate(layer.getFeatures()):
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 from_node = feature.attribute(from_node_field)
                 to_node = feature.attribute(to_node_field)
@@ -110,7 +111,7 @@ class SelectConnectedComponents(AlgorithmMetadata, QgsProcessingAlgorithm):
             for feature in layer.selectedFeatures():
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 from_node = feature.attribute(from_node_field)
                 to_node = feature.attribute(to_node_field)
@@ -125,7 +126,7 @@ class SelectConnectedComponents(AlgorithmMetadata, QgsProcessingAlgorithm):
             while stack:
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 node = stack.pop()
 
@@ -154,7 +155,7 @@ class SelectConnectedComponents(AlgorithmMetadata, QgsProcessingAlgorithm):
             for current, feature in enumerate(layer.getFeatures()):
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 from_node = feature.attribute(from_node_field)
                 to_node = feature.attribute(to_node_field)
@@ -169,7 +170,7 @@ class SelectConnectedComponents(AlgorithmMetadata, QgsProcessingAlgorithm):
             while process_stack:
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 node, segment_id = process_stack.pop()
                 selection.add(segment_id)

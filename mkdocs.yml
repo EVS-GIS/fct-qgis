@@ -1,4 +1,5 @@
-site_name: Fluvial Corridor Toolbox Documentation
+site_name: Fluvial Corridor Toolbox for QGIS - Documentation
+site_url: https://evs-gis.github.io/fct-qgis/
 
 repo_name: EVS-GIS/fct-qgis
 repo_url: https://github.com/EVS-GIS/fct-qgis
@@ -8,9 +9,26 @@ copyright: Copyright &copy; 2016-2025 - UMR5600 Environnement, Ville, Société
 theme:
   name: material
   language: en
+  logo: img/icon.png
+  favicon: img/icon.ico
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - search.suggest
+    - search.highlight
   palette:
-    primary: blue
-    accent: blue
+    - scheme: default
+      toggle:
+        icon: material/brightness-5
+        name: Switch to light mode
+      primary: indigo
+      accent: light blue
+    - scheme: slate
+      toggle:
+        icon: material/brightness-2
+        name: Switch to dark mode
+      primary: indigo
+      accent: light blue
 
 extra:
   manifest: 'manifest.webmanifest'
@@ -20,6 +38,9 @@ extra:
 
 extra_javascript: 
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+
+extra_css:
+  - style.css
 
 markdown_extensions:
   - abbr
@@ -35,18 +56,29 @@ markdown_extensions:
   #     bibtex_file: docs/bibliography.bib
   #     order: sorted
 
+plugins:
+  - search
+  - bibtex:
+      bib_file: docs/bibliography.bib
+      cite_inline: True
+      csl_file: https://raw.githubusercontent.com/citation-style-language/styles/refs/heads/master/apa.csl
+
 nav:
-  - Introduction: index.md
-  - install.md
-  - tutorials/index.md
+  - Getting started: 
+    - Introduction: index.md
+    - Installation: install.md
+  - Tutorials:
+    - tutorials/dem_to_dgo.md
   - Algorithms Reference:
     # Copy output of autodoc.py here
-    - Hydrography:
+    - Hydrographic Network:
       - Index: algorithms/hydrography/index.md
       - algorithms/hydrography/AggregateStreamSegments.md
       - algorithms/hydrography/AggregateUndirectedLines.md
       - algorithms/hydrography/ConnectLines.md
       - algorithms/hydrography/FixLinkOrientation.md
+      - algorithms/hydrography/FixNetworkConnectivity.md
+      - algorithms/hydrography/FixNetworkCycles.md
       - algorithms/hydrography/HackOrder.md
       - algorithms/hydrography/IdentifyNetworkNodes.md
       - algorithms/hydrography/LongestPathInDirectedGraph.md
@@ -55,9 +87,14 @@ nav:
       - algorithms/hydrography/PrincipalStem.md
       - algorithms/hydrography/RasterizeStreamNetwork.md
       - algorithms/hydrography/ReverseFlowDirection.md
+      - algorithms/hydrography/SelectConnectedBasins.md
       - algorithms/hydrography/SelectConnectedComponents.md
+      - algorithms/hydrography/SelectGraphCycle.md
+      - algorithms/hydrography/SelectHeadwaterBasins.md
       - algorithms/hydrography/StrahlerOrder.md
       - algorithms/hydrography/TotalUpstreamChannelLength.md
+      - algorithms/hydrography/UpstreamDownstreamLink.md
+      - algorithms/hydrography/WatershedLink.md
     - Terrain Analysis:
       - Index: algorithms/terrain/index.md
       - algorithms/terrain/BurnFill.md
@@ -66,27 +103,35 @@ nav:
       - algorithms/terrain/FillDepressions.md
       - algorithms/terrain/FlowAccumulation.md
       - algorithms/terrain/FlowDirection.md
+      - algorithms/terrain/HeightAboveNearestDrainageCombined.md
+      - algorithms/terrain/HeightAboveNearestDrainageInSameWatershed.md
+      - algorithms/terrain/MaskAccumulation.md
       - algorithms/terrain/RelativeDEM.md
       - algorithms/terrain/RelativeDEMByFlow.md
       - algorithms/terrain/ResolveFlats.md
+      - algorithms/terrain/ShortestDistance.md
+      - algorithms/terrain/ShortestDistanceReference.md
+      - algorithms/terrain/SignedShortestDistance.md
       - algorithms/terrain/StreamToFeature.md
       - algorithms/terrain/StreamToRaster.md
       - algorithms/terrain/Watershed.md
+      - algorithms/terrain/WatershedMax.md
     - Spatial Components:
       - Index: algorithms/spatialcomponents/index.md
+      - algorithms/spatialcomponents/DisaggregateNetwork.md
       - algorithms/spatialcomponents/DisaggregatePolygon.md
+      - algorithms/spatialcomponents/LandCoverContinuity.md
       - algorithms/spatialcomponents/PolygonCenterLine.md
       - algorithms/spatialcomponents/PolygonSkeleton.md
       - algorithms/spatialcomponents/ValleyBottom.md
-      - algorithms/spatialcomponents/ValleyCenterLine.md
     - Metrics:
       - Index: algorithms/metrics/index.md
       - algorithms/metrics/AggregateFeatures.md
       - algorithms/metrics/KnickPoints.md
       - algorithms/metrics/LineStringZSlope.md
+      - algorithms/metrics/MaximumOnShortestPath.md
       - algorithms/metrics/OrthogonalTransects.md
       - algorithms/metrics/PlanformMetrics.md
-      - algorithms/metrics/PolygonWidth.md
     - Spatial Reference:
       - Index: algorithms/referencing/index.md
       - algorithms/referencing/AxisTransform.md
@@ -94,6 +139,9 @@ nav:
       - algorithms/referencing/LocatePolygonAlongNetwork.md
       - algorithms/referencing/MeasureNetworkFromOutlet.md
       - algorithms/referencing/PointAxisTransform.md
+      - algorithms/referencing/SubGridMap.md
+      - algorithms/referencing/SubGridTopography.md
+      - algorithms/referencing/UpdateAxisLengthAndMeasure.md
     - Tools for Rasters:
       - Index: algorithms/raster/index.md
       - algorithms/raster/AnisotropicDiffusionFilter.md
@@ -115,6 +163,7 @@ nav:
       - algorithms/vector/LineMidpoints.md
       - algorithms/vector/LineStringBufferByM.md
       - algorithms/vector/LocatePointAlongLine.md
+      - algorithms/vector/MinimumOrientedBoundingBox.md
       - algorithms/vector/MonotonicZ.md
       - algorithms/vector/PointsAlongPolygon.md
       - algorithms/vector/PointsInPolygon.md
@@ -132,20 +181,23 @@ nav:
       - algorithms/vector/TransformCoordinateByExpression.md
       - algorithms/vector/UniquePoints.md
       - algorithms/vector/VariableLengthTransects.md
+      - algorithms/vector/VoronoiTransects.md
       - algorithms/vector/WienerCoordinateFilter.md
   - Workflows Reference:
     - 1- Spatial Components:
       - Index: workflows/spatialcomponents/index.md
-      - workflows/spatialcomponents/OrientedCenterline.md
+      - workflows/spatialcomponents/Centerline.md
       - workflows/spatialcomponents/ValleyBottom.md
     - 2- Disaggregation Processes:
       - Index: workflows/disaggregation/index.md
-      - workflows/disaggregation/PolylineDisaggregation.md
+      - workflows/disaggregation/InflectionDisaggregation.md
       - workflows/disaggregation/Segmentation.md
       - workflows/disaggregation/Sequencing.md
     - 3- Metrics:
       - Index: workflows/metrics/index.md
-      - workflows/metrics/Morphometry.md
+      - workflows/metrics/ElevationAndSlope.md
+      - workflows/metrics/PolygonWidth.md
     - 4- Statistics:
       - Index: workflows/statistics/index.md
       - workflows/statistics/HubertTest.md
+  - Bibliography: bibliography.md

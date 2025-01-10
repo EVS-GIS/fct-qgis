@@ -15,7 +15,7 @@ Variable-length transects
 
 import math
 
-from qgis.core import ( #pylint: disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsGeometry,
     QgsPointXY,
@@ -64,7 +64,7 @@ class VariableLengthTransects(AlgorithmMetadata, QgsProcessingFeatureBasedAlgori
     LENGTH = 'LENGTH'
     INTERVAL = 'INTERVAL'
 
-    def initParameters(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initParameters(self, configuration): 
 
         param_length = QgsProcessingParameterDistance(
             self.LENGTH,
@@ -94,19 +94,19 @@ class VariableLengthTransects(AlgorithmMetadata, QgsProcessingFeatureBasedAlgori
                 QgsPropertyDefinition.Double))
         self.addParameter(param_distance)
 
-    def inputLayerTypes(self): #pylint: disable=no-self-use,missing-docstring
+    def inputLayerTypes(self): 
         return [QgsProcessing.TypeVectorLine]
 
-    def outputName(self): #pylint: disable=missing-docstring
+    def outputName(self): 
         return self.tr('Transects')
 
-    def outputWkbType(self, inputWkbType): #pylint: disable=no-self-use,unused-argument,missing-docstring
+    def outputWkbType(self, inputWkbType): 
         return QgsWkbTypes.LineString
 
-    def supportInPlaceEdit(self, layer): #pylint: disable=unused-argument,no-self-use,missing-docstring
+    def supportInPlaceEdit(self, layer): 
         return False
 
-    def prepareAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def prepareAlgorithm(self, parameters, context, feedback): 
 
         self.dynamic_parameters = dict()
 
@@ -144,7 +144,7 @@ class VariableLengthTransects(AlgorithmMetadata, QgsProcessingFeatureBasedAlgori
 
             raise QgsProcessingException('Unknown parameter %s' % name)
 
-    def processFeature(self, feature, context, feedback): #pylint: disable=no-self-use,unused-argument,missing-docstring
+    def processFeature(self, feature, context, feedback): 
 
         cursor = 0.0
         length = self.dynamicParameterAsDouble(self.LENGTH, context)

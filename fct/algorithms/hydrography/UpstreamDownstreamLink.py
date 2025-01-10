@@ -17,11 +17,11 @@ import numpy as np
 from osgeo import gdal
 # import osr
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module,import-error
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -30,7 +30,8 @@ from qgis.core import ( # pylint:disable=import-error,no-name-in-module
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
-    QgsProcessingParameterRasterLayer
+    QgsProcessingParameterRasterLayer,
+    QgsProcessingException,
 )
 
 from ..util import appendUniqueField
@@ -57,7 +58,7 @@ class UpstreamDownstreamLink(AlgorithmMetadata, QgsProcessingAlgorithm):
     PK_FIELD = 'PK_FIELD'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -80,7 +81,7 @@ class UpstreamDownstreamLink(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Linked Points'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         pk_field = self.parameterAsString(parameters, self.PK_FIELD, context)
@@ -125,7 +126,7 @@ class UpstreamDownstreamLink(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 
@@ -146,7 +147,7 @@ class UpstreamDownstreamLink(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 

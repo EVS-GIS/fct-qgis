@@ -1,19 +1,27 @@
 [general]
-name = Fluvial Corridor Toolbox
-qgisMinimumVersion = 3.22.0
-description = Fluvial Corridor Toolbox
-about = The Fluvial Corridor Toolbox is a set of geoalgorithms intended to describe and measure fluvial features and processes.
-version = 1.0.12
-author = UMR5600 EVS
-email = samuel.dunesme@ens-lyon.fr
-category = Vector
-changelog = Actual dev version
-tags = fluvial, vector, analysis, processing
-homepage = https://evs-gis.github.io/fct-qgis/
-tracker = https://github.com/EVS-GIS/fct-qgis/issues
-repository = https://github.com/EVS-GIS/fct-qgis
-icon = images/icon.png
-experimental = False
-deprecated = False
-hasProcessingProvider = True
+name=Fluvial Corridor Toolbox
+qgisMinimumVersion=3.34
+description=Fluvial Corridor Toolbox
+version=1.1.0
+author=CNRS UMR5600 Environnement, Ville, Société
+email=samuel.dunesme@ens-lyon.fr
 
+about = The Fluvial Corridor Toolbox is a set of geoalgorithms intended to describe and measure fluvial features and processes.
+
+tracker=https://github.com/EVS-GIS/fct-qgis/issues
+repository=https://github.com/EVS-GIS/fct-qgis
+
+hasProcessingProvider=yes
+changelog= Actual dev version
+
+tags=fluvial, vector, analysis, processing, hydromorphology, dgo
+
+homepage=https://evs-gis.github.io/fct-qgis/
+category=Analysis
+icon=images/icon.png
+experimental=False
+
+deprecated=False
+server=False
+
+# plugin_dependencies=

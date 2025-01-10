@@ -15,11 +15,11 @@ Features aggregation by Hubert test
 
 import numpy as np
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsFeatureRequest,
     QgsField,
@@ -31,6 +31,7 @@ from qgis.core import ( # pylint:disable=no-name-in-module
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
+    QgsProcessingException,
     QgsWkbTypes,
     NULL
 )
@@ -52,7 +53,7 @@ class AggregateFeatures(AlgorithmMetadata, QgsProcessingAlgorithm):
     DISSOLVE = 'DISSOLVE'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -82,7 +83,7 @@ class AggregateFeatures(AlgorithmMetadata, QgsProcessingAlgorithm):
             QgsProcessing.TypeVectorAnyGeometry))
 
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         metric_field = self.parameterAsString(parameters, self.METRIC_FIELD, context)
@@ -96,7 +97,7 @@ class AggregateFeatures(AlgorithmMetadata, QgsProcessingAlgorithm):
 
         for current, feature in enumerate(layer.getFeatures()):
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             distance = feature.attribute(ordering_field)
             value = feature.attribute(metric_field)
@@ -200,7 +201,7 @@ class AggregateFeatures(AlgorithmMetadata, QgsProcessingAlgorithm):
             for current, feature in enumerate(layer.getFeatures()):
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 outfeature = QgsFeature()
                 outfeature.setGeometry(QgsGeometry(feature.geometry()))

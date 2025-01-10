@@ -5,7 +5,7 @@ summary: |
 
 description: |
   Mutliscale characterization of fluvial system is based on fluvial linear such 
-  as the hydrographic network or the centerline network. To ensure a consistent 
+  as the hydrographic network or the centerline network [@roux2014]. To ensure a consistent 
   process, one of the necessary conditions is that networks must be (i) oriented, 
   (ii) connected and (iii) relevant of the in-field configuration. Sequencing tool 
   aiming at ordering and, if it is needed, flipping streams of a network, to ensure :
@@ -13,7 +13,10 @@ description: |
   1. a good flow direction from upstream to downstream.
   2. a good ordination of streams in order to spatially and hierarchically located them within a network.
 
-  [@roux2014]
+  ![Sequencing](/fct-qgis/img/Sequencing.png)
+
+  If you don't have a DEM, you can use the [Fix Link Orientation](/fct-qgis/algorithms/hydrography/FixLinkOrientation/) algorithm
+  with the selected node or dangling node method.
 
   Algorithm:
 
@@ -41,6 +44,6 @@ parameters:
     description: The output sequenced linear network (or linear feature).
 
 seealso:
-  - "[Identify Network Nodes](../../../algorithms/hydrography/IdentifyNetworkNodes/)"
-  - "[Drape Vectors](../../../algorithms/raster/DrapeVectors/)"
-  - "[Check/Fix Link Orientation](../../../algorithms/hydrography/FixLinkOrientation/)"
+  - "[Identify Network Nodes](/fct-qgis/algorithms/hydrography/IdentifyNetworkNodes/)"
+  - "[Drape Vectors](/fct-qgis/algorithms/raster/DrapeVectors/)"
+  - "[Check/Fix Link Orientation](/fct-qgis/algorithms/hydrography/FixLinkOrientation/)"

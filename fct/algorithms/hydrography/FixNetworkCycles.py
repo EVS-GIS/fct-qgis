@@ -16,11 +16,11 @@ Fix Network Cycles
 from collections import defaultdict, Counter
 import itertools
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -56,7 +56,7 @@ class FixNetworkCycles(AlgorithmMetadata, QgsProcessingAlgorithm):
     FROM_NODE_FIELD = 'FROM_NODE_FIELD'
     TO_NODE_FIELD = 'TO_NODE_FIELD'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -82,7 +82,7 @@ class FixNetworkCycles(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Fixed Cycles'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, fb): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, fb): 
 
         feedback = QgsProcessingMultiStepFeedback(3, fb)
 
@@ -101,7 +101,7 @@ class FixNetworkCycles(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             from_node = feature.attribute(from_node_field)
             to_node = feature.attribute(to_node_field)
@@ -206,7 +206,7 @@ class FixNetworkCycles(AlgorithmMetadata, QgsProcessingAlgorithm):
         # for node in graph:
 
         #     if feedback.isCanceled():
-        #         break
+        #         raise QgsProcessingException(self.tr('Cancelled by user'))
 
         #     if node not in seen_nodes:
         #         connect(node)
@@ -216,7 +216,7 @@ class FixNetworkCycles(AlgorithmMetadata, QgsProcessingAlgorithm):
         while stack:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             node = stack.pop(0)
 
@@ -249,7 +249,7 @@ class FixNetworkCycles(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             from_node = feature.attribute(from_node_field)
             to_node = feature.attribute(to_node_field)

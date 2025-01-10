@@ -13,20 +13,18 @@ LengthOrder
 ***************************************************************************
 """
 
-from heapq import heappush, heappop, heapify
+from heapq import heappop, heapify
 from functools import (
-    partial,
-    reduce,
     total_ordering
 )
 
 from collections import defaultdict, Counter
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module,import-error
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=no-name-in-module,import-error
+from qgis.core import ( 
     QgsFeature,
     QgsFeatureRequest,
     QgsField,
@@ -35,11 +33,16 @@ from qgis.core import ( # pylint:disable=no-name-in-module,import-error
     QgsProcessingParameterBoolean,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingParameterField
+    QgsProcessingParameterField,
+    QgsProcessingException,
+    QgsProcessingUtils
 )
 
 from ..metadata import AlgorithmMetadata
 from ..util import asQgsFields
+from ...utils.assertions import assertLayersCompatibility
+
+import processing
 
 def index_by(i, d, x):
     d[x[i]].append(x)
@@ -78,7 +81,7 @@ class HackOrder(AlgorithmMetadata, QgsProcessingAlgorithm):
     FROM_NODE_FIELD = 'FROM_NODE_FIELD'
     TO_NODE_FIELD = 'TO_NODE_FIELD'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -90,21 +93,24 @@ class HackOrder(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('From Node Field'),
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
-            defaultValue='NODEA'))
+            defaultValue='NODEA',
+            optional=True))
 
         self.addParameter(QgsProcessingParameterField(
             self.TO_NODE_FIELD,
             self.tr('To Node Field'),
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
-            defaultValue='NODEB'))
+            defaultValue='NODEB',
+            optional=True))
 
         self.addParameter(QgsProcessingParameterField(
             self.MEASURE_FIELD,
             self.tr('Measure Field'),
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
-            defaultValue='MEASURE'))
+            defaultValue='MEASURE',
+            optional=True))
 
         self.addParameter(QgsProcessingParameterBoolean(
             self.IS_DOWNSTREAM_MEAS,
@@ -116,13 +122,28 @@ class HackOrder(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Hack Order'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
         to_node_field = self.parameterAsString(parameters, self.TO_NODE_FIELD, context)
         distance_field = self.parameterAsString(parameters, self.MEASURE_FIELD, context)
         is_downstream = self.parameterAsBool(parameters, self.IS_DOWNSTREAM_MEAS, context)
+
+        assertLayersCompatibility([self.parameterAsVectorLayer(parameters, self.INPUT, context)], feedback=feedback)
+
+        if not from_node_field or not to_node_field or not distance_field:
+            measurenetwork = processing.run('fct:measurenetworkfromoutlet', {
+                'INPUT': self.parameterAsVectorLayer(parameters, self.INPUT, context),
+                'FROM_NODE_FIELD':'',
+                'TO_NODE_FIELD':'',
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }, context=context, feedback=feedback, is_child_algorithm=True)
+
+            layer = QgsProcessingUtils.variantToSource(measurenetwork['OUTPUT'], context)
+            from_node_field = 'NODEA'
+            to_node_field = 'NODEB'
+            distance_field = 'MEASURE'
 
         # Step 1 - Find sources and build djacency index
 
@@ -153,7 +174,7 @@ class HackOrder(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, edge in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = edge.attribute(from_node_field)
             b = edge.attribute(to_node_field)
@@ -216,7 +237,7 @@ class HackOrder(AlgorithmMetadata, QgsProcessingAlgorithm):
         while queue:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             entry = heappop(queue)
             a = entry.key

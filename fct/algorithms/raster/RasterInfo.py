@@ -15,7 +15,7 @@ RasterInfo
 
 from osgeo import gdal
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsProcessingAlgorithm,
     QgsProcessingParameterBand,
     QgsProcessingParameterRasterLayer,
@@ -38,7 +38,7 @@ class RasterInfo(AlgorithmMetadata, QgsProcessingAlgorithm):
     YSIZE = 'YSIZE'
     NODATA = 'NODATA'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.INPUT,
@@ -60,7 +60,7 @@ class RasterInfo(AlgorithmMetadata, QgsProcessingAlgorithm):
 
         self.addOutput(QgsProcessingOutputNumber(self.NODATA, self.tr('No Data Value')))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         dem = self.parameterAsRasterLayer(parameters, self.INPUT, context)
         band = self.parameterAsInt(parameters, self.BAND, context)

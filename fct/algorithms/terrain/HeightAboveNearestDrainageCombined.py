@@ -17,12 +17,13 @@ import numpy as np
 from osgeo import gdal
 # import osr
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterRasterDestination,
-    QgsProcessingParameterRasterLayer
+    QgsProcessingParameterRasterLayer,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -132,7 +133,7 @@ class HeightAboveNearestDrainageCombined(AlgorithmMetadata, QgsProcessingAlgorit
     SLOPE = 'SLOPE'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.INPUT,
@@ -160,9 +161,9 @@ class HeightAboveNearestDrainageCombined(AlgorithmMetadata, QgsProcessingAlgorit
             self.tr('Relative Elevation')))
 
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
-        # pylint:disable=import-error,no-name-in-module
+        
         from ...lib import terrain_analysis as ta
 
         elevations_lyr = self.parameterAsRasterLayer(parameters, self.INPUT, context)
@@ -208,7 +209,7 @@ class HeightAboveNearestDrainageCombined(AlgorithmMetadata, QgsProcessingAlgorit
         for current, feature in enumerate(stream_layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 

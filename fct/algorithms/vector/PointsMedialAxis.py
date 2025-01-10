@@ -15,11 +15,11 @@ PointsMedialAxis
 
 import numpy as np
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -31,12 +31,13 @@ from qgis.core import ( # pylint:disable=no-name-in-module
     QgsProcessingParameterField,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
 
-def medial_axis(voronoi, groups): # pylint: disable=too-many-locals
+def medial_axis(voronoi, groups): 
     """
     Extract Voronoi vertices equidistant of two points
     from two different groups.
@@ -64,7 +65,7 @@ class PointsMedialAxis(AlgorithmMetadata, QgsProcessingAlgorithm):
     GROUP_FIELD = 'GROUP_FIELD'
     OUTPUT = 'OUTPUT'
 
-    def canExecute(self): #pylint: disable=unused-argument,missing-docstring
+    def canExecute(self): 
 
         try:
             from scipy.spatial import Voronoi
@@ -72,7 +73,7 @@ class PointsMedialAxis(AlgorithmMetadata, QgsProcessingAlgorithm):
         except ImportError:
             return False, self.tr('Missing dependency: scipy.spatial')
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -91,9 +92,9 @@ class PointsMedialAxis(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Medial Axis'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
-        from scipy.spatial import Voronoi #pylint: disable=no-name-in-module
+        from scipy.spatial import Voronoi 
 
         layer = self.parameterAsVectorLayer(parameters, self.INPUT, context)
         group_field = self.parameterAsString(parameters, self.GROUP_FIELD, context)
@@ -118,7 +119,7 @@ class PointsMedialAxis(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             if feature.geometry():
                 points.append((feature.id(), feature.geometry().asPoint()))
@@ -138,7 +139,7 @@ class PointsMedialAxis(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, (p, q, ridge) in enumerate(medial_axis(voronoi, groups)):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feature = QgsFeature()
             feature.setGeometry(ridge)

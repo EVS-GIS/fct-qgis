@@ -17,10 +17,10 @@ import numpy as np
 from osgeo import gdal
 # import osr
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
-    QgsProcessingParameterBoolean,
+    QgsProcessingException,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterRasterDestination,
     QgsProcessingParameterRasterLayer
@@ -112,7 +112,7 @@ class ShortestDistance(AlgorithmMetadata, QgsProcessingAlgorithm):
     # SIGNED_DISTANCE = 'SIGNED_DISTANCE'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.INPUT,
@@ -132,18 +132,18 @@ class ShortestDistance(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.OUTPUT,
             self.tr('Shortest Distance')))
 
-    def canExecute(self): #pylint: disable=unused-argument,missing-docstring
+    def canExecute(self): 
 
         try:
-            # pylint: disable=import-error,unused-variable
+            
             from ...lib.terrain_analysis import shortest_distance
             return True, ''
         except ImportError:
             return False, self.tr('Missing dependency: FCT terrain_analysis')
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
-        # pylint:disable=import-error,no-name-in-module
+        
         from ...lib.terrain_analysis import shortest_distance
 
         elevations_lyr = self.parameterAsRasterLayer(parameters, self.INPUT, context)
@@ -186,7 +186,7 @@ class ShortestDistance(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(stream_layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 

@@ -1,0 +1,67 @@
+displayName: Centerline
+group: spatialcomponents
+summary: |
+  Centerline (ie. medial axis) of the input polygons based on an auxiliary
+  stream network and, optionally, a DEM to orient the centerline from upstream to downstream.
+description: |
+  Compute the medial axis of a polygon. Orient lines from upstream to downstream if provided DEM. 
+  Useful for computing centerlines of a valley bottom or any other 
+  polygon for which you have a corresponding stream network.
+
+  If a stream network is not available for your polygon (ex. historical channel), it is possible to 
+  use instead a created LineString which cut the polygon boundaries upstream and downstream.
+  This LineString needs to be an approximation of the medial axis to guide the centerline computation.
+
+  ![Extend lines to cut the polygon upstream and downstream](/fct-qgis/img/dem_to_dgo_extend_lines.png)
+
+  Algorithm:
+  
+      Intersect the input polygon boundaries with the stream network
+      Keep the most distant resulting points (upstream and downstream points)
+      Cut the input polygon boundaries with the upstream and downstream points (get two polygon sides)
+      Compute Voronoi polygons with points on the sides and dissolve it on each side
+      Cut the Voronoi lines with the input polygon
+      Remove duplicate lines
+      Drape lines on DEM
+      Check/Fix links orientation
+
+  The resulting centerline is oriented from upstream to downstream if you provided a DEM.
+
+  ![Centerline](/fct-qgis/img/Centerline.png)
+      
+tags:
+  - vector
+  - polygon
+  - medial axis
+  - disaggregation
+  - model
+  - centerline
+  - valley
+  - line orientation
+  - dem
+
+parameters:
+  POLYGON:
+    type: Polygon
+    description:
+      Polygon to compute the centerline.
+  DEM:
+    type: Raster
+    description:
+      Digital Elevation Model.
+  STREAM:
+    type: LineString
+    description: |
+      Stream polyline to compute the upstream and downstream points.
+      ex. french BDCarthage.
+  DISTANCE:
+    type: Number
+    description: |
+      Distance between points on the input polygon sides to compute the
+      Voronoi polygons. The smaller the distance, the smoother the result will be.
+  OUT_CENTERLINE:
+    type: LineString
+    description:
+      Resulting Centerline.
+seealso:
+  - "[PolygonCenterLine](/fct-qgis/algorithms/spatialcomponents/PolygonCenterLine/)"

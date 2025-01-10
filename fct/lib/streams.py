@@ -15,6 +15,8 @@ Vectorize Stream Features
 
 import numpy as np
 
+from qgis.core import QgsProcessingException
+
 from .grid import (
     D8POW2_UPWARD,
     D8_SEARCH,
@@ -59,7 +61,7 @@ def stream_to_feature(streams, flow, feedback):
     for i in range(height):
 
         if feedback.isCanceled():
-            break
+            raise QgsProcessingException(self.tr('Cancelled by user'))
 
         for j in range(width):
 
@@ -96,7 +98,7 @@ def stream_to_feature(streams, flow, feedback):
     while stack:
 
         if feedback.isCanceled():
-            break
+            raise QgsProcessingException(self.tr('Cancelled by user'))
 
         i, j = stack.pop()
         segment = [(j, i)]

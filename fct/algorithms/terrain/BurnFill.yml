@@ -1,8 +1,20 @@
 displayName: Burn Streams And Fill Depressions
 group: terrain
-shortHelpString: NULL
-helpString: NULL
-helpUrl: NULL
+summary: |
+  Compute flow direction raster, using a variant of Wang and Liu priority flood algorithm
+  that processes stream cell in before other cells.
+description: |
+  References
+  ----------
+
+  [1] Lindsay, J. B. (2016).
+        The Practice of DEM Stream Burning Revisited.
+        Earth Surface Processes and Landforms, 41(5), 658‑668. 
+        https://doi.org/10.1002/esp.3888
+
+  [2] WhiteboxGAT Java implementation (Last modified 2 Oct 2017)
+        https://github.com/jblindsay/whitebox-geospatial-analysis-tools/blob/038b9c7/resources/plugins/Scripts/TopologicalBreachBurn.groovy
+
 tags:
   - depression filling
   - sink

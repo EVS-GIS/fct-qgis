@@ -13,7 +13,7 @@ DrapeVectors
 ***************************************************************************
 """
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsGeometry,
     QgsLineString,
@@ -44,7 +44,7 @@ class DrapeVectors(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
     BAND = 'BAND'
     OUTPUT = 'OUTPUT'
 
-    def initParameters(self, configuration=None): #pylint: disable=unused-argument,missing-docstring
+    def initParameters(self, configuration=None): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.RASTER,
@@ -56,26 +56,26 @@ class DrapeVectors(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
             parentLayerParameterName=self.RASTER,
             defaultValue=1))
 
-    def inputLayerTypes(self): #pylint: disable=no-self-use,missing-docstring
+    def inputLayerTypes(self): 
         return [QgsProcessing.TypeVectorLine, QgsProcessing.TypeVectorPolygon]
         # return [QgsProcessing.TypeVectorLine]
 
-    def outputName(self): #pylint: disable=missing-docstring
+    def outputName(self): 
         return self.tr('Draped Features')
 
-    def outputWkbType(self, inputWkbType): #pylint: disable=no-self-use,missing-docstring
+    def outputWkbType(self, inputWkbType): 
 
         if QgsWkbTypes.hasZ(inputWkbType):
             return inputWkbType
 
         return QgsWkbTypes.addZ(inputWkbType)
 
-    def supportInPlaceEdit(self, layer): #pylint: disable=no-self-use,missing-docstring
+    def supportInPlaceEdit(self, layer): 
         return super().supportInPlaceEdit(layer) \
             and QgsWkbTypes.hasZ(layer.wkbType())
             # and QgsWkbTypes.isSingleType(layer.wkbType())
 
-    def prepareAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def prepareAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         raster = self.parameterAsRasterLayer(parameters, self.RASTER, context)
@@ -94,12 +94,12 @@ class DrapeVectors(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
 
         return True
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         with self.data:
             return super().processAlgorithm(parameters, context, feedback)
 
-    def processLineString(self, line): # pylint: disable=unused-argument
+    def processLineString(self, line): 
         """ Drape simple linestring
         """
 
@@ -123,7 +123,7 @@ class DrapeVectors(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm):
         return new_polygon
 
 
-    def processFeature(self, feature, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processFeature(self, feature, context, feedback): 
 
         geometry = feature.geometry()
 

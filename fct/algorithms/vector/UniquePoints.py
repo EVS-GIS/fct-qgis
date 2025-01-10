@@ -12,32 +12,15 @@ UniquePoints - Generate a point if last vertex
 *                                                                         *
 ***************************************************************************
 """
-from qgis.PyQt.QtCore import (
-    QVariant
-)
 
 from qgis.core import (
-    QgsApplication,
-    QgsExpression,
     QgsGeometry,
-    QgsFeatureSink,
-    QgsFeatureRequest,
     QgsFeature,
-    QgsField,
-    QgsFields,
-    QgsPointXY,
     QgsProcessing,
     QgsProcessingAlgorithm,
-    QgsProcessingFeatureBasedAlgorithm,
     QgsProcessingException,
-    QgsProcessingParameterDistance,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingParameterNumber,
-    QgsProcessingParameterString,
-    QgsProcessingParameterField,
-    QgsProcessingParameterVectorLayer,
-    QgsSpatialIndex,
     QgsWkbTypes
 )
 
@@ -53,7 +36,7 @@ class UniquePoints(AlgorithmMetadata, QgsProcessingAlgorithm):
     INPUT = 'INPUT'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -65,7 +48,7 @@ class UniquePoints(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Unique points'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
 
@@ -83,7 +66,7 @@ class UniquePoints(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-              break
+              raise QgsProcessingException(self.tr('Cancelled by user'))
 
             geometry = feature.geometry()
             if geometry.isMultipart():
@@ -106,7 +89,7 @@ class UniquePoints(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, p in enumerate(points):
 
             if feedback.isCanceled():
-              break  
+              raise QgsProcessingException(self.tr('Cancelled by user'))  
 
             feature = QgsFeature()
             

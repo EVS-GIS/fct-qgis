@@ -15,13 +15,14 @@ SelectConnectedComponents - Select Connected Components
 
 from collections import defaultdict
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterEnum,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
     QgsVectorLayer,
+    QgsProcessingException,
     NULL
 )
 
@@ -40,7 +41,7 @@ class SelectConnectedBasins(AlgorithmMetadata, QgsProcessingAlgorithm):
     DOWNSTREAM_FIELD = 'DOWNSTREAM_FIELD'
     DIRECTION = 'DIRECTION'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -72,7 +73,7 @@ class SelectConnectedBasins(AlgorithmMetadata, QgsProcessingAlgorithm):
         #     self.tr('Strahler Order'),
         #     QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsVectorLayer(parameters, self.INPUT, context)
         id_field = self.parameterAsString(parameters, self.ID_FIELD, context)
@@ -91,7 +92,7 @@ class SelectConnectedBasins(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             gid = feature.attribute(id_field)
             downstream = feature.attribute(downstream_field)
@@ -113,7 +114,7 @@ class SelectConnectedBasins(AlgorithmMetadata, QgsProcessingAlgorithm):
             for feature in layer.selectedFeatures():
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 stack = [feature.attribute(id_field)]
 
@@ -138,7 +139,7 @@ class SelectConnectedBasins(AlgorithmMetadata, QgsProcessingAlgorithm):
             for feature in layer.selectedFeatures():
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 component = feature.attribute(id_field)
 

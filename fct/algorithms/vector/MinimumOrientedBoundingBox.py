@@ -15,11 +15,11 @@ Variable-Width Vertex-Wise Buffer
 
 from math import degrees, atan2
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module,import-error
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -90,16 +90,16 @@ class MinimumOrientedBoundingBox(AlgorithmMetadata, QgsProcessingFeatureBasedAlg
 
     METADATA = AlgorithmMetadata.read(__file__, 'MinimumOrientedBoundingBox')
 
-    def inputLayerTypes(self): #pylint: disable=no-self-use,missing-docstring
+    def inputLayerTypes(self): 
         return [QgsProcessing.TypeVectorPolygon]
 
-    def outputName(self): #pylint: disable=missing-docstring
+    def outputName(self): 
         return self.tr('Minimum Oriented Bounding Box')
 
-    def outputWkbType(self, inputWkbType): #pylint: disable=no-self-use,unused-argument,missing-docstring
+    def outputWkbType(self, inputWkbType): 
         return QgsWkbTypes.Polygon
 
-    def outputFields(self, inputFields): #pylint: disable=no-self-use,unused-argument,missing-docstring
+    def outputFields(self, inputFields): 
 
         fields = QgsFields(inputFields)
         appendUniqueField(QgsField('angle', QVariant.Double), fields)
@@ -108,10 +108,10 @@ class MinimumOrientedBoundingBox(AlgorithmMetadata, QgsProcessingFeatureBasedAlg
 
         return fields
 
-    def supportInPlaceEdit(self, layer): #pylint: disable=unused-argument,no-self-use,missing-docstring
+    def supportInPlaceEdit(self, layer): 
         return False
 
-    def prepareAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def prepareAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, 'INPUT', context)
 
@@ -121,7 +121,7 @@ class MinimumOrientedBoundingBox(AlgorithmMetadata, QgsProcessingFeatureBasedAlg
 
         return True
 
-    def processFeature(self, feature, context, feedback): #pylint: disable=no-self-use,unused-argument,missing-docstring
+    def processFeature(self, feature, context, feedback): 
 
         geometry = feature.geometry()
 

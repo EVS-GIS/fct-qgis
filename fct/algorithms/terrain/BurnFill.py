@@ -16,14 +16,15 @@ TopologicalStreamBurn
 from osgeo import gdal
 import numpy as np
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterNumber,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
     QgsProcessingParameterRasterDestination,
-    QgsProcessingParameterRasterLayer
+    QgsProcessingParameterRasterLayer,
+    QgsProcessingException
 )
 
 from .StreamToRaster import worldtopixel, rasterize_linestring
@@ -31,22 +32,6 @@ from .StreamToRaster import worldtopixel, rasterize_linestring
 from ..metadata import AlgorithmMetadata
 
 class BurnFill(AlgorithmMetadata, QgsProcessingAlgorithm):
-    """
-    Compute flow direction raster,
-    using a variant of Wang and Liu priority flood algorithm
-    that processes stream cell in before other cells.
-
-    References
-    -----
-
-    [1] Lindsay, J. B. (2016).
-        The Practice of DEM Stream Burning Revisited.
-        Earth Surface Processes and Landforms, 41(5), 658‑668. 
-        https://doi.org/10.1002/esp.3888
-
-    [2] WhiteboxGAT Java implementation (Last modified 2 Oct 2017)
-        https://github.com/jblindsay/whitebox-geospatial-analysis-tools/blob/038b9c7/resources/plugins/Scripts/TopologicalBreachBurn.groovy
-    """
 
     METADATA = AlgorithmMetadata.read(__file__, 'BurnFill')
 
@@ -57,7 +42,7 @@ class BurnFill(AlgorithmMetadata, QgsProcessingAlgorithm):
     OUTPUT = 'OUTPUT'
     FILLED = 'FILLED'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.ELEVATIONS,
@@ -91,18 +76,18 @@ class BurnFill(AlgorithmMetadata, QgsProcessingAlgorithm):
             optional=True,
             createByDefault=False))
 
-    def canExecute(self): #pylint: disable=unused-argument,missing-docstring
+    def canExecute(self): 
 
         try:
-            # pylint: disable=import-error,unused-variable
+            
             from ...lib.terrain_analysis import burnfill
             return True, ''
         except ImportError:
             return False, self.tr('Missing dependency: FCT terrain_analysis')
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
-        # pylint:disable=import-error,no-name-in-module
+        
         from ...lib.terrain_analysis import burnfill
 
         elevations_lyr = self.parameterAsRasterLayer(parameters, self.ELEVATIONS, context)
@@ -140,7 +125,7 @@ class BurnFill(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 
@@ -174,7 +159,7 @@ class BurnFill(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 

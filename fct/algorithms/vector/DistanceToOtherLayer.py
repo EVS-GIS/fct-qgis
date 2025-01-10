@@ -13,11 +13,11 @@ Distance To Other Layer
 ***************************************************************************
 """
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsFeatureRequest,
     QgsField,
@@ -29,7 +29,8 @@ from qgis.core import ( # pylint:disable=import-error,no-name-in-module
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
     QgsSpatialIndex,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -49,7 +50,7 @@ class DistanceToOtherLayer(AlgorithmMetadata, QgsProcessingAlgorithm):
     SEARCH_DISTANCE = 'SEARCH_DISTANCE'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration=None): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration=None): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -78,7 +79,7 @@ class DistanceToOtherLayer(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Distance'),
             QgsProcessing.TypeVectorAnyGeometry))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         to_layer = self.parameterAsSource(parameters, self.TO_LAYER, context)
@@ -106,7 +107,7 @@ class DistanceToOtherLayer(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             if is_point_layer:
 

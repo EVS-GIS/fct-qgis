@@ -18,16 +18,17 @@ import numpy as np
 from enum import IntEnum
 from osgeo import gdal
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessingAlgorithm,
     QgsProcessingParameterBand,
     QgsProcessingParameterEnum,
     QgsProcessingParameterNumber,
     QgsProcessingParameterRasterDestination,
-    QgsProcessingParameterRasterLayer
+    QgsProcessingParameterRasterLayer,
+    QgsProcessingException
 )
 
-from processing.algs.gdal.GdalUtils import GdalUtils # pylint:disable=import-error
+from processing.algs.gdal.GdalUtils import GdalUtils 
 from ..metadata import AlgorithmMetadata
 
 class SimpleRasterFilterType(IntEnum):
@@ -53,7 +54,7 @@ class SimpleRasterFilter(AlgorithmMetadata, QgsProcessingAlgorithm):
     SIZE = 'SIZE'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, config=None): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, config=None): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.INPUT,
@@ -88,16 +89,16 @@ class SimpleRasterFilter(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.OUTPUT,
             self.tr('Filtered')))
 
-    def canExecute(self): #pylint: disable=unused-argument,missing-docstring
+    def canExecute(self): 
 
         try:
-            # pylint: disable=import-error,unused-variable
+            
             from scipy.ndimage import uniform_filter, median_filter, minimum_filter, maximum_filter
             return True, ''
         except ImportError:
             return False, self.tr('Missing dependency: scipy.ndimage')
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         raster = self.parameterAsRasterLayer(parameters, self.INPUT, context)
         bands = self.parameterAsInts(parameters, self.BANDS, context)
@@ -147,7 +148,7 @@ class SimpleRasterFilter(AlgorithmMetadata, QgsProcessingAlgorithm):
         for i, n in enumerate(bands):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             band = ds.GetRasterBand(n)
             data = band.ReadAsArray()

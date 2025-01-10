@@ -1,9 +1,37 @@
 displayName: Identify Network Nodes
 group: hydrography
-shortHelpString: NULL
-helpString: NULL
-helpUrl: NULL
+summary: Identify the nodes of a LineString network.
+description: |
+  Identify the nodes of an input LineString network. 
+  ![Identified nodes](/fct-qgis/img/IdentifyNetworkNodes.png)
 tags:
   - hydrography
   - graph
   - stream order
+  - network
+  - identification
+parameters:
+    INPUT:
+      type: LineString(ZM)
+      description: |
+        Stream network, oriented from upstream to downstream.
+        MutliLineStrings are not supported.
+    QUANTIZATION:
+      type: Number
+      description: |
+        Tolerance for node pairing (in number of decimal).
+        Nodes are considered identical if their coordinates are within this tolerance.
+        Default is 1e8.
+    OUTPUT:
+      type: LineString(ZM)
+      description: |
+        LineString with nodes identified.
+      fields:
+        - NODEA: unique identifier of the FROM node
+        - NODEB: unique identifier of the TO node
+    NODES:
+      type: Point(ZM)
+      description: |
+        Point features representing the nodes of the network.
+      fields:
+        - GID: node unique identifier

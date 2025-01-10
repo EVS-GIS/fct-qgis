@@ -17,7 +17,7 @@ import numpy as np
 from osgeo import gdal
 # import osr
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterEnum,
@@ -25,7 +25,8 @@ from qgis.core import ( # pylint:disable=import-error,no-name-in-module
     QgsProcessingParameterField,
     QgsProcessingParameterNumber,
     QgsProcessingParameterRasterDestination,
-    QgsProcessingParameterRasterLayer
+    QgsProcessingParameterRasterLayer,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -122,7 +123,7 @@ class StreamToRaster(AlgorithmMetadata, QgsProcessingAlgorithm):
     BURN_VALUE = 'BURN_VALUE'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -161,7 +162,7 @@ class StreamToRaster(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.OUTPUT,
             self.tr('Rasterized Streams')))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         template_lyr = self.parameterAsRasterLayer(parameters, self.RASTER_TEMPLATE, context)
         layer = self.parameterAsSource(parameters, self.INPUT, context)
@@ -230,7 +231,7 @@ class StreamToRaster(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 

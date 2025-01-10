@@ -17,11 +17,11 @@ import numpy as np
 from osgeo import gdal
 # import osr
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module,import-error
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -29,7 +29,7 @@ from qgis.core import ( # pylint:disable=import-error,no-name-in-module
     QgsProcessingAlgorithm,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingParameterField,
+    QgsProcessingException,
     QgsProcessingParameterRasterLayer
 )
 
@@ -57,7 +57,7 @@ class WatershedLink(AlgorithmMetadata, QgsProcessingAlgorithm):
     FLOW = 'FLOW'
     WATERSHEDS = 'WATERSHEDS'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -77,7 +77,7 @@ class WatershedLink(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Linked Watersheds'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
 
@@ -124,7 +124,7 @@ class WatershedLink(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 
@@ -145,7 +145,7 @@ class WatershedLink(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 

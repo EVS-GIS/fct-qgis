@@ -15,11 +15,11 @@ MergeShortLinks - Merge links shorter than a given distance
 
 from collections import Counter, defaultdict, namedtuple
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsGeometry,
@@ -69,7 +69,7 @@ class MergeShortLinks(AlgorithmMetadata, QgsProcessingAlgorithm):
     MIN_LENGTH = 'MIN_LENGTH'
     OUTPUT_GROUP_FIELD = 'OUTPUT_GROUP_FIELD'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -118,7 +118,7 @@ class MergeShortLinks(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Merged Links'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
@@ -165,7 +165,7 @@ class MergeShortLinks(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, edge in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = edge.attribute(from_node_field)
             b = edge.attribute(to_node_field)
@@ -205,7 +205,7 @@ class MergeShortLinks(AlgorithmMetadata, QgsProcessingAlgorithm):
         while stack:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             node = stack.pop()
 
@@ -222,7 +222,7 @@ class MergeShortLinks(AlgorithmMetadata, QgsProcessingAlgorithm):
                 current = current + 1
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 if link.feature_id in output_links:
                     continue
@@ -250,7 +250,7 @@ class MergeShortLinks(AlgorithmMetadata, QgsProcessingAlgorithm):
                 while merged_length < min_length or indegree[next_link.a] == 1:
 
                     if feedback.isCanceled():
-                        break
+                        raise QgsProcessingException(self.tr('Cancelled by user'))
 
                     # Find upstream link with same order
 

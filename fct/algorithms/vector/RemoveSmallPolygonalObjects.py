@@ -79,7 +79,7 @@ class RemoveSmallPolygonalObjects(QgsProcessingAlgorithm):
                             'INPUT': INPUT,
                             'EXPRESSION': '\"%s\" = %f' % (FIELD, VALUE),
                             'OUTPUT': SELECTED
-                        })
+                        }, is_child_algorithm=True)
         
         feedback.pushInfo('Removing small objects...')
         REMOVEDSMALL = os.path.join(tmpdir, 'REMOVEDSMALL.shp')
@@ -88,7 +88,7 @@ class RemoveSmallPolygonalObjects(QgsProcessingAlgorithm):
                             'INPUT': SelectedObjects['OUTPUT'],
                             'EXPRESSION': '$area >= %f' % (MIN_AREA),
                             'OUTPUT': REMOVEDSMALL
-                        })
+                        }, is_child_algorithm=True)
 
         feedback.pushInfo('Removing small holes...')
         RemovedHoles = processing.run('native:deleteholes',
@@ -96,7 +96,7 @@ class RemoveSmallPolygonalObjects(QgsProcessingAlgorithm):
                             'INPUT': RemovedSmallObjects['OUTPUT'],
                             'MIN_AREA': MIN_HOLE_AREA,
                             'OUTPUT': OUTPUT
-                        })
+                        }, is_child_algorithm=True)
 
         return {self.OUTPUT: RemovedHoles['OUTPUT']}
 

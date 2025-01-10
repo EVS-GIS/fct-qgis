@@ -17,12 +17,13 @@ import numpy as np
 from osgeo import gdal
 # import osr
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterRasterDestination,
-    QgsProcessingParameterRasterLayer
+    QgsProcessingParameterRasterLayer,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -130,7 +131,7 @@ class HeightAboveNearestDrainageInSameWatershed(AlgorithmMetadata, QgsProcessing
     WATERSHEDS = 'WATERSHEDS'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.INPUT,
@@ -149,18 +150,18 @@ class HeightAboveNearestDrainageInSameWatershed(AlgorithmMetadata, QgsProcessing
             self.OUTPUT,
             self.tr('Relative DEM')))
 
-    def canExecute(self): #pylint: disable=unused-argument,missing-docstring
+    def canExecute(self): 
 
         try:
-            # pylint: disable=import-error,unused-variable
+            
             from ...lib.terrain_analysis import shortest_ref_ws
             return True, ''
         except ImportError:
             return False, self.tr('Missing dependency: FCT terrain_analysis')
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
-        # pylint:disable=import-error,no-name-in-module
+        
         from ...lib.terrain_analysis import shortest_ref_ws
 
         elevations_lyr = self.parameterAsRasterLayer(parameters, self.INPUT, context)
@@ -204,7 +205,7 @@ class HeightAboveNearestDrainageInSameWatershed(AlgorithmMetadata, QgsProcessing
         for current, feature in enumerate(stream_layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 

@@ -15,11 +15,11 @@ Maximum On Shortest Path
 
 import numpy as np
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module,import-error
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterFeatureSource,
@@ -28,7 +28,8 @@ from qgis.core import ( # pylint:disable=import-error,no-name-in-module
     QgsProcessingParameterFeatureSink,
     QgsFeature,
     QgsField,
-    QgsFields
+    QgsFields,
+    QgsProcessingException
 )
 
 # from processing.core.ProcessingConfig import ProcessingConfig
@@ -67,7 +68,7 @@ class MaximumOnShortestPath(AlgorithmMetadata, QgsProcessingAlgorithm):
 
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -125,7 +126,7 @@ class MaximumOnShortestPath(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Maximum Cost'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         node_layer = self.parameterAsVectorLayer(parameters, self.INPUT, context)
         pk_field = self.parameterAsString(parameters, self.PK_FIELD, context)
@@ -148,7 +149,7 @@ class MaximumOnShortestPath(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, target in enumerate(node_layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             node_type = target.attribute(type_field)
             if node_type > 0:
@@ -182,7 +183,7 @@ class MaximumOnShortestPath(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(node_layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             node_type = feature.attribute(type_field)
             if node_type > 0:
@@ -198,7 +199,7 @@ class MaximumOnShortestPath(AlgorithmMetadata, QgsProcessingAlgorithm):
                 for entry in iterator:
 
                     if feedback.isCanceled():
-                        break
+                        raise QgsProcessingException(self.tr('Cancelled by user'))
 
                     if entry.key in targets:
                         weight = entry.weight

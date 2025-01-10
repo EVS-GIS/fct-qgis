@@ -13,11 +13,11 @@ Locate Point Along Line
 ***************************************************************************
 """
 
-from qgis.PyQt.QtCore import ( #pylint: disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( #pylint: disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeatureRequest,
     QgsFeature,
     QgsField,
@@ -31,7 +31,8 @@ from qgis.core import ( #pylint: disable=import-error,no-name-in-module
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterNumber,
     QgsSpatialIndex,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -51,7 +52,7 @@ class LocatePointAlongLine(AlgorithmMetadata, QgsProcessingAlgorithm):
     NO_DATA = 'NO_DATA'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -79,7 +80,7 @@ class LocatePointAlongLine(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Referenced Points'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         lines = self.parameterAsSource(parameters, self.LINES, context)
@@ -121,7 +122,7 @@ class LocatePointAlongLine(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             point = feature.geometry()
             nearest_line = None

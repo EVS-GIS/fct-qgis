@@ -25,10 +25,10 @@ from qgis.core import (
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterNumber,
     QgsProcessingParameterEnum,
-    QgsProcessingParameterExtent,
 )
 
 from ..metadata import AlgorithmMetadata
+from ...utils.assertions import assertLayersCompatibility
 
 class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
     """ 
@@ -45,11 +45,10 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
     BUFFER = 'BUFFER'
     THRESH_MIN = 'THRESH_MIN'
     THRESH_MAX = 'THRESH_MAX'
-    BBOX = 'BBOX'
     SIMPLIFY = 'SIMPLIFY'
     SMOOTH = 'SMOOTH'
     OUT_VB = 'OUT_VB'
-
+    
     def initAlgorithm(self, configuration):
 
         self.addParameter(QgsProcessingParameterRasterLayer(
@@ -101,25 +100,25 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
         
         self.addParameter(QgsProcessingParameterNumber(
             self.SIMPLIFY,
-            self.tr('Simplify VB tolerance'),
+            self.tr('Simplify Valley Bottom tolerance'),
             defaultValue=10))
         
         self.addParameter(QgsProcessingParameterNumber(
             self.SMOOTH,
-            self.tr('Smooth VB iterations'),
+            self.tr('Smooth Valley Bottom iterations'),
             defaultValue=5))
-        
-        self.addParameter(QgsProcessingParameterExtent(
-            self.BBOX, 
-            self.tr('Output extent'), 
-            defaultValue=None))
 
         self.addParameter(QgsProcessingParameterFeatureSink(
             self.OUT_VB,
             self.tr('Output valley bottom')))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
-        
+    def processAlgorithm(self, parameters, context, feedback): 
+
+        assertLayersCompatibility([
+            self.parameterAsRasterLayer(parameters, self.IN_DEM, context),
+            self.parameterAsVectorLayer(parameters, self.IN_STREAM, context)
+        ], feedback, same_crs=True)
+            
         # Step 1: Detrend DEM
 
         method = self.parameterAsString(parameters, self.METHOD, context)
@@ -133,7 +132,7 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
                     'disaggregationdistance': self.parameterAsDouble(parameters, self.STEP, context), 
                     'Detrended': QgsProcessing.TEMPORARY_OUTPUT, 
                     'stream': self.parameterAsVectorLayer(parameters, self.IN_STREAM, context)
-                }, context=context)
+                }, context=context, is_child_algorithm=True, feedback=feedback)
             
             relative_dem = detrended_dem['Detrended']
 
@@ -144,7 +143,7 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
                 { 
                     'ELEVATIONS': self.parameterAsRasterLayer(parameters, self.IN_DEM, context), 
                     'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT 
-                }, context=context)
+                }, context=context, is_child_algorithm=True, feedback=feedback)
 
             feedback.pushInfo(self.tr('  Detrend DEM...'))
             detrended_dem = processing.run('fct:relativedembyflow',
@@ -153,7 +152,7 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
                     'INPUT': self.parameterAsRasterLayer(parameters, self.IN_DEM, context), 
                     'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT, 
                     'STREAM': self.parameterAsVectorLayer(parameters, self.IN_STREAM, context)
-                }, context=context)
+                }, context=context, is_child_algorithm=True, feedback=feedback)
             
             relative_dem = detrended_dem['OUTPUT']
 
@@ -165,7 +164,7 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
                     'INPUT': self.parameterAsRasterLayer(parameters, self.IN_DEM, context),
                     'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT,
                     'STREAM': self.parameterAsVectorLayer(parameters, self.IN_STREAM, context)
-                }, context=context)
+                }, context=context, is_child_algorithm=True, feedback=feedback)
             
             relative_dem = detrended_dem['OUTPUT']
 
@@ -189,7 +188,7 @@ class ValleyBottom(AlgorithmMetadata, QgsProcessingAlgorithm):
                 'max_height': self.parameterAsDouble(parameters, self.THRESH_MAX, context),
                 'simplify': self.parameterAsDouble(parameters, self.SIMPLIFY, context),
                 'smoothing': self.parameterAsDouble(parameters, self.SMOOTH, context),
-                'bbox': self.parameterAsExtent(parameters, self.BBOX, context)
-            }, context=context)
+                'bbox': self.parameterAsExtent(parameters, self.IN_DEM, context)
+            }, context=context, is_child_algorithm=True, feedback=feedback)
 
         return {self.OUT_VB: valleybottom['Valleybottom_polygon']}

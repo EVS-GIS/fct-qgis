@@ -14,5 +14,5 @@ Spatial Components Workflows
 """
 
 
-from .OrientedCenterline import OrientedCenterline
+from .Centerline import Centerline
 from .ValleyBottom import ValleyBottom

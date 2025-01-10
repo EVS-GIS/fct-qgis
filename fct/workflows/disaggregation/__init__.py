@@ -13,6 +13,6 @@ Disaggregation Workflows
 ***************************************************************************
 """
 
-from .PolylineDisaggregation import PolylineDisaggregation
+from .InflectionDisaggregation import InflectionDisaggregation
 from .Sequencing import Sequencing
 from .Segmentation import Segmentation

@@ -1,0 +1,59 @@
+name: Build terrain analysis extension
+
+on:
+  push:
+    branches: [ "master" ]
+    paths-ignore: [ "fct/lib/terrain_analysis*" ]
+
+permissions:
+  contents: write
+  
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+  
+jobs:
+  build:
+    strategy:
+      max-parallel: 1
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.10", "3.11", "3.12", "3.13"]
+    
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          
+      - name: Install packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install wheel setuptools numpy cython
+          pip install --no-build-isolation -e .
+
+      - name: Check for changes
+        id: git_diff
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          if [[ `git status --porcelain` ]]; then
+            echo "has_changes=true" >> $GITHUB_ENV
+          else
+            echo "has_changes=false" >> $GITHUB_ENV
+          fi
+        shell: bash
+
+      - name: Commit and push build artifacts
+        if: env.has_changes == 'true'
+        run: |
+          git pull origin ${{ github.head_ref }}
+          git add -A
+          git commit -m "CI Build Extension ${{ matrix.os }}-${{ matrix.python }}"
+          git push

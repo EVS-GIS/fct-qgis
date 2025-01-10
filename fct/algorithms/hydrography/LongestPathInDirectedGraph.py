@@ -15,13 +15,14 @@ LongestPathInDirectedGraph - Find the longest path in a directed graph
 
 from collections import Counter, namedtuple
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterBoolean,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingParameterField
+    QgsProcessingParameterField,
+    QgsProcessingException,
 )
 
 from .graph import create_link_index
@@ -41,7 +42,7 @@ class LongestPathInDirectedGraph(AlgorithmMetadata, QgsProcessingAlgorithm):
     MULTIFLOW = 'MULTIFLOW'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -72,7 +73,7 @@ class LongestPathInDirectedGraph(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Longest Path'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
@@ -131,7 +132,7 @@ class LongestPathInDirectedGraph(AlgorithmMetadata, QgsProcessingAlgorithm):
         while stack:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             node = stack.pop()
             if node in seen_nodes:

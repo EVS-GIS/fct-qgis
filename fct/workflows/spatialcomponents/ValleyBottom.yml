@@ -1,24 +1,23 @@
-displayName: Valley bottom
+displayName: Valley Bottom
 group: spatialcomponents
 summary: |
   Extract valley bottom from a DEM and a stream network.
 
 description: |
   Within a watershed, extraction of a valley bottom related to a hydrographic network is a
-  crucial step for the fluvial corridor characterization. Defined as the modern alluvial floodplain by [@alberSpatialDisaggregationAggregation2011], valley bottom is the deposition zone of alluvium since
-  Holocene (Schumm, 1977) and includes both riverbed and floodplain. This valley bottom
-  crucial fluvial unit with important water, material and biota transfers (Nanson and Croke,
-  1992). Valley corridor width also controls fluvial dynamics and patterns so that extracting this
+  crucial step for the fluvial corridor characterization. Defined as the modern alluvial floodplain [@alberSpatialDisaggregationAggregation2011], valley bottom is the deposition zone of alluvium since
+  Holocene [@Gregory1979] and includes both riverbed and floodplain. This valley bottom
+  crucial fluvial unit with important water, material and biota transfers [@Nanson1992]. Valley corridor width also controls fluvial dynamics and patterns so that extracting this
   layer is often a preliminary step in the biogeomorphic characterization of stream networks
-  (Notebaert et Piégay, 2013).
-
-  [@roux2014] 
+  [@Notebaert2013;@roux2014].
 
   3 methods to detrend DEM are proposed:
     
     - Topological is identical to [@roux2014] and [@alberSpatialDisaggregationAggregation2011].
     - Nearest is fast and helpful if your stream network does not match perfectly with your DEM.
     - Flow is slower, but precise. You may need to fill depressions of your DEM and resolve flat lands before trying to extract the valley bottom.
+
+  ![Valley Bottom](/fct-qgis/img/dem_to_dgo_clean_vb.png)
 
 tags:
   - hydrography
@@ -55,10 +54,23 @@ parameters:
   THRESH_MAX:
     type: Number
     description: Maximum elevation to extract from the Relative DEM
+  SIMPLIFY:
+    type: Number
+    description: Simplification tolerance of the valley bottom polygon (in projection unit)
+  SMOOTH:
+    type: Number
+    description: Smoothing iterations of the valley bottom polygon
   OUT_VB:
     type: Polygon
     description: Output valley bottom polygon
+  # OUT_DETRENDED:
+  #   type: RasterLayer
+  #   description: Output detrended DEM (optional)
 
 seealso:
-  - "[Fill depressions](../../../algorithms/terrain/FillDepressions/)"
-  - "[Resolve flats](../../../algorithms/terrain/ResolveFlats/)"
+  - "[Fill depressions](/fct-qgis/algorithms/terrain/FillDepressions/)"
+  - "[Resolve flats](/fct-qgis/algorithms/terrain/ResolveFlats/)"
+  - "[Relative DEM (nearest)](/fct-qgis/algorithms/terrain/RelativeDEM/)"
+  - "[Relative DEM (flow)](/fct-qgis/algorithms/terrain/RelativeDEMByFlow/)"
+  - "[Relative DEM (topological)](/fct-qgis/algorithms/terrain/RelativeDEMTopological/)"
+  - "[Valley Bottom](/fct-qgis/algorithms/spatialcomponents/ValleyBottom/)"

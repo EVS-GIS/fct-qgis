@@ -17,7 +17,7 @@ import numpy as np
 from osgeo import gdal
 # import osr
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsProcessingAlgorithm,
     QgsProcessingParameterRasterDestination,
     QgsProcessingParameterRasterLayer
@@ -34,7 +34,7 @@ class FlowAccumulation(AlgorithmMetadata, QgsProcessingAlgorithm):
     FLOW = 'FLOW'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.FLOW,
@@ -47,18 +47,18 @@ class FlowAccumulation(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.OUTPUT,
             self.tr('Accumulation Raster')))
 
-    def canExecute(self): #pylint: disable=unused-argument,missing-docstring
+    def canExecute(self): 
 
         try:
-            # pylint: disable=import-error,unused-variable
+            
             from ...lib.terrain_analysis import flow_accumulation
             return True, ''
         except ImportError:
             return False, self.tr('Missing dependency: FCT terrain_analysis')
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
-        # pylint:disable=import-error,no-name-in-module
+        
         from ...lib.terrain_analysis import flow_accumulation
 
         flow_lyr = self.parameterAsRasterLayer(parameters, self.FLOW, context)

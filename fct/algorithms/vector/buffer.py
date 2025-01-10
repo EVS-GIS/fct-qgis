@@ -16,7 +16,7 @@ Miter-style buffers need more love and tests.
 
 import math
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsGeometry,
     QgsLineString,
     QgsPoint,

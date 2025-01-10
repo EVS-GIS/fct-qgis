@@ -19,11 +19,11 @@ from collections import namedtuple, defaultdict
 import numpy as np
 from osgeo import gdal
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -35,7 +35,8 @@ from qgis.core import ( # pylint:disable=import-error,no-name-in-module
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterRasterLayer,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 # from processing.core.ProcessingConfig import ProcessingConfig
@@ -72,7 +73,7 @@ class SubGridTopography(AlgorithmMetadata, QgsProcessingAlgorithm):
     IMPLEMENTATION = 'IMPLEMENTATION'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -100,9 +101,9 @@ class SubGridTopography(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('SubGrid Nodes'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
-        # pylint:disable=import-error,no-name-in-module
+        
         from ...lib import terrain_analysis as ta
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
@@ -195,7 +196,7 @@ class SubGridTopography(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 
@@ -280,7 +281,7 @@ class SubGridTopography(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, fid in enumerate(outlet_pixels):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             feedback.setProgress(int(current*total))
 

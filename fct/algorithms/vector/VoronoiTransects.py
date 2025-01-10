@@ -17,11 +17,11 @@ import numpy as np
 
 from collections import namedtuple
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -33,14 +33,15 @@ from qgis.core import ( # pylint:disable=no-name-in-module
     QgsProcessingParameterField,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
 
 PointAttributes = namedtuple('PointAttributes', ['id', 'axis', 'seq'])
 
-def voronoi_transect(voronoi, attrs): # pylint: disable=too-many-locals
+def voronoi_transect(voronoi, attrs): 
     """
     Extract Voronoi ridges equidistant of two points
     from the same axis and following each other on this axis.
@@ -75,7 +76,7 @@ class VoronoiTransects(AlgorithmMetadata, QgsProcessingAlgorithm):
     SEQ_FIELD = 'SEQ_FIELD'
     OUTPUT = 'OUTPUT'
 
-    def canExecute(self): #pylint: disable=unused-argument,missing-docstring
+    def canExecute(self): 
 
         try:
             from scipy.spatial import Voronoi
@@ -83,7 +84,7 @@ class VoronoiTransects(AlgorithmMetadata, QgsProcessingAlgorithm):
         except ImportError:
             return False, self.tr('Missing dependency: scipy.spatial')
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -109,9 +110,9 @@ class VoronoiTransects(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Voronoi Transects'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
-        from scipy.spatial import Voronoi #pylint: disable=no-name-in-module
+        from scipy.spatial import Voronoi 
 
         layer = self.parameterAsVectorLayer(parameters, self.INPUT, context)
         axis_field = self.parameterAsString(parameters, self.AXIS_FIELD, context)
@@ -140,7 +141,7 @@ class VoronoiTransects(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             if feature.geometry():
 
@@ -166,7 +167,7 @@ class VoronoiTransects(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, (p, q, ridge) in enumerate(voronoi_transect(voronoi, attrs)):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             x, y = 0.5 * (points[p] + points[q])
 

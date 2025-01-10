@@ -15,11 +15,11 @@ SelectByDistance - Select vectors in layer nearest to a reference layer
 
 import math
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsApplication,
     QgsExpression,
     QgsGeometry,
@@ -45,7 +45,7 @@ from qgis.core import ( # pylint:disable=import-error,no-name-in-module
     QgsWkbTypes
 )
 
-from processing.algs.qgis.QgisAlgorithm import QgisAlgorithm # pylint:disable=import-error,no-name-in-module
+from processing.algs.qgis.QgisAlgorithm import QgisAlgorithm 
 
 from ..metadata import AlgorithmMetadata
 
@@ -57,7 +57,7 @@ class SelectNearestFeature(AlgorithmMetadata, QgsProcessingAlgorithm):
     REFERENCE_LAYER = 'REFERENCE_LAYER'
     SEARCH_DISTANCE = 'SEARCH_DISTANCE'
 
-    def initAlgorithm(self, configuration=None): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration=None): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(self.INPUT_LAYER,
                                           self.tr('Select In Layer'), [QgsProcessing.TypeVectorAnyGeometry]))
@@ -68,7 +68,7 @@ class SelectNearestFeature(AlgorithmMetadata, QgsProcessingAlgorithm):
                                           defaultValue=0.0))
 
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         input_layer = self.parameterAsVectorLayer(parameters, self.INPUT_LAYER, context)
         reference_layer = self.parameterAsVectorLayer(parameters, self.REFERENCE_LAYER, context)
@@ -82,7 +82,7 @@ class SelectNearestFeature(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, ref_feature in enumerate(reference_layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
             
             ref_geometry = ref_feature.geometry()
             search_box = ref_geometry.boundingBox()

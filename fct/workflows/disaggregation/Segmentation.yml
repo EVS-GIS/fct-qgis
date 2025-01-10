@@ -1,11 +1,12 @@
-displayName: Segmentation
+displayName: Segmentation and VB width
 group: disaggregation
 summary: |
   Disaggregate fluvial units (polygons or polylines) in DGO of chosen size.
+  Output contains Polygon Width by DGO if the segmented feature was a Polygon.
 
 description: |
   Prior to assess metrics to characterize a fluvial system, fluvial units 
-  have to be disaggregated. This step enables to discretize a continuum 
+  have to be disaggregated [@roux2014]. This step enables to discretize a continuum 
   with a constant length in order to provide a higher resolution for 
   characterizing fluvial units. The constant length must be set precisely 
   to ensure spatial trends or relationships between several variables to be 
@@ -13,7 +14,7 @@ description: |
   disaggregation can be run both for linear (e.g. hydrographic network, 
   centerline) and polygon feature (valley bottom, active channel).
 
-  [@roux2014]
+  ![Segmentation result](/fct-qgis/img/Segmentation.png)
 
   Algorithm:
     
@@ -25,6 +26,9 @@ description: |
           calculate a AXIS FID field on centerline
           run disaggregate polygon algorithm
 
+  For more details on the disaggregation process, please refer to the 
+  [Disaggregate Polygon](/fct-qgis/algorithms/spatialcomponents/DisaggregatePolygon/) documentation.
+
 tags:
   - dgo
   - polygon
@@ -34,6 +38,8 @@ tags:
   - vector
   - disaggregation
   - centerline
+  - width
+  - valley bottom
 
 parameters:
   INPUT:
@@ -54,5 +60,5 @@ parameters:
     description: The segmented output feature.
 
 seealso:
-  - "[Disaggregate Polygon](../../../algorithms/spatialcomponents/DisaggregatePolygon/)"
-  - "[Segmentize](../../../algorithms/vector/Segmentize/)"
+  - "[Disaggregate Polygon](/fct-qgis/algorithms/spatialcomponents/DisaggregatePolygon/)"
+  - "[Segmentize](/fct-qgis/algorithms/vector/Segmentize/)"

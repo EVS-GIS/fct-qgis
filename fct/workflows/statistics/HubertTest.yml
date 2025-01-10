@@ -1,7 +1,19 @@
-displayName: Hubert test
+displayName: Hubert-Kehagias Aggregation
 group: statistics
-shortHelpString: NULL
-helpString: NULL
-helpUrl: NULL
+summary: |
+  Perform a basic Hubert test and aggregate homogeneous segments in an AGO field.
+
+description: |
+  Detailed documentation on the [raw algorithm](/fct-qgis/algorithms/metrics/AggregateFeatures).
+
 tags:
   - hydrography
+  - hubert
+  - statistics
+  - aggregation
+  - ago
+  - dgo
+  - segmentation
+
+seealso:
+  - "[Aggregate Features](/fct-qgis/algorithms/metrics/AggregateFeatures/)"

@@ -16,11 +16,11 @@ UpstreamChannelLength - Compute a new `UCL` attribute
 
 from collections import defaultdict, deque, namedtuple, Counter
 
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
     QgsFields,
@@ -29,6 +29,7 @@ from qgis.core import ( # pylint:disable=import-error,no-name-in-module
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
+    QgsProcessingException,
     QgsProcessingParameterNumber
 )
 
@@ -55,7 +56,7 @@ class TotalUpstreamChannelLength(AlgorithmMetadata, QgsProcessingAlgorithm):
     TO_NODE_FIELD = 'TO_NODE_FIELD'
     SCALE = 'SCALE'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -87,7 +88,7 @@ class TotalUpstreamChannelLength(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Total Upstream Channel Length'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
@@ -120,7 +121,7 @@ class TotalUpstreamChannelLength(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, edge in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = edge.attribute(from_node_field)
             b = edge.attribute(to_node_field)
@@ -154,7 +155,7 @@ class TotalUpstreamChannelLength(AlgorithmMetadata, QgsProcessingAlgorithm):
         while stack:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             node = stack.pop()
             if node in seen_nodes:
@@ -237,7 +238,7 @@ class TotalUpstreamChannelLength(AlgorithmMetadata, QgsProcessingAlgorithm):
             while stack:
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 node = stack.pop()
                 seen_nodes.add(node)
@@ -276,7 +277,7 @@ class TotalUpstreamChannelLength(AlgorithmMetadata, QgsProcessingAlgorithm):
         while stack:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = stack.popleft()
             if a in other_seen_nodes:
@@ -314,7 +315,7 @@ class TotalUpstreamChannelLength(AlgorithmMetadata, QgsProcessingAlgorithm):
         while queue:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = queue.popleft()
 
@@ -343,7 +344,7 @@ class TotalUpstreamChannelLength(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, edge in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             a = edge.attribute(from_node_field)
             b = edge.attribute(to_node_field)

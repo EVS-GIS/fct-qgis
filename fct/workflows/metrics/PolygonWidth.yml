@@ -1,0 +1,59 @@
+displayName: Disaggregated object width
+group: metrics
+summary: |
+  Calculate a poylgon width (ex. active channel or valley bottom) with the VariableLengthTransects tool
+  and resume the result by DGO. 
+
+description: |
+  Algorithm:
+
+  - Create orthogonal transects from medial axis DGOs, spaced by the sampling interval and with a length defined by MAX_WIDTH parameter
+  - Intersect transects by input polygon and measure length of each resulting intersection
+  - Use the QGIS "Statistics by category" tool to calculate statistics by DGO
+
+  To simply make orthogonal transects along a medial axis, use directly the [VariableLengthTransect](/fct-qgis/algorithms/vectors/VariableLengthTransect/) tool.
+
+tags:
+  - metric
+  - width
+  - dgo
+  - polygon
+  - transects
+
+parameters:
+  INPUT_POLYGONS:
+    type: Polygon
+    description:
+      Input disaggregated polygons
+
+  INPUT_POLYGONS_FID:
+    type: Field
+    description: Field containing DGOs ID in the polygons layer
+
+  INPUT_MEDIAL_AXIS:
+    type: LineString
+    description: 
+      Axis of the polygon you want to compute the width. The measurement will be made perpendiculary to this axis
+
+  INPUT_MEDIAL_AXIS_FID:
+    type: Field
+    description: Field containing DGOs ID in the axis layer
+
+  SAMPLING_INTERVAL:
+    type: Number
+    description: Interval between two width measures along the axis.
+
+  MAX_WIDTH:
+    type: Number
+    description: Maximum width of the polygon to measure (eq. maximum transects length)
+
+  OUTPUT_TRANSECTS:
+    type: LineString
+    description: Output measurement transects
+
+  OUTPUT_TABLE:
+    type: Table
+    description: Output statistics on the measurement transects of each DGOs. The "mean" field contains the mean transect length (eq. the min width) for this DGO
+
+seealso:
+  - "[VariableLengthTransect](/fct-qgis/algorithms/vectors/VariableLengthTransect/)"

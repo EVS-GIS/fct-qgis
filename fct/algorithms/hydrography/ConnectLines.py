@@ -15,7 +15,7 @@ Connect Lines
 
 from collections import Counter, defaultdict, namedtuple
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsFeatureRequest,
     QgsGeometry,
@@ -26,7 +26,8 @@ from qgis.core import ( # pylint:disable=no-name-in-module
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
-    QgsSpatialIndex
+    QgsSpatialIndex,
+    QgsProcessingException
 )
 
 from ..metadata import AlgorithmMetadata
@@ -54,7 +55,7 @@ class ConnectLines(AlgorithmMetadata, QgsProcessingAlgorithm):
     TO_NODE_FIELD = 'TO_NODE_FIELD'
     SEARCH_DISTANCE = 'SEARCH_DISTANCE'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -86,7 +87,7 @@ class ConnectLines(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Connected Lines'),
             QgsProcessing.TypeVectorLine))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsVectorLayer(parameters, self.INPUT, context)
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
@@ -110,7 +111,7 @@ class ConnectLines(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             from_node = feature.attribute(from_node_field)
             to_node = feature.attribute(to_node_field)
@@ -137,7 +138,7 @@ class ConnectLines(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, node in enumerate(node_index):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             point = node_index[node]
             search_box = point.boundingBox()
@@ -175,7 +176,7 @@ class ConnectLines(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures(request)):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             geometry = feature.geometry()
 
@@ -275,7 +276,7 @@ class ConnectLines(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             if feature.id() not in modified_features:
                 sink.addFeature(feature)

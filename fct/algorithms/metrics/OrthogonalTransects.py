@@ -15,7 +15,7 @@ Knick Points Detection
 
 import math
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsGeometry,
     QgsPointXY,
@@ -68,7 +68,7 @@ class OrthogonalTransects(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm)
     OUTPUT = 'OUTPUT'
     LENGTH = 'LENGTH'
 
-    def initParameters(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initParameters(self, configuration): 
 
         param_length = QgsProcessingParameterNumber(
             self.LENGTH,
@@ -83,19 +83,19 @@ class OrthogonalTransects(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm)
                 QgsPropertyDefinition.DoublePositive))
         self.addParameter(param_length)
 
-    def inputLayerTypes(self): #pylint: disable=no-self-use,missing-docstring
+    def inputLayerTypes(self): 
         return [QgsProcessing.TypeVectorLine]
 
-    def outputName(self): #pylint: disable=missing-docstring
+    def outputName(self): 
         return self.tr('Transects')
 
-    def outputWkbType(self, inputWkbType): #pylint: disable=no-self-use,unused-argument,missing-docstring
+    def outputWkbType(self, inputWkbType): 
         return QgsWkbTypes.LineString
 
-    def supportInPlaceEdit(self, layer): #pylint: disable=no-self-use,unused-argument,missing-docstring
+    def supportInPlaceEdit(self, layer): 
         return False
 
-    def prepareAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def prepareAlgorithm(self, parameters, context, feedback): 
 
         self.length = self.parameterAsDouble(parameters, self.LENGTH, context)
         dynamic = QgsProcessingParameters.isDynamic(parameters, self.LENGTH)
@@ -115,7 +115,7 @@ class OrthogonalTransects(AlgorithmMetadata, QgsProcessingFeatureBasedAlgorithm)
 
             return self.length
 
-    def processFeature(self, feature, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processFeature(self, feature, context, feedback): 
 
         out_feature = QgsFeature()
         geom = feature.geometry()

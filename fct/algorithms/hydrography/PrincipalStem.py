@@ -15,16 +15,14 @@ Export Main Drain
 
 from collections import defaultdict
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsFeatureRequest,
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
-    QgsProcessingParameterNumber,
-    QgsProcessingParameters,
-    QgsPropertyDefinition
+    QgsProcessingException,
 )
 
 from ..metadata import AlgorithmMetadata
@@ -43,7 +41,7 @@ class PrincipalStem(AlgorithmMetadata, QgsProcessingAlgorithm):
     COST = 'COST'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -77,7 +75,7 @@ class PrincipalStem(AlgorithmMetadata, QgsProcessingAlgorithm):
             QgsProcessing.TypeVectorLine))
 
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
@@ -123,7 +121,7 @@ class PrincipalStem(AlgorithmMetadata, QgsProcessingAlgorithm):
         while stack:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             nb = stack.pop()
 
@@ -159,14 +157,14 @@ class PrincipalStem(AlgorithmMetadata, QgsProcessingAlgorithm):
         for source in sources:
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             na = source
 
             while na in backtracks:
 
                 if feedback.isCanceled():
-                    break
+                    raise QgsProcessingException(self.tr('Cancelled by user'))
 
                 segment, nb, cost = backtracks[na]
 

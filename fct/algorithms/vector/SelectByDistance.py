@@ -13,39 +13,15 @@ SelectByDistance - Select vectors within a specific distance to layer
 ***************************************************************************
 """
 
-import math
-
-from qgis.PyQt.QtCore import ( # pylint:disable=import-error,no-name-in-module
-    QVariant
-)
-
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
-    QgsApplication,
-    QgsExpression,
-    QgsGeometry,
-    QgsFeatureSink,
-    QgsFeatureRequest,
-    QgsFeature,
-    QgsField,
-    QgsFields,
-    QgsPointXY,
+from qgis.core import ( 
     QgsProcessing,
     QgsProcessingAlgorithm,
-    QgsProcessingFeatureBasedAlgorithm,
     QgsProcessingException,
     QgsProcessingParameterDistance,
-    QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
-    QgsProcessingParameterNumber,
-    QgsProcessingParameterString,
-    QgsProcessingParameterField,
-    QgsProcessingParameterVectorLayer,
     QgsSpatialIndex,
     QgsVectorLayer,
-    QgsWkbTypes
 )
-
-from processing.algs.qgis.QgisAlgorithm import QgisAlgorithm # pylint:disable=import-error,no-name-in-module
 
 from ..metadata import AlgorithmMetadata
 
@@ -59,7 +35,7 @@ class SelectByDistance(AlgorithmMetadata, QgsProcessingAlgorithm):
     DISTANCE_TO_LAYER = 'DISTANCE_TO_LAYER'
     DISTANCE = 'DISTANCE'
 
-    def initAlgorithm(self, configuration=None): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration=None): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(self.TARGET_LAYER,
                                           self.tr('Select From Layer'), [QgsProcessing.TypeVectorAnyGeometry]))
@@ -69,7 +45,7 @@ class SelectByDistance(AlgorithmMetadata, QgsProcessingAlgorithm):
                                           self.tr('Max Distance'),
                                           defaultValue=0.0))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         target_layer = self.parameterAsVectorLayer(parameters, self.TARGET_LAYER, context)
         distance_layer = self.parameterAsVectorLayer(parameters, self.DISTANCE_TO_LAYER, context)
@@ -83,7 +59,7 @@ class SelectByDistance(AlgorithmMetadata, QgsProcessingAlgorithm):
         for current, feature in enumerate(target_layer.getFeatures()):
 
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
             
             search_box = feature.geometry().boundingBox()
             search_box.grow(distance)

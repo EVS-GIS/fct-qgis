@@ -15,7 +15,7 @@ ApplyMask
 
 from osgeo import gdal
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsProcessingAlgorithm,
     QgsProcessingException,
     # QgsProcessingParameterNumber,
@@ -24,12 +24,12 @@ from qgis.core import ( # pylint:disable=no-name-in-module
     QgsProcessingParameterString
 )
 
-from qgis.analysis import ( # pylint:disable=no-name-in-module
+from qgis.analysis import ( 
     QgsRasterCalculator,
     QgsRasterCalculatorEntry
 )
 
-from processing.algs.gdal.GdalUtils import GdalUtils # pylint:disable=import-error
+from processing.algs.gdal.GdalUtils import GdalUtils 
 from ..metadata import AlgorithmMetadata
 
 class ApplyMask(AlgorithmMetadata, QgsProcessingAlgorithm):
@@ -47,7 +47,7 @@ class ApplyMask(AlgorithmMetadata, QgsProcessingAlgorithm):
     MASK_EXPRESSION = 'MASK_EXPRESSION'
     OUTPUT = 'OUTPUT'
 
-    def initAlgorithm(self, config=None): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, config=None): 
 
         self.addParameter(QgsProcessingParameterRasterLayer(
             self.INPUT,
@@ -65,7 +65,7 @@ class ApplyMask(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.OUTPUT,
             self.tr('Masked')))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         raster = self.parameterAsRasterLayer(parameters, self.INPUT, context)
         band = 1

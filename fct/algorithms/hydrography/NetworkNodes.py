@@ -13,14 +13,13 @@ NetworkNodes - Extract and categorize nodes from hydrogaphy network
 ***************************************************************************
 """
 
-from qgis.PyQt.QtCore import ( # pylint:disable=no-name-in-module
+from qgis.PyQt.QtCore import ( 
     QVariant
 )
 
-from qgis.core import ( # pylint:disable=no-name-in-module
+from qgis.core import ( 
     QgsFeature,
     QgsField,
-    QgsFields,
     QgsGeometry,
     QgsProcessing,
     QgsProcessingAlgorithm,
@@ -28,11 +27,16 @@ from qgis.core import ( # pylint:disable=no-name-in-module
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
     QgsProcessingParameterField,
-    QgsWkbTypes
+    QgsWkbTypes,
+    QgsProcessingException,
+    QgsProcessingUtils
 )
 
 from ..metadata import AlgorithmMetadata
 from ..util import asQgsFields
+from ...utils.assertions import assertLayersCompatibility
+
+import processing
 
 def asPolyline(geometry):
 
@@ -82,7 +86,7 @@ class NetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
     MEAS_FIELD = 'MEAS_FIELD'
     SUBSET = 'SUBSET'
 
-    def initAlgorithm(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initAlgorithm(self, configuration): 
 
         self.addParameter(QgsProcessingParameterFeatureSource(
             self.INPUT,
@@ -94,14 +98,16 @@ class NetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('From Node Field'),
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
-            defaultValue='NODEA'))
+            defaultValue='NODEA',
+            optional=True))
 
         self.addParameter(QgsProcessingParameterField(
             self.TO_NODE_FIELD,
             self.tr('To Node Field'),
             parentLayerParameterName=self.INPUT,
             type=QgsProcessingParameterField.Numeric,
-            defaultValue='NODEB'))
+            defaultValue='NODEB',
+            optional=True))
 
         self.addParameter(QgsProcessingParameterField(
             self.MEAS_FIELD,
@@ -129,13 +135,26 @@ class NetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Nodes'),
             QgsProcessing.TypeVectorPoint))
 
-    def processAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def processAlgorithm(self, parameters, context, feedback): 
 
         layer = self.parameterAsSource(parameters, self.INPUT, context)
         from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
         to_node_field = self.parameterAsString(parameters, self.TO_NODE_FIELD, context)
         measure_field = self.parameterAsString(parameters, self.MEAS_FIELD, context)
         subset = self.parameterAsInt(parameters, self.SUBSET, context)
+
+        assertLayersCompatibility([self.parameterAsVectorLayer(parameters, self.INPUT, context)], feedback=feedback)
+
+        if not from_node_field or not to_node_field:
+            identifynodes = processing.run('fct:identifynetworknodes', {
+                'INPUT': self.parameterAsVectorLayer(parameters, self.INPUT, context),
+                'NODES': QgsProcessing.TEMPORARY_OUTPUT,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }, context=context, feedback=feedback, is_child_algorithm=True)
+
+            layer = QgsProcessingUtils.variantToSource(identifynodes['OUTPUT'], context)
+            from_node_field = 'NODEA'
+            to_node_field = 'NODEB'
 
         subset_map = [
             ('All', {}),
@@ -193,7 +212,7 @@ class NetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
 
             feedback.setProgress(int(current * total))
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
         feedback.pushInfo(self.tr("Compute in-degree ..."))
 
@@ -215,7 +234,7 @@ class NetworkNodes(AlgorithmMetadata, QgsProcessingAlgorithm):
 
             feedback.setProgress(int(current * total))
             if feedback.isCanceled():
-                break
+                raise QgsProcessingException(self.tr('Cancelled by user'))
 
             din = in_degree[gid]
             dout = len(adjacency[gid])

@@ -13,21 +13,15 @@ HubertTest
 ***************************************************************************
 """
 
-import os
 
-from qgis.core import ( # pylint:disable=no-name-in-module
-    QgsProcessingModelAlgorithm
-)
+from ...algorithms.metrics.AggregateFeatures import AggregateFeatures
 
 from ..metadata import AlgorithmMetadata
 
-class HubertTest(AlgorithmMetadata, QgsProcessingModelAlgorithm):
-    """ 
-    Hubert Test
+class HubertTest(AggregateFeatures):
+    """
+    Hubert test
     """
 
-    def __init__(self, *args, **kwargs):
-
-        super().__init__(*args, **kwargs)
-        self.METADATA = AlgorithmMetadata.read(__file__, type(self).__name__)
-        self.fromFile(os.path.join(os.path.dirname(__file__), type(self).__name__ + '.model3'))
+    METADATA = AlgorithmMetadata.read(__file__, 'HubertTest')
+    

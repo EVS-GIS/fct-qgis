@@ -13,7 +13,7 @@ Variable-Width Vertex-Wise Buffer
 ***************************************************************************
 """
 
-from qgis.core import ( # pylint:disable=import-error,no-name-in-module
+from qgis.core import ( 
     QgsExpression,
     QgsExpressionContextScope,
     QgsFeature,
@@ -49,7 +49,7 @@ class TransformCoordinateByExpression(AlgorithmMetadata, QgsProcessingFeatureBas
     STORE_M = 0
     STORE_Z = 1
 
-    def initParameters(self, configuration): #pylint: disable=unused-argument,missing-docstring
+    def initParameters(self, configuration): 
 
         self.addParameter(QgsProcessingParameterExpression(
             self.EXPRESSION,
@@ -68,19 +68,19 @@ class TransformCoordinateByExpression(AlgorithmMetadata, QgsProcessingFeatureBas
             options=[self.tr(option) for option in ['M', 'Z']],
             defaultValue=0))
 
-    def inputLayerTypes(self): #pylint: disable=no-self-use,missing-docstring
+    def inputLayerTypes(self): 
         return [QgsProcessing.TypeVectorLine]
 
-    def outputName(self): #pylint: disable=missing-docstring
+    def outputName(self): 
         return self.tr('Transformed')
 
-    def outputWkbType(self, inputWkbType): #pylint: disable=no-self-use,unused-argument,missing-docstring
+    def outputWkbType(self, inputWkbType): 
         return QgsWkbTypes.LineStringZM
 
-    def supportInPlaceEdit(self, layer): #pylint: disable=unused-argument,no-self-use,missing-docstring
+    def supportInPlaceEdit(self, layer): 
         return False
 
-    def prepareAlgorithm(self, parameters, context, feedback): #pylint: disable=unused-argument,missing-docstring
+    def prepareAlgorithm(self, parameters, context, feedback): 
 
         store = self.parameterAsInt(parameters, self.STORE, context)
 
@@ -136,7 +136,7 @@ class TransformCoordinateByExpression(AlgorithmMetadata, QgsProcessingFeatureBas
 
         return QgsLineString(vertices)
 
-    def processFeature(self, feature, context, feedback): #pylint: disable=no-self-use,unused-argument,missing-docstring
+    def processFeature(self, feature, context, feedback): 
 
         features = []
 
