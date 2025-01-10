@@ -32,22 +32,6 @@ from .StreamToRaster import worldtopixel, rasterize_linestring
 from ..metadata import AlgorithmMetadata
 
 class BurnFill(AlgorithmMetadata, QgsProcessingAlgorithm):
-    """
-    Compute flow direction raster,
-    using a variant of Wang and Liu priority flood algorithm
-    that processes stream cell in before other cells.
-
-    References
-    -----
-
-    [1] Lindsay, J. B. (2016).
-        The Practice of DEM Stream Burning Revisited.
-        Earth Surface Processes and Landforms, 41(5), 658‑668. 
-        https://doi.org/10.1002/esp.3888
-
-    [2] WhiteboxGAT Java implementation (Last modified 2 Oct 2017)
-        https://github.com/jblindsay/whitebox-geospatial-analysis-tools/blob/038b9c7/resources/plugins/Scripts/TopologicalBreachBurn.groovy
-    """
 
     METADATA = AlgorithmMetadata.read(__file__, 'BurnFill')
 
