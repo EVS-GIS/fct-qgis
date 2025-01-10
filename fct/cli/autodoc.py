@@ -202,16 +202,24 @@ def generate_alg(alg, destination):
     summary = metadata.get('summary', alg.__doc__)
 
     if pythonfile in coverage_data['files'].keys():
-        cov = coverage_data['files'][pythonfile]['summary']['percent_covered_display']
+        cov = int(coverage_data['files'][pythonfile]['summary']['percent_covered_display'])
     else:
         cov = 0
+    
+    if cov >= 85:
+        covcolor = 'green'
+    elif cov >= 70:
+        covcolor = 'orange'
+    else:
+        covcolor = 'red'
     
     metadata.update(
         summary=unindent(summary or ''),
         description=metadata.get('description', None) or 'No Description Yet.',
         parameters=parameters,
         tags=[tag for tag in metadata.get('tags', [])],
-        coverage=cov)
+        coverage=cov,
+        covcolor=covcolor)
     
 
     with open(filename, 'w', encoding="utf-8") as output:
