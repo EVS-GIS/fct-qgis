@@ -2,8 +2,7 @@ name: Build documentation
 
 on:
   push:
-    branches: [ "master" ]
-  workflow_dispatch:
+    branches: [ "master", "ci" ]
 
 permissions:
   contents: write
