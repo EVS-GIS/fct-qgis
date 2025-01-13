@@ -37,7 +37,7 @@ jobs:
 
       - name: Install packages
         run: |
-          pip install pypandoc mkdocs mkdocs-material mkdocs-bibtex
+          pip install pypandoc_binary mkdocs mkdocs-material mkdocs-bibtex
       
       - name: Deploy docs
         run: |
