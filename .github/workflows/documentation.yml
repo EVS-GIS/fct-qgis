@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  deploy:
+  build-doc:
     runs-on: ubuntu-latest
 
     steps:
@@ -41,6 +41,6 @@ jobs:
         run: |
           pip install pypandoc_binary mkdocs mkdocs-material mkdocs-bibtex
       
-      - name: Deploy docs
+      - name: Build and deploy docs
         run: |
           python -m mkdocs gh-deploy --force

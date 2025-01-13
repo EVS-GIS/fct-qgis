@@ -1,12 +1,10 @@
 name: Zip plugin for release
 
 on:
-  release:
-    types: 
-      - prereleased
+  workflow_dispatch:
       
 jobs:
-  zip:
+  zip-and-release:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,13 +12,16 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Zip release
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           cp -r fct FluvialCorridorToolbox
-          zip -r FluvialCorridorToolbox-${{ github.event.release.tag_name }}.zip FluvialCorridorToolbox
+          zip -r FluvialCorridorToolbox-${{ github.ref_name }}.zip FluvialCorridorToolbox
         
-      - name: Attach zip to release
+      - name: Create release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: FluvialCorridorToolbox-${{ github.event.release.tag_name }}.zip
+          files: FluvialCorridorToolbox-${{ github.ref_name }}.zip
+          draft: true
+          generate_release_notes: true
           
