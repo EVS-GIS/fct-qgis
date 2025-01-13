@@ -10,6 +10,13 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
+    container:
+      image: qgis/qgis:3.34
+      env:
+        QGIS_PLUGIN_IN_CI: 1
+        PYTHONPATH: /usr/share/qgis/python/plugins
+
     steps:
 
       - uses: actions/checkout@v4
@@ -21,10 +28,6 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.x
-
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
 
       - uses: actions/cache@v4
@@ -34,12 +37,16 @@ jobs:
           restore-keys: |
             mkdocs-material-
 
+      # - name: Install packages
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install wheel setuptools numpy cython
+      #     pip install --no-build-isolation -r requirements.txt
+      #     pip install --no-build-isolation -e .
+
       - name: Install packages
         run: |
-          python -m pip install --upgrade pip
-          pip install wheel setuptools numpy cython
-          pip install -r requirements.txt
-          pip install --no-build-isolation -e .
+          pip install --no-build-isolation -r requirements.txt
       
       - name: Build and deploy docs
         run: |
