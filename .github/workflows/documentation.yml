@@ -3,6 +3,8 @@ name: Build documentation
 on:
   push:
     branches: [ "master", "ci" ]
+    paths:
+      - 'docs/'
 
 permissions:
   contents: write
