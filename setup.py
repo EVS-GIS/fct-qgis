@@ -17,7 +17,7 @@ extensions = [
 
 setup(
     name='fct-qgis',
-    version='1.1.0',
+    version='1.1.2',
     packages=find_packages(),
     ext_modules=cythonize(extensions),
     include_package_data=True,

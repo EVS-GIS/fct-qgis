@@ -2,9 +2,9 @@ name: Build terrain analysis extension
 
 on:
   push:
-    branches: [ "master" ]
     paths:
       - 'cython/**'
+      - 'setup.py'
       - '.github/workflows/build.yml'
 
 permissions:

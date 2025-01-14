@@ -16,6 +16,7 @@ jobs:
       - name: Zip release
         run: |
           cp -r fct FluvialCorridorToolbox
+          cp LICENSE FluvialCorridorToolbox/LICENSE
           zip -r FluvialCorridorToolbox-${{ github.ref_name }}.zip FluvialCorridorToolbox
         
       - name: Create release
