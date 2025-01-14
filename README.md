@@ -1,6 +1,5 @@
 [![Build terrain analysis extension](https://github.com/EVS-GIS/fct-qgis/actions/workflows/build.yml/badge.svg)](https://github.com/EVS-GIS/fct-qgis/actions/workflows/build.yml)
 [![Documentation](https://github.com/EVS-GIS/fct-qgis/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/EVS-GIS/fct-qgis/actions/workflows/pages/pages-build-deployment)
-[![Release](https://github.com/EVS-GIS/fct-qgis/actions/workflows/release.yml/badge.svg?branch=master)](https://github.com/EVS-GIS/fct-qgis/actions/workflows/release.yml)
 
 [![Ubuntu / QGIS 3.34](https://github.com/EVS-GIS/fct-qgis/actions/workflows/ubuntu-qgis334.yml/badge.svg)](https://github.com/EVS-GIS/fct-qgis/actions/workflows/ubuntu-qgis334.yml)
 [![Ubuntu / QGIS 3.40](https://github.com/EVS-GIS/fct-qgis/actions/workflows/ubuntu-qgis340.yml/badge.svg)](https://github.com/EVS-GIS/fct-qgis/actions/workflows/ubuntu-qgis340.yml)
