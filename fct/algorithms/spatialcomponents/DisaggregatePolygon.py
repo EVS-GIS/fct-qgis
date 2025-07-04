@@ -87,7 +87,7 @@ class DisaggregatePolygon(AlgorithmMetadata, QgsProcessingAlgorithm):
         centerline = self.parameterAsVectorLayer(parameters, self.CENTERLINE, context)
         polygon = self.parameterAsVectorLayer(parameters, self.POLYGON, context)
         
-        assertLayersCompatibility([centerline, polygon], feedback, mutli_geom_allowed=False)
+        assertLayersCompatibility([centerline, polygon], feedback, multi_geom_allowed=False)
 
         step = self.parameterAsDouble(parameters, self.STEP, context)
 

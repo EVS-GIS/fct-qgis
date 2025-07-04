@@ -16,7 +16,7 @@ Generic assertions used by FCT
 from qgis.core import QgsWkbTypes, QgsProcessingFeedback, QgsProcessingException, QgsVectorLayer, QgsRasterLayer
 
 
-def assertLayersCompatibility(layers: list[QgsVectorLayer|QgsRasterLayer], feedback: QgsProcessingFeedback, same_crs: bool = True, mutli_geom_allowed: bool = True):
+def assertLayersCompatibility(layers: list[QgsVectorLayer|QgsRasterLayer], feedback: QgsProcessingFeedback, same_crs: bool = True, multi_geom_allowed: bool = True):
     """ Assert that a list of layers are compatible
 
     Parameters
@@ -44,7 +44,7 @@ def assertLayersCompatibility(layers: list[QgsVectorLayer|QgsRasterLayer], feedb
                 feedback.reportError(f'Input layer {layer.name()} have different CRS')
                 valid = False   
 
-        if not mutli_geom_allowed:
+        if not multi_geom_allowed:
             if layer.wkbType() == QgsWkbTypes.MultiPolygon:
                 feedback.reportError(f'MultiPolygon geometries are not allowed')
                 valid = False
