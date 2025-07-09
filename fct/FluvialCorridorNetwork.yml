@@ -1,0 +1,7 @@
+groups:
+  - id: drainage
+    displayName: 1- Drainage network
+  - id: spatialcomponents
+    displayName: 2- Spatial components
+  - id: metrics
+    displayName: 3- Metrics

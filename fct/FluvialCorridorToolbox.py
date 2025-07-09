@@ -106,7 +106,6 @@ class FluvialCorridorToolboxProvider(FluvialCorridorBaseProvider):
     METADATA = AlgorithmMetadata.read(__file__, 'FluvialCorridorToolbox')
     SOURCE_FOLDER = 'algorithms'
     ICON = 'images/tbxIcon.png'
-    CYTHON_SETTING = 'FCT_ACTIVATE_CYTHON'
 
     def id(self):
         return 'fct'
@@ -119,20 +118,10 @@ class FluvialCorridorToolboxProvider(FluvialCorridorBaseProvider):
 
     def load(self):
         
-        ProcessingConfig.addSetting(
-            Setting(
-                self.name(),
-                self.CYTHON_SETTING,
-                self.tr('Activate Cython Extensions'),
-                True))
-
-        ProcessingConfig.readSettings()
         self.refreshAlgorithms()
 
         return True
 
-    def unload(self):
-        ProcessingConfig.removeSetting(self.CYTHON_SETTING)
 
 
 class FluvialCorridorWorkflowsProvider(FluvialCorridorBaseProvider):
@@ -157,9 +146,79 @@ class FluvialCorridorWorkflowsProvider(FluvialCorridorBaseProvider):
     def groupDisplayName(self, group):
 
         return self.groups[group]
+    
+
+class FluvialCorridorNetworkProvider(FluvialCorridorBaseProvider):
+
+    METADATA = AlgorithmMetadata.read(__file__, 'FluvialCorridorNetwork')
+    SOURCE_FOLDER = 'network'
+    ICON = 'images/icon.png'
+
+    TILES_SIZE = 'FCN_TILES_SIZE'
+    TILES_DIR = 'FCN_TILES_DIR'
+    KEEP_TEMP_TILES = 'FCN_KEEP_TEMP_TILES'
+    RESUME = 'FCN_RESUME'
+
+    def id(self):
+        return 'fcn'
+
+    def name(self):
+        return 'Fluvial Corridor Network'
+    
+    def longName(self):
+        return 'Fluvial Corridor Network'
+
+    def load(self):
+
+        ProcessingConfig.settingIcons[self.name()] = self.icon()
+
+        ProcessingConfig.addSetting(
+            Setting(
+                self.name(),
+                self.TILES_SIZE,
+                self.tr('Data tiles size (in pixels)'),
+                2000,
+                valuetype=Setting.INT))
+
+        ProcessingConfig.addSetting(
+            Setting(
+                self.name(),
+                self.TILES_DIR,
+                self.tr('Data tiles directory'),
+                default=os.path.expanduser('~/fct-qgis'),
+                valuetype=Setting.FOLDER))
+        
+        ProcessingConfig.addSetting(
+            Setting(
+                self.name(),
+                self.KEEP_TEMP_TILES,
+                self.tr('Keep temporary tiles'),
+                False))
+        
+        ProcessingConfig.addSetting(
+            Setting(
+                self.name(),
+                self.RESUME,
+                self.tr('Resume previous run if tiles already exist (requires keeping temporary tiles)'),
+                False))
+        
+        ProcessingConfig.readSettings()
+        self.refreshAlgorithms()
+        return True
+
+    def groupDisplayName(self, group):
+
+        return self.groups[group]
+    
+    def unload(self):
+        ProcessingConfig.removeSetting(self.TILES_SIZE)
+        ProcessingConfig.removeSetting(self.TILES_DIR)
+        ProcessingConfig.removeSetting(self.KEEP_TEMP_TILES)
+        ProcessingConfig.removeSetting(self.RESUME)
 
 
 PROVIDERS = [
     FluvialCorridorToolboxProvider,
-    FluvialCorridorWorkflowsProvider
+    FluvialCorridorWorkflowsProvider,
+    FluvialCorridorNetworkProvider
 ]

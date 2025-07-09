@@ -1,0 +1,5 @@
+scipy>=1.14.0
+rasterio>=1.3.5
+# xarray>=2024.6.0
+# netcdf4>=1.6.2
+# scikit-learn>=1.2.2
