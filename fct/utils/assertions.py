@@ -16,7 +16,12 @@ Generic assertions used by FCT
 from qgis.core import QgsWkbTypes, QgsProcessingFeedback, QgsProcessingException, QgsVectorLayer, QgsRasterLayer
 
 
-def assertLayersCompatibility(layers: list[QgsVectorLayer|QgsRasterLayer], feedback: QgsProcessingFeedback, same_crs: bool = True, multi_geom_allowed: bool = True):
+def assertLayersCompatibility(layers: list[QgsVectorLayer|QgsRasterLayer], 
+                              feedback: QgsProcessingFeedback, 
+                              same_crs: bool = True, 
+                              multi_geom_allowed: bool = True, 
+                              nodata_set: bool = True,
+                              band_count: int = None):
     """ Assert that a list of layers are compatible
 
     Parameters
@@ -54,6 +59,17 @@ def assertLayersCompatibility(layers: list[QgsVectorLayer|QgsRasterLayer], feedb
             elif layer.wkbType() == QgsWkbTypes.MultiPoint:
                 feedback.reportError(f'MultiPoint geometries are not allowed')
                 valid = False
+
+        if nodata_set and type(layer) == QgsRasterLayer:
+            if not layer.dataProvider().sourceNoDataValue(1) is not None:
+                feedback.reportError(f'Input raster layer {layer.name()} must have NoData value set')
+                valid = False
+
+        if band_count is not None and type(layer) == QgsRasterLayer:
+            if layer.bandCount() != band_count:
+                feedback.reportError(f'Input raster layer {layer.name()} must have {band_count} bands')
+                valid = False
+
 
     if not valid:
         raise QgsProcessingException("Assertions failed (see above for details)")
