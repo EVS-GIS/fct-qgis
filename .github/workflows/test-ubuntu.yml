@@ -19,6 +19,9 @@ jobs:
         
     steps:
       - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          /usr/bin/python3 -m pip install -r fct/requirements.txt
       - name: Run tests
         run: |
           xvfb-run -s '+extension GLX -screen 0 1024x768x24' /usr/bin/python3 -m pytest -v

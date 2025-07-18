@@ -14,14 +14,16 @@ Prepare DEM for Drainage Analysis
 """
 
 import os
+import shutil
 
+from contextlib import contextmanager
 from processing.core.ProcessingConfig import ProcessingConfig
 
 from qgis.core import (
     QgsProject,
 )
 
-
+@contextmanager
 def getFCTconfig():
     output_dir = os.path.join(
         ProcessingConfig.getSetting("FCN_TILES_DIR"),
@@ -30,9 +32,16 @@ def getFCTconfig():
     keep_tiles = ProcessingConfig.getSetting("FCN_KEEP_TEMP_TILES")
     overwrite = not ProcessingConfig.getSetting("FCN_RESUME")
 
-    return {
-        'output_dir': output_dir,
-        'tiles_size': tiles_size,
-        'keep_tiles': keep_tiles,
-        'overwrite': overwrite,
-    }
+    os.makedirs(output_dir, exist_ok=True)
+
+    try:
+        yield {
+            'output_dir': output_dir,
+            'tiles_size': tiles_size,
+            'keep_tiles': keep_tiles,
+            'overwrite': overwrite,
+        }
+
+    finally:
+        if not keep_tiles and os.path.exists(output_dir):
+            shutil.rmtree(output_dir)
