@@ -18,6 +18,8 @@ import os
 import numpy as np
 import rasterio as rio
 
+import processing
+
 from collections import defaultdict, Counter
 from qgis.core import (
     QgsProcessing,
@@ -27,7 +29,8 @@ from qgis.core import (
     QgsProcessingParameterRasterDestination,
     QgsProcessingParameterNumber,
     QgsApplication,
-    QgsProcessingFeedback,
+    QgsProcessingParameterField,
+    QgsVectorLayer
 )  
 
 # from shapely.geometry import (
@@ -35,10 +38,10 @@ from qgis.core import (
 #     box
 # )
 
-from .DrainageTasks import PrepareDEMTask
+from .DrainageTasks import PrepareDEMTask, DrapeNetworkAndAdjustElevations, SplitStreamNetworkIntoTiles
 from ..metadata import AlgorithmMetadata
 from ...utils.assertions import assertLayersCompatibility
-from ...utils.tiles import FctTileset, FctTiledDataset, FctDataTile
+from ...utils.tiles import FctTileset, FctTiledDataset
 from ...utils.config import getFCTconfig
     
 class PrepareDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
@@ -47,6 +50,8 @@ class PrepareDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
     
     DEM = 'DEM'
     NETWORK = 'NETWORK'
+    FROM_NODE_FIELD = 'FROM_NODE_FIELD'
+    TO_NODE_FIELD = 'TO_NODE_FIELD'
     OUTPUT = 'OUTPUT'
     WINDOW = 'WINDOW'
     BURN = 'BURN'
@@ -63,6 +68,22 @@ class PrepareDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
             self.tr('Stream network layer'),
             [QgsProcessing.TypeVectorLine]))
 
+        self.addParameter(QgsProcessingParameterField(
+            self.FROM_NODE_FIELD,
+            self.tr('From Node Field'),
+            parentLayerParameterName=self.NETWORK,
+            type=QgsProcessingParameterField.Numeric,
+            defaultValue='NODEA',
+            optional=True))
+
+        self.addParameter(QgsProcessingParameterField(
+            self.TO_NODE_FIELD,
+            self.tr('To Node Field'),
+            parentLayerParameterName=self.NETWORK,
+            type=QgsProcessingParameterField.Numeric,
+            defaultValue='NODEB',
+            optional=True))
+        
         self.addParameter(QgsProcessingParameterNumber(
             self.WINDOW,
             self.tr('Focal mean window size in pixels (0 = no focal mean filter)'),
@@ -91,6 +112,9 @@ class PrepareDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
             window_size = self.parameterAsInt(parameters, self.WINDOW, context)
             overlap = window_size * 2 if window_size != 0 else 10
 
+            burn = self.parameterAsInt(parameters, self.BURN, context)
+
+            # Open and tile DEM
             dem_layer = self.parameterAsRasterLayer(parameters, self.DEM, context)
             tileset = FctTileset(dem_layer, 
                                  resolution=config['tiles_size'], 
@@ -102,11 +126,46 @@ class PrepareDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
             dem_tiled.fromDatasource(
                 datasource=dem_layer, 
                 tileset=tileset, 
+                context=context,
                 feedback=feedback, 
                 overwrite=config['overwrite'])
+            
+            # Open network
+            network = self.parameterAsVectorLayer(parameters, self.NETWORK, context)
+            from_node_field = self.parameterAsString(parameters, self.FROM_NODE_FIELD, context)
+            to_node_field = self.parameterAsString(parameters, self.TO_NODE_FIELD, context)
 
 
-            feedback.pushInfo("Processing DEM tiles...")
+            network_processing = processing.run("native:multiparttosingleparts", 
+                                                {
+                                                    'INPUT': network,
+                                                    'OUTPUT': os.path.join(config['output_dir'], 'RAW_HYDROGRAPHY.gpkg')
+                                                }, context=context, feedback=feedback, is_child_algorithm=True)
+
+            network = QgsVectorLayer(network_processing['OUTPUT'])
+
+            if not from_node_field or not to_node_field:
+                identifynodes = processing.run('fct:identifynetworknodes', {
+                    'INPUT': self.parameterAsVectorLayer(parameters, self.INPUT, context),
+                    'NODES': QgsProcessing.TEMPORARY_OUTPUT,
+                    'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+                }, context=context, feedback=feedback, is_child_algorithm=True)
+
+                network = QgsVectorLayer(identifynodes['OUTPUT'])
+                from_node_field = 'NODEA'
+                to_node_field = 'NODEB'
+
+            # Drape network
+            draped_network = os.path.join(config['output_dir'], "DRAPED_HYDROGRAPHY.gpkg")
+            DrapeNetworkAndAdjustElevations(dem=dem_tiled, networkfile=network.source(), output=draped_network, feedback=feedback)
+
+            # Split network into tiles
+            SplitStreamNetworkIntoTiles(networkfile=draped_network, 
+                                        tileset=tileset, 
+                                        output_dir=os.path.join(config['output_dir'], 'DRAPED'),
+                                        feedback=feedback)
+
+            feedback.pushInfo("Starting parallel processing for DEM tiles")
 
             tasks = list()
             output_dataset = FctTiledDataset("PrepareDEM", config['output_dir'], tileset)
@@ -118,6 +177,7 @@ class PrepareDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
                     dem_layer = tile, 
                     output = output_tile, 
                     window_size = window_size, 
+                    burn = burn,
                     overwrite=config['overwrite']
                 )
                 
@@ -129,7 +189,7 @@ class PrepareDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
                 if feedback.isCanceled():
                     for task in tasks:
                         task.cancel()
-                    feedback.pushInfo("Multiprocessing cancelled.")
+                    feedback.pushInfo("Multiprocessing cancelled")
                     break
 
                 # Count the number of finished tasks

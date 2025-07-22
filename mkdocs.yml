@@ -67,6 +67,7 @@ nav:
   - Getting started: 
     - Introduction: index.md
     - Installation: install.md
+    - Usage: usage.md
   - Tutorials:
     - tutorials/dem_to_dgo.md
   - Algorithms Reference:

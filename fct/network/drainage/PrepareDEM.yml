@@ -1,6 +1,13 @@
 displayName: Prepare DEM for drainage analysis
 group: drainage
-summary: 
+summary: |
+  Prepare the DEM for drainage analysis:
+    - Apply a focal mean filter to smooth the data.
+    - Burn the stream network into the DEM to force flow along the streams.
+    - Fill depressions that create flow dead ends.
+    - Resolve flat areas that can cause flow issues.
+
+  All the steps are optional and the tool can also be used to benefit from multiprocessing when applying a single step.
 description: |
   Prepare the DEM for drainage analysis:
     - Apply a focal mean filter to smooth the data.

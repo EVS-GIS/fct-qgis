@@ -58,8 +58,7 @@ class FctTileset():
 
         if not overwrite and os.path.exists(self.main_tileset_path) and os.path.exists(self.aux_tileset_path):
             QgsMessageLog.logMessage("Tilesets already exist and overwrite is set to False.", 'Fluvial Corridor Toolbox', Qgis.Warning)
-            return (('MAIN', QgsVectorLayer(self.main_tileset_path, "main_tileset", 'ogr')), 
-                    ('AUX', QgsVectorLayer(self.aux_tileset_path, "aux_tileset", 'ogr')))
+            return
 
         resolution = datasource.rasterUnitsPerPixelX() * resolution
         overlap = datasource.rasterUnitsPerPixelX() * overlap
@@ -166,7 +165,7 @@ class FctTiledDataset():
         self.wd = working_directory
         self.directory = os.path.join(working_directory, name)
         self.tileset = tileset
-        self.vrt = None
+        self.vrt: str = None
         self.tindex = list()
 
         os.makedirs(self.directory, exist_ok=True)
@@ -175,13 +174,14 @@ class FctTiledDataset():
     def fromDatasource(self, 
                        datasource: QgsRasterLayer, 
                        tileset: FctTileset,
+                       context: QgsProcessingContext=None,
                        feedback: QgsProcessingFeedback=None,
                        overwrite: bool = True):
         """
         Tile an input datasource (GeoTIFF or VRT) and update the FctTiledDataset object
         """
 
-        feedback.pushInfo("Tiling dataset for multiprocessing...")
+        feedback.setProgressText("Tiling dataset for multiprocessing")
 
         self.tileset = tileset
 
@@ -197,7 +197,7 @@ class FctTiledDataset():
             if feedback.isCanceled():
                 for task in tasks:
                     task.cancel()
-                feedback.pushInfo("Tiling process cancelled.")
+                feedback.pushInfo("Multiprocessing cancelled")
                 break
 
             # Count the number of finished tasks
@@ -205,6 +205,11 @@ class FctTiledDataset():
             feedback.setProgress(int((finished_tasks / len(tasks)) * 100))
 
         self.tindex: list[FctDataTile] = [t.output for t in tasks if t.output and os.path.exists(t.output.file)]
+
+        self.mergeTiles(output = os.path.join(self.wd, f"{self.name}.vrt"), 
+                        vrt = True,
+                        context=context,
+                        feedback=feedback)
 
 
     def appendTile(self, row: int, col: int):
@@ -219,37 +224,37 @@ class FctTiledDataset():
             yield tile
 
 
-    def buildVRT(self, context, feedback):
+    # def buildVRT(self, context, feedback):
 
-        vrt_path = os.path.join(Path(os.path.dirname(self.directory)).parent, f"{self.name}.vrt")
-        tlist = [t.file for t in self.tindex]
+    #     vrt_path = os.path.join(Path(os.path.dirname(self.directory)).parent, f"{self.name}.vrt")
+    #     tlist = [t.file for t in self.tindex]
 
-        with rio.open(self.tindex[0].file) as first_tile:
-            nodata = first_tile.nodata
+    #     with rio.open(self.tindex[0].file) as first_tile:
+    #         nodata = first_tile.nodata
 
-        vrt = processing.run("gdal:buildvirtualraster",
-                            {
-                                'INPUT': tlist,
-                                'RESAMPLING': 0,  # Nearest neighbor
-                                'OUTPUT': vrt_path,
-                                'SRC_NODATA': nodata,
-                                "SEPARATE": False,
-                            },
-                            context=context,
-                            feedback=feedback,
-                            is_child_algorithm=True)
+    #     vrt = processing.run("gdal:buildvirtualraster",
+    #                         {
+    #                             'INPUT': tlist,
+    #                             'RESAMPLING': 0,  # Nearest neighbor
+    #                             'OUTPUT': vrt_path,
+    #                             'SRC_NODATA': nodata,
+    #                             "SEPARATE": False,
+    #                         },
+    #                         context=context,
+    #                         feedback=feedback,
+    #                         is_child_algorithm=True)
 
-        self.vrt = vrt['OUTPUT']
+    #     self.vrt = vrt['OUTPUT']
 
 
     def mergeTiles(self,
                    output: str, 
-                   vrt: bool = False,
-                   context: QgsProcessingContext = None,
-                   feedback: QgsProcessingFeedback = None) -> str:
+                   context: QgsProcessingContext,
+                   feedback: QgsProcessingFeedback,
+                   vrt: bool = False) -> str:
         
         
-        feedback.pushInfo("Crop output overlapping tiles")
+        feedback.setProgressText("Crop output overlapping tiles")
 
         output_tiles_dir = os.path.join(self.wd, "OUTPUT")
         os.makedirs(output_tiles_dir, exist_ok=True)
@@ -265,15 +270,15 @@ class FctTiledDataset():
             if feedback.isCanceled():
                 for task in tasks:
                     task.cancel()
-                feedback.pushInfo("Tiling process cancelled.")
+                feedback.pushInfo("Multiprocessing cancelled.")
                 break
 
             # Count the number of finished tasks
             finished_tasks = sum(1 for task in tasks if task.progress() == 100)
             feedback.setProgress(int((finished_tasks / len(tasks)) * 100))
 
-        feedback.pushInfo("Merging output tiles")
-
+        feedback.setProgressText("Merging output tiles")
+        
         if vrt:
             output_tiles = [t.output for t in tasks]
             with rio.open(self.tindex[0].file) as first_tile:
@@ -290,8 +295,9 @@ class FctTiledDataset():
                                             context=context,
                                             feedback=feedback,
                                             is_child_algorithm=True)
-                
-            return vrt_processing['OUTPUT']
+            
+            self.vrt = vrt_processing['OUTPUT']
+            return self.vrt
 
         else:
             output_tiles = [rio.open(t.output) for t in tasks]
