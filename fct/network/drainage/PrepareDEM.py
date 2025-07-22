@@ -14,7 +14,11 @@ Prepare DEM for Drainage Analysis
 """
 
 import os
+# import fiona
+import numpy as np
+import rasterio as rio
 
+from collections import defaultdict, Counter
 from qgis.core import (
     QgsProcessing,
     QgsProcessingAlgorithm,
@@ -23,12 +27,18 @@ from qgis.core import (
     QgsProcessingParameterRasterDestination,
     QgsProcessingParameterNumber,
     QgsApplication,
+    QgsProcessingFeedback,
 )  
 
-from .DrainageTasks import MeanFilterTask
+# from shapely.geometry import (
+#     asShape,
+#     box
+# )
+
+from .DrainageTasks import PrepareDEMTask
 from ..metadata import AlgorithmMetadata
 from ...utils.assertions import assertLayersCompatibility
-from ...utils.tiles import CreateTilesets, TileDataset, MergeTiles
+from ...utils.tiles import FctTileset, FctTiledDataset, FctDataTile
 from ...utils.config import getFCTconfig
     
 class PrepareDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
@@ -74,59 +84,65 @@ class PrepareDEM(AlgorithmMetadata, QgsProcessingAlgorithm):
         with getFCTconfig() as config:
 
             assertLayersCompatibility([
-                self.parameterAsRasterLayer(parameters, self.DEM, context)
+                self.parameterAsRasterLayer(parameters, self.DEM, context),
+                self.parameterAsVectorLayer(parameters, self.NETWORK, context)
             ], feedback, nodata_set=True, band_count=1)
 
-            dem_layer = self.parameterAsRasterLayer(parameters, self.DEM, context)
-            tileset = CreateTilesets(dem_layer, resolution=config['tiles_size'], output_dir=config['output_dir'], overwrite=config['overwrite'])[0]
-            
-            tiles_list = TileDataset(dem_layer, tileset, directory=config['output_dir'], feedback=feedback, overwrite=config['overwrite'])
+            window_size = self.parameterAsInt(parameters, self.WINDOW, context)
+            overlap = window_size * 2 if window_size != 0 else 10
 
-            # Mean filter (focal mean)
-            feedback.pushInfo("Applying focal mean filter to DEM tiles...")
+            dem_layer = self.parameterAsRasterLayer(parameters, self.DEM, context)
+            tileset = FctTileset(dem_layer, 
+                                 resolution=config['tiles_size'], 
+                                 output_dir=config['output_dir'], 
+                                 overlap=overlap, 
+                                 overwrite=config['overwrite'])
+            
+            dem_tiled = FctTiledDataset("DEM", config['output_dir'])
+            dem_tiled.fromDatasource(
+                datasource=dem_layer, 
+                tileset=tileset, 
+                feedback=feedback, 
+                overwrite=config['overwrite'])
+
+
+            feedback.pushInfo("Processing DEM tiles...")
 
             tasks = list()
+            output_dataset = FctTiledDataset("PrepareDEM", config['output_dir'], tileset)
 
-            ######
-            ### MEAN FILTER
+            for tile in dem_tiled.getDataTiles():
+                output_tile = output_dataset.appendTile(tile.row, tile.col)
 
-            window_size = self.parameterAsInt(parameters, self.WINDOW, context)
-            if window_size != 0:
-                for tile in tiles_list:
-                    output = os.path.join(config['output_dir'], "MeanFilter", f"MeanFilter_{tile[0]}_{tile[1]}_{tile[2]}.tif")
+                task = PrepareDEMTask(
+                    dem_layer = tile, 
+                    output = output_tile, 
+                    window_size = window_size, 
+                    overwrite=config['overwrite']
+                )
+                
+                QgsApplication.taskManager().addTask(task)
+                tasks.append(task)
 
-                    task = MeanFilterTask(
-                        dem_layer = tile[3], 
-                        output = output, 
-                        window_size = window_size, 
-                        overwrite=config['overwrite']
-                        )
-                    
-                    QgsApplication.taskManager().addTask(task)
-                    tasks.append((tile[0], tile[1], tile[2], task))
+            # Wait for all tasks to finish
+            while any(task.progress() < 100 for task in tasks):
+                if feedback.isCanceled():
+                    for task in tasks:
+                        task.cancel()
+                    feedback.pushInfo("Multiprocessing cancelled.")
+                    break
 
-                # Wait for all tasks to finish
-                while any(task[3].progress() < 100 for task in tasks):
-                    if feedback.isCanceled():
-                        for task in tasks:
-                            task[3].cancel()
-                        feedback.pushInfo("Multiprocessing cancelled.")
-                        break
+                # Count the number of finished tasks
+                finished_tasks = sum(1 for task in tasks if task.progress() == 100)
+                feedback.setProgress(int((finished_tasks / len(tasks)) * 100))
 
-                    # Count the number of finished tasks
-                    finished_tasks = sum(1 for task in tasks if task[3].progress() == 100)
-                    feedback.setProgress(int((finished_tasks / len(tasks)) * 100))
 
-                tiles_list = [(t[0], t[1], t[2], t[3].output) for t in tasks if t[3].output and os.path.exists(t[3].output)]
-
-            ######
-            ### BURN
-
-            if tiles_list:
-                tiles_paths = [tile[3] for tile in tiles_list]
-
-                feedback.pushInfo("Merging tiles for output...")
-                result = MergeTiles(tiles_paths, self.parameterAsOutputLayer(parameters, self.OUTPUT, context), context=context, feedback=feedback, keep_tiles=config['keep_tiles'])
+            result = output_dataset.mergeTiles(
+                output=self.parameterAsOutputLayer(parameters, self.OUTPUT, context), 
+                vrt=config['keep_tiles'],
+                context=context,
+                feedback=feedback
+            )
                             
         return {self.OUTPUT: result}
-        
+
