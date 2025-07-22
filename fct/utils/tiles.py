@@ -187,7 +187,7 @@ class FctTiledDataset():
 
         tasks = list()
         for tile in tileset.getTiles():
-            datatile = FctDataTile(self, tile[0].attribute("ROW"), tile[0].attribute("COL"))
+            datatile = FctRasterTile(self, tile[0].attribute("ROW"), tile[0].attribute("COL"))
             task = ExtractTile(datasource=datasource, tile=datatile, overwrite=overwrite)
             QgsApplication.taskManager().addTask(task)
             tasks.append(task)
@@ -204,7 +204,7 @@ class FctTiledDataset():
             finished_tasks = sum(1 for task in tasks if task.progress() == 100)
             feedback.setProgress(int((finished_tasks / len(tasks)) * 100))
 
-        self.tindex: list[FctDataTile] = [t.output for t in tasks if t.output and os.path.exists(t.output.file)]
+        self.tindex: list[FctRasterTile] = [t.output for t in tasks if t.output and os.path.exists(t.output.file)]
 
         self.mergeTiles(output = os.path.join(self.wd, f"{self.name}.vrt"), 
                         vrt = True,
@@ -213,7 +213,7 @@ class FctTiledDataset():
 
 
     def appendTile(self, row: int, col: int):
-        tile = FctDataTile(self, row, col)
+        tile = FctRasterTile(self, row, col)
         self.tindex.append(tile)
 
         return tile
@@ -310,7 +310,7 @@ class FctTiledDataset():
             return output
     
 
-class FctDataTile():
+class FctRasterTile():
 
     def __init__(self, dataset: FctTiledDataset, row: int, col: int):
         
@@ -323,9 +323,9 @@ class FctDataTile():
 
         
 class ExtractTile(QgsTask):
-    def __init__(self, datasource: QgsRasterLayer, tile: FctDataTile, overwrite: bool = False):
+    def __init__(self, datasource: QgsRasterLayer, tile: FctRasterTile, overwrite: bool = False):
 
-        super().__init__("Extracting tile", QgsTask.CanCancel)
+        super().__init__(f"Extract tile - ROW{tile.row} COL{tile.col}", QgsTask.CanCancel)
         self.datasource = datasource
         self.tile = tile
         # self.name = self.tile.dataset.name
@@ -416,7 +416,7 @@ class ExtractTile(QgsTask):
 
 
 class CropTile(QgsTask):
-    def __init__(self, tile: FctDataTile, output_dir: str):
+    def __init__(self, tile: FctRasterTile, output_dir: str):
 
         super().__init__("Extracting tile", QgsTask.CanCancel)
         self.tile = tile

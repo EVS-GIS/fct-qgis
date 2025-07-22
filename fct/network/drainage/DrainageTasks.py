@@ -18,33 +18,38 @@ import rasterio as rio
 import numpy as np
 import fiona
 
-from collections import defaultdict, Counter
 from scipy.ndimage import convolve
-from shapely.geometry import shape
-from shapely.wkt import loads
 
 from qgis.core import (
     Qgis,
     QgsTask,
     QgsMessageLog,
-    QgsProcessingFeedback,
-    QgsFeature
 )
 
-from ...utils.tiles import FctDataTile, FctTiledDataset, FctTileset
+from ...lib import terrain_analysis as ta
+from ...utils.tiles import FctRasterTile
+from ...utils.rasterize import rasterize_linestringz
 
 
 class PrepareDEMTask(QgsTask):
         
-    def __init__(self, dem_layer: FctDataTile, output: FctDataTile, window_size: int, burn: int, overwrite: bool = False):
+    def __init__(self, dem_layer: FctRasterTile, network: str, output: FctRasterTile, output_labels: FctRasterTile, window_size: int, burn: int, exterior: float, overwrite: bool = False):
         
-        super().__init__("Extracting tile", QgsTask.CanCancel)
+        super().__init__(f"Prepare DEM - ROW{dem_layer.row} COL{dem_layer.col}", QgsTask.CanCancel)
         self.dem_layer = dem_layer
+        self.network = network
         self.output = output
+        self.output_labels = output_labels
         self.window_size = window_size
         self.overwrite = overwrite
+        self.burn = burn
+        self.exterior = exterior
+        self.output_graph = os.path.join(output.dataset.wd, 'WATERSHED_GRAPH', f'WATERSHED_GRAPH_{dem_layer.row}_{dem_layer.col}.npz')
 
         os.makedirs(os.path.dirname(self.output.file), exist_ok=True)
+        os.makedirs(os.path.dirname(self.output_labels.file), exist_ok=True)
+        os.makedirs(os.path.dirname(self.output_graph), exist_ok=True)
+
         self.setProgress(0)
     
     def run(self):
@@ -57,15 +62,72 @@ class PrepareDEMTask(QgsTask):
         with rio.open(self.dem_layer.file) as ds:
 
             data = ds.read(1)
+            nodata = ds.nodata
             data[data == ds.nodata] = np.nan
-            kernel = np.ones((self.window_size, self.window_size))
-            out = convolve(data, kernel) / kernel.size
             profile = ds.profile.copy()
-            self.setProgress(50)
 
+        # MEAN FILTER
+        if self.window_size != 0:
+
+            kernel = np.ones((self.window_size, self.window_size))
+            data = convolve(data, kernel) / kernel.size 
+
+        self.setProgress(15)
+
+        # BURN
+        if self.burn > 0:
+
+            height, width = data.shape
+
+            if os.path.exists(self.network):
+
+                with fiona.open(self.network) as fs:
+                    for feature in fs:
+
+                        geom = np.array(feature['geometry']['coordinates'], dtype=np.float32)
+                        geom[:, :2] = np.fliplr(ta.worldtopixel(geom, ds.transform, gdal=False))
+
+                        for a, b in zip(geom[:-1], geom[1:]):
+                            for px, py, z in rasterize_linestringz(a, b):
+                                if all([py >= 0, py < height, px >= 0, px < width, not np.isinf(z)]):
+                                    data[py, px] = z - self.burn
+
+            else:
+                QgsMessageLog(f'File not found: {self.network}')
+        
+        self.setProgress(30)
+
+        # LABEL FLATS
+        labels, graph = ta.watershed_labels(data, nodata, self.exterior)
+        labels = np.uint32(labels)
+
+        self.setProgress(75)
+
+        # SAVE OUTPUT
         with rio.open(self.output.file, 'w', **profile) as dst:
-            dst.write(out, 1)
-            self.setProgress(100)
+            dst.write(data, 1)
+
+        with rio.open(self.output_labels.file, 'w', **profile) as dst:
+            dst.write(labels, 1)
+        
+        self.setProgress(85)
+        
+        np.savez(
+            self.output_graph,
+            z=np.array([
+                data[0, :],
+                data[:, -1],
+                np.flip(data[-1, :], axis=0),
+                np.flip(data[:, 0], axis=0)]),
+            labels=np.array([
+                labels[0, :],
+                labels[:, -1],
+                np.flip(labels[-1, :], axis=0),
+                np.flip(labels[:, 0], axis=0)]),
+            graph=np.array(list(graph.items()), dtype=object)
+        )
+
+        self.setProgress(100)
 
         return True
     
@@ -83,145 +145,3 @@ class PrepareDEMTask(QgsTask):
         QgsMessageLog.logMessage(f'Task "{self.description}" cancelled', 'Fluvial Corridor Toolbox', Qgis.Info)
         super().cancel()
 
-
-def DrapeNetworkAndAdjustElevations(dem: FctTiledDataset, networkfile: str, output: str, feedback: QgsProcessingFeedback):
-    """
-    Drape hydrography vectors on DEM
-    and adjust elevation profile to ensure
-    monotonic decreasing z across network.
-    """
-
-    networklayer = None
-    if "|layername=" in networkfile:
-        networkfile, networklayer = networkfile.split('|layername=')
-
-    graph = defaultdict(list)
-    indegree = Counter()
-    features = list()
-
-    feedback.setProgressText('Drape Stream Vectors on DEM')
-
-    feedback.setProgress(0)
-    with rio.open(dem.vrt) as ds:
-        with fiona.open(networkfile, layer=networklayer) as fs:
-
-            feature_count = len(fs)
-            options = dict(driver=fs.driver, crs=fs.crs, schema=fs.schema)
-                
-            for i, feature in enumerate(fs):
-
-                a = feature['properties']['NODEA']
-                b = feature['properties']['NODEB']
-                coordinates = np.array(feature['geometry']['coordinates'])
-
-                z = np.array(list(ds.sample(coordinates[:, :2], 1)))
-                coordinates[:, 2] = np.ravel(z)
-                feature['geometry']['coordinates'] = coordinates
-                
-                idx = len(features)
-                graph[a].append((b, idx))
-                indegree[b] += 1
-                features.append(feature)
-
-                feedback.setProgress((i/feature_count)*100)
-
-    feedback.setProgressText('Adjust Elevation Profile')
-
-    nodez = defaultdict(lambda: float('inf'))
-    queue = [node for node in graph if indegree[node] == 0]
-
-    with fiona.open(output, 'w', **options) as fst:
-        while queue:
-
-            source = queue.pop(0)
-
-            for node, idx in graph[source]:
-
-                feature = features[idx]
-                coordinates = feature['geometry']['coordinates']
-                a = feature['properties']['NODEA']
-                b = feature['properties']['NODEB']
-
-                zmin = nodez[a]
-
-                for k, z in enumerate(coordinates[:, 2]):
-                            
-                    if z != ds.nodata and z <= zmin:
-                        zmin = z
-                    
-                    # Clamp z to upstream elevation
-                    coordinates[k, 2] = zmin
-
-                if not np.isinf(feature['geometry']['coordinates']).any():
-                    fst.write(feature)
-
-                nodez[b] = zmin
-                indegree[node] -= 1
-
-                if indegree[node] == 0:
-                    queue.append(node)
-
-
-def SplitStreamNetworkIntoTiles(networkfile: str, tileset: FctTileset, output_dir: str, feedback: QgsProcessingFeedback):
-
-    feedback.setProgressText("Split network into tiles")
-    feedback.setProgress(0)
-
-    os.makedirs(output_dir, exist_ok=True)
-
-    with fiona.open(networkfile) as fs:
-
-        properties = fs.schema['properties'].copy()
-        properties.update(
-            ROW='int',
-            COL='int'
-        )
-
-        schema = dict(
-            geometry=fs.schema['geometry'],
-            properties=properties)
-
-        options = dict(driver=fs.driver, crs=fs.crs, schema=schema)
-
-        ntiles = tileset.aux_tileset.featureCount()
-
-        for i, t in enumerate(tileset.getTiles()):
-            tile: QgsFeature = t[1]
-
-            output = os.path.join(output_dir, f"DRAPED_{tile.attribute('ROW')}_{tile.attribute('COL')}.gpkg")
-            with fiona.open(output, 'w', **options) as dst:
-
-                tile_geom = loads(tile.geometry().boundingBox().asWktPolygon())
-                bbox = (
-                    tile.geometry().boundingBox().xMinimum(),
-                    tile.geometry().boundingBox().yMinimum(),
-                    tile.geometry().boundingBox().xMaximum(),
-                    tile.geometry().boundingBox().yMaximum()
-                )
-
-                for feature in fs.filter(bbox=bbox):
-
-                    intersection = shape(feature['geometry']).intersection(tile_geom)
-
-                    if intersection.geom_type == 'LineString':
-
-                        props = feature['properties']
-                        props.update(ROW=tile.attribute('ROW'), COL=tile.attribute('COL'))
-                        dst.write({
-                            'geometry': intersection.__geo_interface__,
-                            'properties': props
-                        })
-
-                    elif intersection.geom_type in ('MultiLineString', 'GeometryCollection'):
-
-                        for geom in intersection.geoms:
-                            if geom.geometryType() == 'LineString':
-
-                                props = feature['properties']
-                                props.update(ROW=tile.attribute('ROW'), COL=tile.attribute('COL'))
-                                dst.write({
-                                    'geometry': geom.__geo_interface__,
-                                    'properties': props
-                                })
-
-            feedback.setProgress((i/ntiles)*100)
