@@ -1,10 +1,13 @@
 lxml
 doit
-qgis-plugin-ci
-wheel 
-numpy 
+# qgis-plugin-ci
+# wheel
 cython 
-setuptools
+# setuptools
+Click>=7.0
+numpy>=1.26
+scipy>=1.11
+pytest>=8.3
 # PyGithub
 # pylint>=1.9.4
 mkdocs>=1.0

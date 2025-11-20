@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=80", "setuptools-scm[simple]>=8", "wheel", "cython", "numpy"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["test", "env"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[project]
+name = "fct-qgis"
+authors = [
+  {name = "Christophe Rousson"},
+  {name = "Samuel Dunesme", email = "samuel.dunesme@ens-lyon.fr"}
+]
+description = "Fluvial Corridor Toolbox QGIS Plugin"
+readme = "README.md"
+license-files = ["LICENSE"]
+dynamic = ["version", "dependencies"]
+requires-python = ">=3.10"
+
+[project.scripts]
+autodoc = "fct.cli.autodoc:autodoc"
+fct = "fct.cli.algorithms:fct"
+fcw = "fct.cli.algorithms:workflows"
