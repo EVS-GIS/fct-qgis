@@ -226,7 +226,7 @@ class GraphIterator(object):
         if key in self.seen:
             return self.seen[key].weight
 
-        return np.infty
+        return np.inf
 
     def path(self, key):
 

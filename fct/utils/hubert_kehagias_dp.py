@@ -24,7 +24,7 @@ def cumulative_variance(x):
     mean = csum / (np.arange(n) + 1)
     return np.cumsum(np.power(x, 2)) - csum*mean
 
-def segment(x, Kmax=np.infty):
+def segment(x, Kmax=np.inf):
     """
     Recursively break sequence `x` with 1 to max `Kmax` breakpoints.
 
@@ -151,7 +151,7 @@ class HubertKehagiasSegmentation(object):
         https://doi.org/10.1007/s00477-005-0013-6
     """
 
-    def __init__(self, x, Kmax=np.infty):
+    def __init__(self, x, Kmax=np.inf):
         """
         Segment sequence `x` into a maximum of `Kmax` segments.
         """

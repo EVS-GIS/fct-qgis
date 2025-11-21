@@ -181,7 +181,7 @@ class SignedShortestDistance(AlgorithmMetadata, QgsProcessingAlgorithm):
                 a[:, 1] + dot*segment_ab[:, 1]]).T
 
             distance = np.linalg.norm(nearest - c, axis=1)
-            distance[np.isnan(distance)] = np.infty
+            distance[np.isnan(distance)] = np.inf
 
             signed_dist = np.cross(segment_ab, segment_ac) / length_ab
 

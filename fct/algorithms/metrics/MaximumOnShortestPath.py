@@ -193,7 +193,7 @@ class MaximumOnShortestPath(AlgorithmMetadata, QgsProcessingAlgorithm):
 
             with GraphIterator(graph, origin) as iterator:
 
-                weight = np.infty
+                weight = np.inf
                 entry = None
 
                 for entry in iterator:
@@ -205,7 +205,7 @@ class MaximumOnShortestPath(AlgorithmMetadata, QgsProcessingAlgorithm):
                         weight = entry.weight
                         break
 
-                if weight != np.infty:
+                if weight != np.inf:
 
                     path, weight = iterator.path(entry.key)
                     # weights = [ iterator.seen[k].weight for k in path ]
