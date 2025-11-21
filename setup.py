@@ -1,6 +1,7 @@
 from setuptools import setup, Extension
 from setuptools.command.build_py import build_py as _build_py
 from setuptools_scm import get_version
+from packaging.version import Version
 import re
 import numpy
 from Cython.Build import cythonize
@@ -16,7 +17,7 @@ extensions = [
 
 class update_version(_build_py):
     def run(self):
-        version = get_version()
+        version = Version(get_version()).base_version
         path = "fct/metadata.txt"
 
         with open(path, "r", encoding="utf-8") as f:

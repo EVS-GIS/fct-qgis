@@ -2,7 +2,7 @@
 name=Fluvial Corridor Toolbox
 qgisMinimumVersion=3.34
 description=Fluvial Corridor Toolbox
-version=2.0.0.dev1+g8810b1ed1.d20251120
+version=2.0.0
 author=CNRS UMR5600 Environnement, Ville, Société
 email=samuel.dunesme@ens-lyon.fr
 
