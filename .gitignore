@@ -18,3 +18,4 @@ env/
 build/
 .coverage
 .pytest_cache/
+tutorials/network_processing
