@@ -122,6 +122,25 @@ def task_install():
     Install plugin to user's QGis plugin directory
     """
 
+    def update_version():
+        import re
+        from importlib.metadata import version
+
+        path = "fct/metadata.txt"
+
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        content = re.sub(
+            r"^version=.*",
+            f"version={version('fct-qgis')}",
+            content,
+            flags=re.MULTILINE
+        )
+
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(content)
+
     def copy_extension():
         """
         Copy extension to FluvialCorridorToolbox/lib
@@ -140,6 +159,7 @@ def task_install():
 
     return {
         'actions': [
+            update_version,
             (copyfiles, ('fct', fct_target_folder())),
             copy_extension
         ],
