@@ -61,7 +61,7 @@ def fieldlist(fields):
     return jinja2.Markup('<ul><li>' + '</li><li>'.join(buf) + '</li></ul>')
 
 loader = jinja2.FileSystemLoader(searchpath="./templates")
-environment = jinja2.Environment(loader=loader)
+environment = jinja2.Environment(loader=loader, autoescape=True)
 # environment.filters['markdown'] = lambda text: jinja2.Markup(md.convert(text))
 environment.filters['nl2br'] = lambda text: jinja2.Markup(text.replace('\n', '</br>\n'))
 environment.filters['link_algorithm'] = link_algorithm
