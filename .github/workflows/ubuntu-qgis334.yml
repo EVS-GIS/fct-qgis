@@ -1,6 +1,11 @@
 name: 'Ubuntu / QGIS 3.34'
 
-on: push
+on: 
+  push:
+    paths:
+      - "fct/"
+      - "cython/"
+      - "test/"
 
 jobs:
   test:

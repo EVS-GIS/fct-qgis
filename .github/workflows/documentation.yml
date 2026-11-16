@@ -1,16 +1,24 @@
 name: Build documentation
 
 on:
-  push:
-    branches: [ "master" ]
+  workflow_dispatch:
+  # push:
+  #   branches: [ "master", "ci" ]
+  #   paths:
+  #     - 'docs/**'
 
 permissions:
   contents: write
 
 jobs:
-  deploy:
+  build-doc:
     runs-on: ubuntu-latest
+
     steps:
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
 
       - uses: actions/checkout@v4
         with:
@@ -21,12 +29,7 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.x
-
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
-
       - uses: actions/cache@v4
         with:
           key: mkdocs-material-${{ env.cache_id }}
@@ -34,14 +37,11 @@ jobs:
           restore-keys: |
             mkdocs-material-
 
+
       - name: Install packages
         run: |
-          python -m pip install --upgrade pip
-          pip install wheel setuptools numpy cython
-          pip install -r requirements.txt
-          pip install --no-build-isolation -e .
+          pip install pypandoc_binary mkdocs mkdocs-material mkdocs-bibtex
       
       - name: Build and deploy docs
         run: |
-          python -m doit doc
           python -m mkdocs gh-deploy --force

@@ -217,7 +217,7 @@ class DistanceToStream(AlgorithmMetadata, QgsProcessingAlgorithm):
                 directions.append((direction[1], direction[0]))
 
             # Add a separator point at Infinity between linestrings
-            # stream_points.append((np.infty, np.infty, 0))
+            # stream_points.append((np.inf, np.inf, 0))
 
         stream_points = np.array(stream_points)
         directions = np.array(directions)

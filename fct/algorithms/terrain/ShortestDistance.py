@@ -204,7 +204,7 @@ class ShortestDistance(AlgorithmMetadata, QgsProcessingAlgorithm):
                         origins[py, px] = 1
 
             # Add a separator point at Infinity between linestrings
-            # stream_points.append((np.infty, np.infty, 0))
+            # stream_points.append((np.inf, np.inf, 0))
 
         feedback.setProgressText('Calculate shortest distance')
 

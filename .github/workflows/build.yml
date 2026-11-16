@@ -3,7 +3,10 @@ name: Build terrain analysis extension
 on:
   push:
     branches: [ "master" ]
-    paths-ignore: [ "fct/lib/terrain_analysis*" ]
+    paths:
+      - 'cython/**'
+      - 'setup.py'
+      - '.github/workflows/build.yml'
 
 permissions:
   contents: write
