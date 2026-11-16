@@ -20,7 +20,7 @@ def distance_to_segment(a, b, c):
         a[:, 1] + dot*segment_ab[:, 1]]).T
 
     distance = np.linalg.norm(nearest - c, axis=1)
-    distance[np.isnan(distance)] = np.infty
+    distance[np.isnan(distance)] = np.inf
 
     return distance
 

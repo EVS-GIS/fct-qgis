@@ -48,7 +48,7 @@ def signed_distance(float[:, :] a, float[:, :] b, float[:, :] c):
     #     a[:, 1] + dot*segment_ab[:, 1]]).T
 
     # distance = np.linalg.norm(nearest - c, axis=1)
-    # distance[np.isnan(distance)] = np.infty
+    # distance[np.isnan(distance)] = np.inf
 
     # signed_dist = np.cross(segment_ab, segment_ac) / length_ab
 
@@ -142,8 +142,8 @@ def signed_distance(float[:, :] a, float[:, :] b, float[:, :] c):
 #         point = np.array([(x, y)])
 #         dist, signed_dist, pos = signed_distance(segments[:, :2], segments[:, 2:], point)
 
-#         min_dist = np.infty
-#         min_signed = np.infty
+#         min_dist = np.inf
+#         min_signed = np.inf
 #         nearest = 0
 
 #         for k in range(n):
